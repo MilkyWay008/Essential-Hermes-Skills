@@ -131,6 +131,48 @@ After extracting, sanity-check the result:
 
 ---
 
+## First-Time Run & Install
+
+The skill is ready to use once its folder exists — no build step and **no API keys required**. Jina Reader is free and anonymous, trafilatura ships in the Hermes venv, and the headless browser is built in. Two optional setup items make the agent prefer this skill automatically.
+
+### 1. Optional: make sure `trafilatura` is installed
+
+Trafilatura is already installed in the Hermes venv. If it's ever missing from a fresh environment:
+
+```bash
+python -m pip install trafilatura
+```
+
+### 2. SOUL.md Injection — make the agent prefer this skill
+
+For the agent to **automatically use this skill instead of the built-in `web_extract` tool**, add a few lines to the profile's `SOUL.md` (e.g. `<profile>/SOUL.md`) under a suitable section (e.g. `## General Agent System prompt` or a new `## Web Extract` section). Reference injection (live in the gf-helen profile):
+
+```markdown
+## Web Extract
+When performing a web extract, use the `web_extract` skill `skill_view(name='web_extract')` instead of the built-in web_extract tool, unless the user explicitly requests the built-in tool. Native `web_extract` requires an API-key backend (firecrawl/tavily/exa/parallel) unless the web-native plugin is present. When uncertain, load the extraction skill and follow its 3-tier fallback:
+
+1. **Jina Reader first** (except X.com): `curl -sL "https://r.jina.ai/https://<URL>"`
+   - Best for JS-heavy pages (grok.com, SPA apps, forums).
+2. **trafilatura** when Jina fails/blocked — and ALWAYS first for X.com:
+   `python -c "import trafilatura; print(trafilatura.extract(trafilatura.fetch_url('<URL>')))"`
+   - Best for X.com and raw-HTML pages; bundled in the internal venv, no install.
+3. **Headless browser** as last resort: `browser_navigate("<URL>")` then read the snapshot.
+
+**Complementarity rule:** Jina is best for JS-heavy; trafilatura is best for X.com and anything Jina can't open — and things trafilatura can't open, Jina usually can.
+```
+
+> 💡 On a fresh install, you can simply tell your agent: *"Set up the web_extract skill: add the SOUL.md rule for me."* The agent will handle the rest (backups included).
+
+### 3. Verify
+
+```bash
+curl -sL "https://r.jina.ai/https://example.com"
+```
+
+Expect clean markdown back (`Title:` / `URL Source:` / `Markdown Content:`). Or give the agent a URL and ask it to *read / extract / summarize* the page — it should load the skill and follow the 3-tier fallback.
+
+---
+
 ## Known limitations
 
 | Limitation | Workaround |

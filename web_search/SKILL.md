@@ -108,7 +108,7 @@ prompt` or a new `## Web Search` section):
 
 ```markdown
 ## Web Search
-When performing a web search, use the `web_search` skill
+When performing a web search, use the `web_search` skill `skill_view(name='web_search')`
 (tiered: deepseek → tavily → tinyfish → ddgs) instead of the built-in
 web_search tool, unless the user explicitly requests the built-in tool.
 ```
