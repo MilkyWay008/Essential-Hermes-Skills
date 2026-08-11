@@ -101,7 +101,7 @@ Each skill is **self-contained**, **production-tested**, and documented with its
 **What it is:** A tiered web-search chain — **DeepSeek → Tavily → TinyFish → DuckDuckGo** — that replaces the built-in web_search tool with a richer, key-managed chain.
 
 **Why it's useful:**
-- **Best answer first** — DeepSeek tier synthesizes an actual *answer* (server-side search + model reasoning)
+- **Best answer first** — DeepSeek sits at tier 1 because **deepseek-v4-flash (0731 build) natively supports the Responses API protocol**, which includes **native server-side search**: the model searches the web itself and synthesizes an actual *answer* in one call — no separate search round-trip, no raw link list to post-process
 - **Raw results when you need them** — Tavily/TinyFish/DuckDuckGo for links, citations, and sources (effectively free)
 - **Fail-fast fallthrough** — auto mode tries tier 1 → 2 → 3 → 4 and stops at the first success
 - **Zero-key safety net** — DuckDuckGo needs no key, so the chain always has a last resort
