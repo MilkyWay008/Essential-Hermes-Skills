@@ -1,10 +1,24 @@
-# 🕵️ reverse-skill — Hermes-Ready Cybersecurity Skills Router
+# 🕵️ reverse-skill — Open Up Any Program and See What's Inside
 
 > **Hermes Agent port of [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)** (MIT, 23.9k⭐). Upstream READMEs, routing docs, and bilingual (EN/ZH) content preserved in this folder — this port adapts the skill pack to Hermes Agent conventions so every module loads as a first-class Hermes skill.
 
-A collection of **85 security/RE skill modules** for reverse engineering, exploitation, penetration testing, malware analysis, mobile, firmware, browser automation, CTF, and security documentation — organized behind a routing skill that dispatches tasks to the right specialist module.
+**In plain English:** software is a black box — you see what it *shows* you, not what it *does*. When a program breaks, won't start, acts suspicious, or hides its logic, reverse-skill gives your agent the tools to open the box: read the code inside apps, find out why they crash, see what they send over the internet, and judge whether they're safe to trust.
 
-## What's inside
+**Everyday examples of what this gets you:**
+
+- **"This app won't open anymore."** A program (say, QuickBooks) crashes on launch and the error message says nothing useful. reverse-skill inspects the compiled code, finds the missing dependency or the corrupted check, and tells you exactly what broke — instead of guessing.
+- **"Is this downloaded file safe?"** You grabbed something from a sketchy site. The malware-analysis module dissects it safely — what it does, where it's trying to phone home — without running it on your machine.
+- **"Why can't I log in to this website?"** A login form sends encrypted parameters you can't reproduce in your own test script. The JS reverse module figures out how the signing works, so you can test your integration properly.
+- **"Why is my app calling home?"** Suspicious network traffic from a tool you use? reverse-skill traces what it sends, where, and why.
+
+**Why coders and IT pros need this in their job:**
+
+- **Troubleshooting closed-source software** — when vendor code breaks and the error message lies, reverse engineering is how you find the truth instead of uninstalling and hoping
+- **Security audits** — before you trust a tool, a dependency, or an app in your environment, you can verify what it actually does
+- **Working with legacy or unknown code** — no source code? No problem. Read the compiled version
+- **CTF and security careers** — this is the exact skill set security jobs are built on
+
+## What's inside (the technical tour)
 
 | Part | What it is |
 |------|-----------|
