@@ -1,13 +1,13 @@
 # <p align="center">🧰 Essential Hermes Skills — The Power Bundle</p>
 
 <p align="center">
-  <strong>Four production-tested skills that turn Hermes Agent into a serious workhorse.</strong><br>
-  Debug any unfamiliar codebase. Run any complex project. Search the web. Read any page.<br>
+  <strong>Five production-tested skills that turn Hermes Agent into a serious workhorse.</strong><br>
+  Debug any unfamiliar codebase. Run any complex project. Search the web. Read any page. Reverse anything.<br>
   <em>Built from real debugging sessions. Battle-tested in production.</em>
 </p>
 
 <p align="center">
-  <a href="#"><img src="https://img.shields.io/badge/Skills-4_Production_Ready-2EA043?style=for-the-badge" alt="4 Production Skills"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Skills-5_Production_Ready-2EA043?style=for-the-badge" alt="5 Production Skills"></a>
   <a href="#"><img src="https://img.shields.io/badge/Agent-Hermes_Agent-FFD700?style=for-the-badge" alt="Hermes Agent"></a>
   <a href="#"><img src="https://img.shields.io/badge/Platform-Windows_%7C_Linux_%7C_macOS-0078D6?style=for-the-badge" alt="Cross-Platform"></a>
   <a href="#"><img src="https://img.shields.io/badge/Type-Essential_Workflows-8A2BE2?style=for-the-badge" alt="Essential Workflows"></a>
@@ -23,7 +23,7 @@
 ## 📑 Table of Contents
 
 - [💡 What This Bundle Is](#-what-this-bundle-is)
-- [📦 The Four Skills](#-the-four-skills)
+- [📦 The Five Skills](#-the-five-skills)
 - [🧭 Which Skill Do I Use When?](#-which-skill-do-i-use-when)
 - [⚙️ How They Work Together](#️-how-they-work-together)
 - [🚀 Quick Start](#-quick-start)
@@ -35,12 +35,13 @@
 
 ## 💡 What This Bundle Is
 
-A curated collection of **four essential Hermes Agent skills** — the kind of tools you reach for every single day:
+A curated collection of **five essential Hermes Agent skills** — the kind of tools you reach for every single day:
 
 - **Debug** unfamiliar codebases with discipline, not chaos
 - **Execute** complex multi-phase projects without losing the thread
 - **Search** the web with a tiered fallback chain that never dead-ends
 - **Extract** content from any page — even JavaScript-heavy SPAs
+- **Reverse** binaries, apps, and protocols with an 85-skill security pack
 
 Each skill is **self-contained**, **production-tested**, and documented with its own README. Drop any of them into any Hermes profile and it just works.
 
@@ -48,7 +49,7 @@ Each skill is **self-contained**, **production-tested**, and documented with its
 
 ---
 
-## 📦 The Four Skills
+## 📦 The Five Skills
 
 ### 1. 🔧 `app-debug-workflow` — Disciplined Codebase Auditing
 
@@ -111,6 +112,22 @@ Each skill is **self-contained**, **production-tested**, and documented with its
 
 ---
 
+### 5. 🕵️ `reverse-skill` — The 85-Skill Security & Reverse Engineering Pack
+
+**What it is:** A Hermes-ready port of the popular [reverse-skill](https://github.com/zhaoxuya520/reverse-skill) project (MIT, 23.9k⭐) — **85 security/RE skill modules** behind a routing skill that dispatches tasks to the right specialist: APK/.NET/JS/Go/IDA/radare2 reverse engineering, malware analysis, firmware pentest, EDR bypass, CTF, mobile, pentest toolchain, LLM/API security, and more.
+
+**Why it's useful:**
+- **Router-first design** — a `reverse-skill-router` skill reads the task, picks the PRIMARY module, and enforces the authorization contract (authorized-use only)
+- **Self-evolving** — each task writes lessons to `field-journal/`, so the next similar target skips trial-and-error
+- **On-demand tool bootstrap** — missing jadx/frida/ghidra? The bootstrap manifest provisions it (commercial tools stay manual-license-only)
+- **Cross-platform** — every helper ships as both PowerShell (`.ps1`) and POSIX shell (`.sh`) twins
+- **85 skills, one install** — copy the whole pack, or cherry-pick individual modules (each has its own English trigger description)
+- **Fully attributed** — a fork/port of the upstream project; deep reference content preserved verbatim (see the language note in `reverse-skill/README.md`)
+
+**Trigger phrases:** *"analyze this APK" · "reverse this .NET binary" · "understand this stripped Go binary" · "route this security task"* — any RE/malware/pentest task
+
+---
+
 ## 🧭 Which Skill Do I Use When?
 
 | Situation | Skill |
@@ -121,6 +138,7 @@ Each skill is **self-contained**, **production-tested**, and documented with its
 | "Search for / look up / find out X" | 🔎 `web_search` |
 | Research project needing both search + extraction | 🔎 `web_search` → 🌐 `web_extract` |
 | Project with a research phase | 🏗️ `complex-project-workflow` (Recon phase) |
+| "Reverse / analyze this binary / APK / malware" | 🕵️ `reverse-skill` (router → specialist module) |
 
 ---
 
@@ -151,7 +169,8 @@ Each skill is **self-contained**, **production-tested**, and documented with its
 - **`complex-project-workflow`** is the **orchestrator** — it knows *when* each phase runs
 - **`web_search` + `web_extract`** power the **research** phases (find → read)
 - **`app-debug-workflow`** powers the **execute** phase when the project is a code audit/fix
-- All four share one principle: **hard rules, enforced systems, no drift**
+- **`reverse-skill`** is the **security/RE specialist** — drop in any binary, APK, malware, or pentest target and let the router pick the right module
+- All five share one principle: **hard rules, enforced systems, no drift**
 
 ---
 
@@ -167,6 +186,7 @@ cp -r app-debug-workflow ~/AppData/Local/hermes/profiles/gf-helen/skills/softwar
 cp -r complex-project-workflow ~/AppData/Local/hermes/profiles/gf-helen/skills/software-development/
 cp -r web_extract ~/AppData/Local/hermes/profiles/gf-helen/skills/web/
 cp -r web_search ~/AppData/Local/hermes/profiles/gf-helen/skills/web/
+cp -r reverse-skill/skills ~/AppData/Local/hermes/profiles/gf-helen/skills/security/   # whole pack (85 skills + router)
 ```
 
 ### Configure
@@ -177,10 +197,11 @@ cp -r web_search ~/AppData/Local/hermes/profiles/gf-helen/skills/web/
 | `complex-project-workflow` | None — works out of the box |
 | `web_extract` | `pip install trafilatura` (optional but recommended) |
 | `web_search` | API keys in profile `.env` (`DEEPSEEK_API_KEY`, `TAVILY_API_KEY`, `TINYFISH_API_KEY`) + optional `pip install duckduckgo-search` |
+| `reverse-skill` | None — works out of the box (tools auto-bootstrap on demand; optional MCP integrations are additive) |
 
 ### Verify
 
-Trigger each skill with its phrase — e.g. ask the agent to *"search for X"* (web_search), *"read this URL"* (web_extract), *"audit this codebase"* (app-debug-workflow), or *"run this as a master workflow"* (complex-project-workflow).
+Trigger each skill with its phrase — e.g. ask the agent to *"search for X"* (web_search), *"read this URL"* (web_extract), *"audit this codebase"* (app-debug-workflow), *"run this as a master workflow"* (complex-project-workflow), or *"analyze this APK / reverse this binary"* (reverse-skill).
 
 ---
 
@@ -201,22 +222,30 @@ Trigger each skill with its phrase — e.g. ask the agent to *"search for X"* (w
 ├── web_extract/                 ← tiered web-content extraction
 │   ├── SKILL.md
 │   └── README.md
-└── web_search/                  ← tiered search (deepseek → tavily → tinyfish → ddgs)
-    ├── SKILL.md
-    ├── README.md
-    └── scripts/
-        ├── search.py            ← dispatcher (auto tier chain)
-        ├── deepseek_search.py   ← tier 1: DeepSeek /responses web_search
-        ├── tavily_search.py     ← tier 2: Tavily API
-        ├── tinyfish_search.py   ← tier 3: TinyFish API
-        └── ddgs_search.py       ← tier 4: DuckDuckGo (no key)
+├── web_search/                  ← tiered search (deepseek → tavily → tinyfish → ddgs)
+│   ├── SKILL.md
+│   ├── README.md
+│   └── scripts/
+│       ├── search.py            ← dispatcher (auto tier chain)
+│       ├── deepseek_search.py   ← tier 1: DeepSeek /responses web_search
+│       ├── tavily_search.py     ← tier 2: Tavily API
+│       ├── tinyfish_search.py   ← tier 3: TinyFish API
+│       └── ddgs_search.py       ← tier 4: DuckDuckGo (no key)
+└── reverse-skill/               ← 85-skill security & RE pack (Hermes port)
+    ├── README.md                ← Hermes guide (front page) + language note
+    ├── README-hermes.md         ← Hermes guide (duplicate, kept for visibility)
+    ├── README-orignal.md        ← upstream README (preserved)
+    ├── LICENSE                  ← upstream MIT (zhaoxuya520)
+    ├── skills/                  ← 43 specialist modules + router + scripts
+    ├── CTF-Sandbox-Orchestrator/← 42 CTF competition sub-skills
+    └── kali/                    ← Kali Linux edition docs
 ```
 
 ---
 
 ## 🔍 Search Keywords
 
-`Essential Hermes Skills` · `Hermes skills bundle` · `Hermes Agent skills` · `codebase audit skill` · `debug workflow agent` · `complex project workflow` · `master workflow agent` · `web search skill` · `tiered web search` · `web extraction skill` · `read any URL agent` · `Hermes agent skills pack` · `AI agent workflows` · `agentic debugging` · `production Hermes skills` · `Hermes skill collection` · `multi-phase project agent` · `duck-council audit`
+`Essential Hermes Skills` · `Hermes skills bundle` · `Hermes Agent skills` · `codebase audit skill` · `debug workflow agent` · `complex project workflow` · `master workflow agent` · `web search skill` · `tiered web search` · `web extraction skill` · `read any URL agent` · `Hermes agent skills pack` · `AI agent workflows` · `agentic debugging` · `production Hermes skills` · `Hermes skill collection` · `multi-phase project agent` · `duck-council audit` · `reverse-skill Hermes` · `reverse engineering skills` · `APK reverse Hermes` · `malware analysis skill` · `security skills Hermes` · `pentest skills agent`
 
 ---
 
@@ -227,6 +256,6 @@ Trigger each skill with its phrase — e.g. ask the agent to *"search for X"* (w
 ---
 
 <p align="center">
-  <strong>Essential Hermes Skills — debug it, build it, search it, read it. Every day.</strong><br>
+  <strong>Essential Hermes Skills — debug it, build it, search it, read it, reverse it. Every day.</strong><br>
   <sub>Hard rules. Enforced systems. No drift. 🧰</sub>
 </p>
