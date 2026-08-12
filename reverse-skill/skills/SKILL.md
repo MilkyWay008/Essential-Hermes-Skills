@@ -57,7 +57,7 @@ If routing fails to match, research additional methodology online and propose a 
 | **Mobile Reverse Engineering** | `mobile-reverse/` | Android + iOS: Frida/Objection dynamic instrumentation, SSL pinning/root/jailbreak detection bypass, OWASP MASTG |
 | **Malware Analysis** | `malware-analysis/` | Six-phase sample analysis, YARA/Sigma, anti-analysis detection, sandbox orchestration |
 | **DSL VM Reverse Engineering** | `reverse-engineering/dsl-vm-reverse/` | JS custom-instruction-set VMs (IIFE + switch-case opcodes); risk-control/captcha engines |
-| **Operations Contracts** | `ops/` | Scope / evidence chain / roles / timeline / identity / skill supply-chain security |
+| **Operations Contracts** | `ops/` | Scope / evidence chain / roles / timeline / identity (`ops/IDENTITY.md`) / skill supply-chain security |
 | **Community Skill Reference** | `references/community-security-skills.md` | External security skill index and adoption rules (no blind installs) |
 | **Skill Supply Chain** | `ops/skill-supply-chain.md` | External skill/MCP installation gate (AST10 condensed) |
 | **RE Phase Gate** | `reverse-engineering/references/re-agent-workflow.md` | triage → static → dynamic → synthesis |

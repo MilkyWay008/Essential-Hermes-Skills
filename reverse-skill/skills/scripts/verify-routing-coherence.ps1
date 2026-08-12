@@ -184,24 +184,24 @@ Assert-Fields (Join-Path $skillsRoot 'field-journal/_template.md') @('Scope', 'E
 Assert-Fields (Join-Path $skillsRoot 'case-review/SKILL.md') @('ACTION REQUIRED', 'review_case.py', 'Evidence Graph Review')
 $vendorRulesPath = Join-Path $skillsRoot 'docs-generator/references\vendor-report-rules.md'
 $vendorRulesText = Get-Content $vendorRulesPath -Raw -Encoding UTF8
-Assert-Fields (Join-Path $skillsRoot 'docs-generator/SKILL.md') @('vendor-report-rules.md', 'flavor = null', '不强制 IOC/ATT&CK')
+Assert-Fields (Join-Path $skillsRoot 'docs-generator/SKILL.md') @('vendor-report-rules.md', 'flavor = null', 'IOC')
 Assert-Fields $vendorRulesPath @('flavor = null', 'explicit_malware')
-if ($vendorRulesText -match '(?m)逆向工程报告\s*\|\s*默认\s*`malware`') {
+if ($vendorRulesText -match '(?m)Reverse engineering report\s*\|\s*default\s*`malware`') {
     Bad 'vendor rules default generic reverse engineering to malware flavor'
 } else {
     Ok 'vendor rules keep generic reverse engineering flavor-neutral'
 }
-if ($vendorRulesText -match '先确认 scope 并保全' -and $vendorRulesText -match '不得在证据保全前直接删除文件') {
+if ($vendorRulesText -match 'confirm scope and preserve evidence' -and $vendorRulesText -match 'never auto-import IOCs') {
     Ok 'malware remediation preserves evidence before destructive actions'
 } else {
     Bad 'malware remediation does not require evidence preservation before destructive actions'
 }
-if ($vendorRulesText -match '(?m)JS/Web 签名逆向报告\s*\|[^\r\n]*malware') {
+if ($vendorRulesText -match '(?m)JS/Web signature reverse report\s*\|[^\r\n]*malware') {
     Bad 'vendor rules route JS signature reports through malware flavor'
 } else {
     Ok 'vendor rules keep JS signature reports flavor-neutral'
 }
-Assert-Fields $vendorRulesPath @('skills/ops/evidence-finding-path.md', '来源证据', 'securelist.com/updated-mata', 'www.huorong.cn')
+Assert-Fields $vendorRulesPath @('skills/ops/evidence-finding-path.md', 'Source evidence', 'securelist.com/updated-mata', 'www.huorong.cn')
 $fieldLog | Set-Content -LiteralPath (Join-Path $ScratchDir 'template-fields.txt') -Encoding UTF8
 
 # --- role map skills exist for primary rows ---
