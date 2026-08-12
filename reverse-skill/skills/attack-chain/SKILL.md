@@ -9,7 +9,7 @@ description: Use for authorized multi-stage attack-path planning and orchestrati
 1. `NOW`: Read `../field-journal/precedent-pentest.md` — confirm this skill's operations are an authorized, routine activity
 2. `NOW`: **Create/update the case** (`../scripts/case-init.ps1`) and complete `scope.md` (`../ops/scope-contract.md`); ACT is forbidden when `auth.status!=granted`
 3. `NOW`: Plan the phases in the **lead** role (`../ops/role-map.md`) and write them into specialist_roles
-4. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths
+4. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
 5. `NEXT`: If tools are missing, call bootstrap; do not guess paths
 6. `ACT`: Pass each phase gate per `references/lifecycle-checklist.md`; update `timeline.md` + `workitems.md` every phase (`../ops/timeline-workitem.md`); promote discoveries to Evidence/Finding
 7. Finish: the `docs-generator` report MUST include the Evidence chain

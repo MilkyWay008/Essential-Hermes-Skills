@@ -408,7 +408,7 @@ print(f"admin_session={payload_b64}.{sig_b64}")
 ## Web Phishing Infrastructure
 
 ### Phishing Panel: {target_domain_a} / {target_domain_b}
-**Full analysis**: [phishing-case-study.md](phishing-case-study.md)
+**Full analysis**: [phishing-case-study.md](phishing-case-study.md) — *created alongside this note when the case study is written (template slot; not present until filled)*
 
 Two-server phishing infrastructure impersonating a government agency. Full victim control system with server-driven status code redirection.
 

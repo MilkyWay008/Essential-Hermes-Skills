@@ -20,7 +20,7 @@
 5. 向用户报告配置结果
 ```
 
-General agent onboarding lives at the repository root in [README_AI.md](../README_AI.md) — read this file when Kali is detected.
+General agent onboarding lives at the repository root in [README-hermes.md](../README-hermes.md) — read this file when Kali is detected.
 
 ---
 

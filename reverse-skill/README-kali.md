@@ -29,4 +29,4 @@ bash kali/scripts/refresh-tool-index.sh
 | Kali scripts & manifest | `kali/scripts/` |
 | Full Kali documentation | **[kali/README-kali.md](kali/README-kali.md)** |
 
-General AI onboarding still lives in [README_AI.md](README_AI.md) — refer to this directory's docs when the Kali branch is selected.
+General AI onboarding still lives in [README-hermes.md](README-hermes.md) — refer to this directory's docs when the Kali branch is selected.
