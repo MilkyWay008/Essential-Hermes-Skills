@@ -97,6 +97,7 @@ Route tasks to the most appropriate skill module by target type, user intent, an
 | "CTF challenge / competition reverse" | `reverse-engineering/patterns-ctf*.md` |
 | "CTF ZIP / PKZIP / bkcrack / 压缩包明文攻击" | `CTF-Sandbox-Orchestrator/competition-zip-archive/SKILL.md` |
 | "write report / documentation" | `docs-generator/` — technical documentation |
+| "CTF / competition / capture the flag" | `CTF-Sandbox-Orchestrator/SKILL.md` — master orchestrator for multi-type CTF |
 | "review case / evidence chain / traceability" | `case-review/`: read-only Evidence Graph Review |
 | "write writeup" | `docs-generator/` — CTF writeup template |
 | "open webpage / browser automation / fill form" | `browser-automation/SKILL.md` — Playwright |

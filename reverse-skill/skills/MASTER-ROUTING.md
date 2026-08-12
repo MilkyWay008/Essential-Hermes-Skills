@@ -93,10 +93,8 @@ python3 skills/case-review/scripts/review_case.py work/<case> --verify-hashes --
 | **R40** | Case / Evidence graph review | `case-review/` |
 | **R20** | Reports / writeups | `docs-generator/` |
 | **R39** | Diagrams / Mermaid / Graphviz / PlantUML / architecture diagrams | `diagram-generator/` |
+| **R41** | Pure multi-type CTF orchestration | `CTF-Sandbox-Orchestrator/` |
 | **R0** | General RE / anti-debug / OLLVM / unknown binaries | `reverse-engineering/` |
-
-No strong keyword matched → PRIMARY=`R0`, and prompt to open `routing.md`.
-
 ## Boundaries
 
 | Task | Handling |
