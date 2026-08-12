@@ -97,7 +97,7 @@ Route tasks to the most appropriate skill module by target type, user intent, an
 | "CTF challenge / competition reverse" | `reverse-engineering/patterns-ctf*.md` |
 | "CTF ZIP / PKZIP / bkcrack / 压缩包明文攻击" | `CTF-Sandbox-Orchestrator/competition-zip-archive/SKILL.md` |
 | "write report / documentation" | `docs-generator/` — technical documentation |
-| "CTF / competition / capture the flag" | `CTF-Sandbox-Orchestrator/SKILL.md` — master orchestrator for multi-type CTF |
+| "CTF / competition / capture the flag" | `CTF-Sandbox-Orchestrator/ctf-sandbox-orchestrator/SKILL.md` — master orchestrator for multi-type CTF |
 | "review case / evidence chain / traceability" | `case-review/`: read-only Evidence Graph Review |
 | "write writeup" | `docs-generator/` — CTF writeup template |
 | "open webpage / browser automation / fill form" | `browser-automation/SKILL.md` — Playwright |
@@ -119,7 +119,7 @@ Route tasks to the most appropriate skill module by target type, user intent, an
 | "password cracking / Hashcat" | `pentest-tools/SKILL.md` — password cracking |
 | "penetration testing / active scan" | `pentest-tools/SKILL.md` — pentest toolchain |
 | "SRC hunting / Bug Bounty" | `pentest-tools/src-hunter/SKILL.md` — 19 playbooks + H1 cases |
-| "WAF bypass" | `pentest-tools/src-hunter/references/payloader/` — 263 bypass steps |
+| "WAF bypass" | `pentest-tools/src-hunter/references/payloader/` — 176 payloads / 303 bypass steps |
 | "draw diagram / flowchart / architecture" | `diagram-generator/SKILL.md` |
 | "attack path diagram / sequence diagram" | `diagram-generator/SKILL.md` — Mermaid/Graphviz/PlantUML |
 | "malware / virus analysis / sample analysis" | `reverse-engineering/SKILL.md` + YARA/sandbox |

@@ -24,6 +24,12 @@ Desktop.ini
 *.bak
 *.log
 
+# Secrets (future-proofing)
+.env
+.env.*
+*.pem
+*.key
+
 # User-specific config
 .claude/
 # Local Issue/PR review exports; do not commit GitHub discussion snapshots.

@@ -102,7 +102,7 @@
 | "密码破解/Hashcat" | `pentest-tools/SKILL.md` — 密码破解 |
 | "渗透测试/主动扫描" | `pentest-tools/SKILL.md` — 渗透工具链 |
 | "SRC 挖洞/Bug Bounty/众测" | `pentest-tools/src-hunter/SKILL.md` — 19 类 playbook + H1 案例 |
-| "WAF 绕过/bypass" | `pentest-tools/src-hunter/references/payloader/` — 263 绕过步骤 |
+| "WAF 绕过/bypass" | `pentest-tools/src-hunter/references/payloader/` — 176 条 payload / 303 条绕过步骤 |
 | "画图/流程图/架构图/攻击路径图" | `diagram-generator/SKILL.md` — 图表生成 |
 | "时序图/状态图/ER图/数据流图" | `diagram-generator/SKILL.md` — Mermaid/Graphviz/PlantUML |
 | "Mermaid/Graphviz/PlantUML" | `diagram-generator/SKILL.md` — 图表生成 |
