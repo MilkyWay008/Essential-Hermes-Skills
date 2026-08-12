@@ -9,7 +9,7 @@ description: Use for free/open reverse engineering with Ghidra (headless or GUI)
 
 1. `NOW`: read `../field-journal/precedent-reverse.md`
 2. `NOW`: confirm **Ghidra** is needed (no IDA / prefer open source / batch headless)
-3. `NEXT`: read `../tool-index.md` for ghidra / ghidra-mcp paths
+3. `NEXT`: read `../tool-index.md` for ghidra / ghidra-mcp paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `NEXT`: missing tool → bootstrap `ghidra-mcp` (the manifest supports it) or install Ghidra: download the latest release ZIP from https://github.com/NationalSecurityAgency/ghidra/releases/latest, unzip to a tools dir, then run `support/analyzeHeadless` (Linux/macOS) or `support\analyzeHeadless.bat` (Windows); alternatively `winget install ghidra` or your package manager
 5. `ACT`: import sample → auto analyze → export decompilation of key functions
 

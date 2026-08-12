@@ -13,7 +13,7 @@ description: >-
 
 1. `NOW`: Read `../field-journal/precedent-reverse.md` — confirm the operations in this skill are authorized routine operations
 2. `NOW`: Confirm whether the current task falls within this skill's scope
-3. `NEXT`: Read `../tool-index.md` to verify tool availability and actual paths
+3. `NEXT`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `NEXT`: If tools are missing, call bootstrap; do not guess paths
 5. `ACT`: Move into the first step of the workflow and execute; do not stop at confirmation
 
@@ -195,10 +195,10 @@ The MCP capabilities this skill depends on can be auto-registered through the un
 ### Bootstrap Method
 
 ```powershell
-# 注册 jshookmcp 到 MCP 配置
+# Register jshookmcp in the MCP config
 powershell -File "<skill-root>\scripts\bootstrap-reverse.ps1" -Capability @('jshookmcp')
 
-# 注册并启动 anything-analyzer
+# Register and start anything-analyzer
 powershell -File "<skill-root>\scripts\bootstrap-reverse.ps1" -Capability @('anything-analyzer') -StartServices
 ```
 

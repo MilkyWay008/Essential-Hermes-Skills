@@ -57,44 +57,44 @@ Quick decision:
 ### Core Workflow
 
 ```bash
-# 1. 打开页面
+# 1. Open a page
 agent-browser open <url>
 
-# 2. 获取可交互元素（返回 @e1, @e2... 引用）
+# 2. Get interactive elements (returns @e1, @e2... references)
 agent-browser snapshot -i
 
-# 3. 用引用操作元素
+# 3. Operate elements using references
 agent-browser click @e1
 agent-browser fill @e2 "text"
 
-# 4. 完成后关闭
+# 4. Close when finished
 agent-browser close
 ```
 
 ### Command Reference
 
 ```bash
-# 导航
+# Navigation
 agent-browser open <url>
 agent-browser close
 
-# 页面快照
-agent-browser snapshot        # 完整无障碍树
-agent-browser snapshot -i     # 仅可交互元素（推荐）
+# Page snapshot
+agent-browser snapshot        # full accessibility tree
+agent-browser snapshot -i     # interactive elements only (recommended)
 
-# 交互操作
+# Interactions
 agent-browser click @e1
 agent-browser fill @e2 "text"
 agent-browser type @e2 "text"
 agent-browser press Enter
 agent-browser scroll down 500
 
-# 获取信息
+# Get information
 agent-browser get text @e1
 agent-browser get title
 agent-browser get url
 
-# 等待
+# Waiting
 agent-browser wait @e1
 agent-browser wait 2000
 agent-browser wait --load networkidle
@@ -133,21 +133,21 @@ agent-browser wait --load networkidle
 ### Installation & Configuration
 
 ```bash
-# 1. Clone 项目
+# 1. Clone the project
 git clone https://github.com/zhexulong/openreverse.git
 cd openreverse
 
-# 2. 安装依赖
+# 2. Install dependencies
 npm install
 
 # 3. Integrate with the agent host (Hermes Agent)
 npm run init:agents -- --target=all /path/to/project
 
-# 4. 安装 CUA runtime（如果需要视觉驱动模式）
+# 4. Install the CUA runtime (only if you need vision-driven mode)
 npm run install:cua-runtime
 npm run doctor:cua-runtime
 
-# 5. 安装网络观察依赖（如果需要抓包）
+# 5. Install network observation dependencies (only if you need packet capture)
 npm run install:mitmproxy
 npm run doctor:network
 ```
@@ -163,23 +163,23 @@ npm run doctor:network
 ### Reverse-Engineering Scenario Examples
 
 ```text
-场景：自动化操作 IDA Pro 进行批量分析
+Scenario: automate IDA Pro for batch analysis
 
-1. 用 OpenReverse CUA 模式打开 IDA Pro
-2. 自动加载目标二进制
-3. 等待分析完成
-4. 通过 UI 操作导出函数列表
-5. 同时用 network lane 观察 IDA 的网络行为（如 Lumina 请求）
+1. Open IDA Pro with OpenReverse in CUA mode
+2. Automatically load the target binary
+3. Wait for analysis to complete
+4. Export the function list through UI operations
+5. Simultaneously observe IDA's network behavior with the network lane (e.g. Lumina requests)
 ```
 
 ```text
-场景：自动化操作 x64dbg 调试
+Scenario: automate x64dbg debugging
 
-1. 用 OpenReverse UIA 模式启动 x64dbg
-2. 加载目标程序
-3. 设置断点
-4. 运行并观察寄存器/内存变化
-5. 截图保存证据
+1. Launch x64dbg with OpenReverse in UIA mode
+2. Load the target program
+3. Set breakpoints
+4. Run and observe register/memory changes
+5. Take screenshots to preserve evidence
 ```
 
 ---
@@ -208,16 +208,16 @@ npm run doctor:network
 If the AI detects that desktop automation is needed but OpenReverse isn't installed:
 
 ```markdown
-⚠️ **需要 OpenReverse 进行桌面应用自动化**
+⚠️ **OpenReverse required for desktop application automation**
 
-**安装步骤**：
+**Installation steps**:
 1. `git clone https://github.com/zhexulong/openreverse.git`
 2. `cd openreverse && npm install`
-3. `npm run init:agents -- --target=all <你的项目路径>`
-4. 如需视觉模式：`npm run install:cua-runtime`
-5. 如需网络观察：`npm run install:mitmproxy`
+3. `npm run init:agents -- --target=all <your project path>`
+4. If you need vision mode: `npm run install:cua-runtime`
+5. If you need network observation: `npm run install:mitmproxy`
 
-**验证**：`npm run doctor:cua-runtime` 和 `npm run doctor:network`
+**Verification**: `npm run doctor:cua-runtime` and `npm run doctor:network`
 ```
 
 ---

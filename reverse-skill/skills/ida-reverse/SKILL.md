@@ -12,7 +12,7 @@ description: >-
 
 1. `NOW`: Read `../field-journal/precedent-reverse.md` — confirm this skill's operations are an authorized, routine activity
 2. `NOW`: Confirm whether the current task falls within this skill's scope
-3. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths
+3. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `NEXT`: If tools are missing, call bootstrap; do not guess paths
 5. `ACT`: Enter step one of the "workflow" and execute; do not stop at confirmation
 
@@ -106,28 +106,28 @@ powershell -File "<skill-root>\ida-reverse\scripts\open.ps1" -Path "C:\path\to\f
 
 **Optional parameters**:
 ```
-# 指定 SessionId
+# Specify SessionId
 powershell -File "scripts\open.ps1" -Path "file.exe" -SessionId "my_session"
 
-# 跳过自动分析（大文件推荐）
+# Skip auto-analysis (recommended for large files)
 powershell -File "scripts\open.ps1" -Path "large.exe" -NoAutoAnalysis
 
-# 设置超时，避免带自动分析时长时间无返回
+# Set a timeout to avoid long no-response periods when auto-analysis is enabled
 powershell -File "scripts\open.ps1" -Path "file.exe" -TimeoutSeconds 600
 ```
 
 **Output conventions**:
 ```
-# 分析进行中（每 10 秒输出一次）
+# Analysis in progress (printed every 10 seconds)
 INFO:opening:11/600s
 
-# 成功打开
+# Successfully opened
 OK:sample.exe:abcd1234
 
-# 成功打开，但因锁文件降级到 Temp 副本
+# Successfully opened, but degraded to a Temp copy due to locked files
 OK:1234abcd-sample.exe:abcd1234 (temp copy)
 
-# 达到超时上限
+# Reached the timeout limit
 ERR:open_timeout_600s
 ```
 
@@ -228,7 +228,7 @@ Output `OK:72` means it is ready.
 
 ### Step 2: Open the File
 ```
-powershell -File "scripts/open.ps1" -Path "C:\目标.exe" -TimeoutSeconds 600
+powershell -File "scripts/open.ps1" -Path "C:\target.exe" -TimeoutSeconds 600
 ```
 Output `OK:filename:session_id` means success (followed by `(temp copy)` means it automatically degraded to a temp copy).
 If analysis takes long, `INFO:opening:...` is printed periodically; if the timeout is reached, `ERR:open_timeout_xxs` is printed.
@@ -248,25 +248,25 @@ Focus on:
 
 ### Step 4: Deep-Dive Key Functions
 ```
-idapro_analyze_function(addr="关键函数名")
+idapro_analyze_function(addr="key_function")
 ```
 Or:
 ```
-idapro_decompile(addr="函数名")
-idapro_disasm(addr="函数名", max_instructions=50)
+idapro_decompile(addr="function_name")
+idapro_disasm(addr="function_name", max_instructions=50)
 ```
 
 ### Step 5: Data Flow and Cross-References
 ```
-idapro_xrefs_to(addrs="关键地址/字符串")
-idapro_callgraph(roots=["关键函数"], max_depth=3)
-idapro_trace_data_flow(addr="关键地址", direction="backward", max_depth=5)
+idapro_xrefs_to(addrs="key_address/string")
+idapro_callgraph(roots=["key_function"], max_depth=3)
+idapro_trace_data_flow(addr="key_address", direction="backward", max_depth=5)
 ```
 
 ### Step 6: Annotate and Refine
 ```
-idapro_set_comments(items=[{"addr": "0x140001000", "comment": "你的理解"}])
-idapro_rename(batch={"func": [{"addr": "函数地址", "name": "有意义的名字"}]})
+idapro_set_comments(items=[{"addr": "0x140001000", "comment": "your_understanding"}])
+idapro_rename(batch={"func": [{"addr": "function_address", "name": "meaningful_name"}]})
 ```
 
 ### Step 7: Produce the Report
@@ -314,19 +314,19 @@ This skill's entry scripts are wired into the unified bootstrap system.
 ### Installation Steps (Verified)
 
 ```cmd
-# 1. 设置 IDA 路径（替换为你的实际 IDA 安装目录）
-setx IDADIR "<你的IDA安装目录>"
+# 1. Set the IDA path (replace with your actual IDA installation directory)
+setx IDADIR "<your_IDA_install_dir>"
 
-# 2. 从 GitHub 安装 ida-pro-mcp（PyPI 上的 ida-mcp 是另一个项目，不要装错！）
+# 2. Install ida-pro-mcp from GitHub (ida-mcp on PyPI is a different project — don't install the wrong one!)
 pip install git+https://github.com/mrexodia/ida-pro-mcp.git
 
-# 3. 安装 IDA 插件（选择 Streamable HTTP + Global + 全选客户端）
+# 3. Install the IDA plugin (select Streamable HTTP + Global + all clients)
 ida-pro-mcp --install
 
-# 4. 重启 IDA Pro，打开目标文件
-# 插件自动监听 127.0.0.1:13337
+# 4. Restart IDA Pro and open the target file
+# The plugin automatically listens on 127.0.0.1:13337
 
-# 5. 验证
+# 5. Verify
 ida-pro-mcp --config
 ```
 

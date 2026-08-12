@@ -49,15 +49,15 @@ Compared with traditional approaches:
 ## Core Principle
 
 ```text
-旧版函数（有符号）          新版同一函数（无符号）
+Old-version function (symbolized)      Same function in the new version (unsymbolized)
     ↓                              ↓
-导出反汇编 + 伪代码          导出反汇编 + 伪代码
+Export disassembly + pseudocode       Export disassembly + pseudocode
     ↓                              ↓
-    └──────── LLM 结构化比对 ────────┘
+    └──────── LLM structured diff ────────┘
                     ↓
-         输出 YAML（符号映射表）
+         Output YAML (symbol mapping table)
                     ↓
-         程序化解析 → 批量应用到新版 IDB
+         Programmatic parse → batch-apply to the new-version IDB
 ```
 
 Key points:
@@ -159,28 +159,28 @@ If nothing found, output an empty YAML. DO NOT output anything other than the de
 ### Full Process
 
 ```text
-Step 1: 准备数据
-  - 旧版二进制加载到 IDA（有 PDB/符号）
-  - 新版二进制加载到 IDA（无符号）
-  - 找到两个版本中相同的锚点函数（导出函数、字符串引用等）
+Step 1: Prepare data
+  - Load the old-version binary into IDA (with PDB/symbols)
+  - Load the new-version binary into IDA (unsymbolized)
+  - Locate anchor functions shared by both versions (exported functions, string references, etc.)
 
-Step 2: 批量导出
-  - 从旧版导出：锚点函数的反汇编 + 伪代码（含符号名）
-  - 从新版导出：同一锚点函数的反汇编 + 伪代码（无符号名）
+Step 2: Batch export
+  - Export from the old version: anchor function disassembly + pseudocode (with symbol names)
+  - Export from the new version: the same anchor function's disassembly + pseudocode (without symbol names)
 
-Step 3: LLM 比对
-  - 用 prompt 模板填充数据
-  - 调用 LLM API（推荐：deepseek 量大便宜，超大函数切 gpt）
-  - 解析返回的 YAML
+Step 3: LLM comparison
+  - Fill the prompt template with the data
+  - Call the LLM API (recommended: deepseek for large volume at low cost; switch to gpt for very large functions)
+  - Parse the returned YAML
 
-Step 4: 应用结果
-  - 将 YAML 中的符号映射批量应用到新版 IDB
-  - 用 idapro_rename 或 IDAPython 脚本批量重命名
+Step 4: Apply results
+  - Batch-apply the YAML symbol mappings to the new-version IDB
+  - Batch-rename with idapro_rename or an IDAPython script
 
-Step 5: 迭代
-  - 第一轮迁移的函数成为新的锚点
-  - 进入这些函数，继续对比内部调用
-  - 重复直到覆盖所有目标函数
+Step 5: Iterate
+  - Functions migrated in the first round become new anchors
+  - Drill into these functions and keep comparing internal calls
+  - Repeat until all target functions are covered
 ```
 
 ### Anchor Selection Strategy
@@ -227,32 +227,32 @@ found_struct_offset → idapro_set_comments(addr=insn_va, comment="{struct_name}
 ### Scenario 1: ntoskrnl.exe Missing PDB
 
 ```text
-已有：ntoskrnl.exe 10.0.26100.2000 + 完整 PDB
-目标：ntoskrnl.exe 10.0.26100.2605（PDB 被下架）
-需求：定位 PspSetCreateProcessNotifyRoutine 的新地址
+Have: ntoskrnl.exe 10.0.26100.2000 + complete PDB
+Target: ntoskrnl.exe 10.0.26100.2605 (PDB removed from distribution)
+Need: locate the new address of PspSetCreateProcessNotifyRoutine
 
-步骤：
-1. 两个版本都加载到 IDA
-2. 找到导出函数 PsSetCreateProcessNotifyRoutine（两个版本都有）
-3. 旧版中它调用了 PspSetCreateProcessNotifyRoutine（有符号）
-4. 新版中它调用了 sub_140822108（无符号）
-5. LLM 一眼看出：sub_140822108 = PspSetCreateProcessNotifyRoutine
-6. 批量应用
+Steps:
+1. Load both versions into IDA
+2. Find the exported function PsSetCreateProcessNotifyRoutine (present in both versions)
+3. In the old version it calls PspSetCreateProcessNotifyRoutine (symbolized)
+4. In the new version it calls sub_140822108 (unsymbolized)
+5. The LLM sees at a glance: sub_140822108 = PspSetCreateProcessNotifyRoutine
+6. Batch-apply
 ```
 
 ### Scenario 2: Migration After an App Update
 
 ```text
-已有：target.exe v1.0 的完整逆向结果（200+ 函数已命名）
-目标：target.exe v1.1（所有符号丢失）
-需求：批量迁移 200 个函数名
+Have: complete reverse-engineering results for target.exe v1.0 (200+ functions named)
+Target: target.exe v1.1 (all symbols lost)
+Need: migrate 200 function names in bulk
 
-步骤：
-1. 从旧版导出所有已命名函数的反汇编+伪代码
-2. 在新版中通过导出函数/字符串找到对应锚点
-3. 批量调用 LLM 比对
-4. 解析 YAML，批量 rename
-5. 迭代深入
+Steps:
+1. Export disassembly + pseudocode for all named functions from the old version
+2. In the new version, find the corresponding anchors via exported functions/strings
+3. Batch-call the LLM for comparison
+4. Parse the YAML and batch-rename
+5. Iterate deeper
 ```
 
 ## LLM Selection Recommendations

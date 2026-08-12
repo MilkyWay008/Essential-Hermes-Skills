@@ -9,7 +9,7 @@ description: Use for authorized Android or iOS application reverse engineering a
 
 1. `NOW`: Read `../field-journal/precedent-reverse.md` — confirm that this skill's operations are an authorized routine
 2. `NOW`: Confirm whether the current task falls within this skill's scope
-3. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths
+3. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `NEXT`: If tools are missing, call bootstrap; do not guess paths
 5. `ACT`: Move to the first step of the "Workflow" and execute it; do not stop at confirmation
 
@@ -31,72 +31,72 @@ description: Use for authorized Android or iOS application reverse engineering a
 ### Phase 1: Information Gathering
 
 ```text
-Android：
-□ APK 获取（Google Play / APKMirror / adb pull）
-□ Manifest 分析: 权限、导出组件、Intent Filter、backup 标志
-□ androguard: androguard analyze APK → 组件/权限/签名
-□ APKLeaks: 硬编码 API Key / Token / Secret 扫描
-□ 加固检测: 是否加壳（360/腾讯/梆梆/爱加密）
+Android:
+□ APK acquisition (Google Play / APKMirror / adb pull)
+□ Manifest analysis: permissions, exported components, Intent Filters, backup flag
+□ androguard: androguard analyze APK → components/permissions/signature
+□ APKLeaks: scan for hardcoded API Key / Token / Secret
+□ Hardening detection: packed? (360/Tencent/Bangcle/iJiami)
 
-iOS：
-□ IPA 获取（App Store / ipatool / Apple Configurator）
-□ 解密 App Store 二进制: frida-ios-dump / Clutch
-□ Info.plist 分析: ATS 配置、URL Scheme、Queries Schemes
-□ class-dump: 导出 ObjC 类结构
-□ 加固检测: 是否使用 Swift/ObjC 混淆
+iOS:
+□ IPA acquisition (App Store / ipatool / Apple Configurator)
+□ Decrypt App Store binaries: frida-ios-dump / Clutch
+□ Info.plist analysis: ATS config, URL Schemes, Queries Schemes
+□ class-dump: export ObjC class structure
+□ Hardening detection: Swift/ObjC obfuscation in use?
 ```
 
 ### Phase 2: Static Analysis
 
 ```text
-跨平台：
-□ JADX-GUI: APK → Java 源码（Android）
-□ Ghidra / Hopper: .so / Mach-O 反编译
-□ radare2 / Cutter: CLI 快速侦察
+Cross-platform:
+□ JADX-GUI: APK → Java source (Android)
+□ Ghidra / Hopper: decompile .so / Mach-O
+□ radare2 / Cutter: quick CLI recon
 
-Android 专项：
-□ apktool d app.apk → smali 代码 + 资源
+Android-specific:
+□ apktool d app.apk → smali code + resources
 □ dex2jar: DEX → JAR → JD-GUI
-□ smali/baksmali: Dalvik 字节码修改
+□ smali/baksmali: modify Dalvik bytecode
 
-iOS 专项：
-□ class-dump: 导出 ObjC 头文件
-□ Swift 符号恢复: swift-demangle
-□ dsymutil: 调试符号提取
-□ otool -L: 查看动态库依赖
-□ jtool2: Mach-O 分析
+iOS-specific:
+□ class-dump: export ObjC headers
+□ Swift symbol recovery: swift-demangle
+□ dsymutil: extract debug symbols
+□ otool -L: inspect dynamic library dependencies
+□ jtool2: Mach-O analysis
 ```
 
 ### Phase 3: Dynamic Analysis
 
 ```text
-Frida — 通用动态插桩：
-□ frida-ps -U: 列出设备进程
-□ frida-trace -U -i "open*" com.app: 追踪函数调用
-□ 自定义 Hook 脚本: 修改参数/返回值、调用私有方法
+Frida — general-purpose dynamic instrumentation:
+□ frida-ps -U: list device processes
+□ frida-trace -U -i "open*" com.app: trace function calls
+□ Custom Hook scripts: modify args/return values, call private methods
 
-Objection — Frida 增强层（无需写脚本）：
+Objection — Frida enhancement layer (no scripting needed):
 □ objection -g "com.app" explore
 □ android root disable / ios jailbreak disable
 □ android sslpinning disable / ios sslpinning disable
 □ android keystore list / ios keychain dump
 □ env / ls / sqlite connect
 
-Frida Gadget（免 Root/越狱）：
-□ 注入 frida-gadget.so / FridaGadget.dylib 到 APK/IPA
-□ 重新签名 → 安装 → 无需设备权限即可 Hook
-□ objection patchapk --source app.apk（全自动）
+Frida Gadget (no Root/Jailbreak):
+□ Inject frida-gadget.so / FridaGadget.dylib into APK/IPA
+□ Re-sign → install → Hook without device privileges
+□ objection patchapk --source app.apk (fully automatic)
 ```
 
 ### Phase 4: Network Analysis
 
 ```text
-□ Burp Suite: 拦截 HTTP/HTTPS，修改请求/响应
-□ mitmproxy: 脚本化代理（Python API）
-□ Wireshark: PCAP 抓包分析
-□ 证书安装: Android 用户证书 → 系统证书（Magisk + MoveCert）
-□ SSL Pinning 绕过: Frida/Objection/Xposed/SSL Kill Switch 2
-□ WebSocket / gRPC 流量分析
+□ Burp Suite: intercept HTTP/HTTPS, modify requests/responses
+□ mitmproxy: scriptable proxy (Python API)
+□ Wireshark: PCAP capture analysis
+□ Certificate install: Android user cert → system cert (Magisk + MoveCert)
+□ SSL Pinning bypass: Frida/Objection/Xposed/SSL Kill Switch 2
+□ WebSocket / gRPC traffic analysis
 ```
 
 ## Common Bypass Quick Reference
@@ -104,15 +104,15 @@ Frida Gadget（免 Root/越狱）：
 ### SSL Pinning
 
 ```bash
-# Objection（最简）
+# Objection (simplest)
 objection -g "com.app" explore
 android sslpinning disable
 
-# Frida 通用脚本
+# Frida general script
 frida -U -l ssl_pinning_bypass.js -f com.app
 
-# Xposed（Android）
-TrustMeAlready 模块 → 全局禁用证书校验
+# Xposed (Android)
+TrustMeAlready module → globally disable certificate validation
 ```
 
 ### Root / Jailbreak Detection
@@ -122,11 +122,11 @@ TrustMeAlready 模块 → 全局禁用证书校验
 android root disable
 ios jailbreak disable
 
-# Frida 自定义（多层检测）
+# Frida custom (multi-layer detection)
 Java.perform(function() {
     var RootBeer = Java.use("com.scottyab.rootbeer.RootBeer");
     RootBeer.isRooted.implementation = function() { return false; };
-    // 额外绕过: Magisk su 检测、frida-server 检测、/proc/self/maps 检测
+    // extra bypass: Magisk su detection, frida-server detection, /proc/self/maps detection
 });
 ```
 
@@ -135,17 +135,17 @@ Java.perform(function() {
 ```bash
 # Android
 frida -U -l anti_debug_bypass.js -f com.app
-# 绕过: ptrace(TracerPid)、/proc/self/status、isDebuggerConnected()
+# Bypass: ptrace(TracerPid), /proc/self/status, isDebuggerConnected()
 
 # iOS
-# 绕过: PT_DENY_ATTACH、sysctl CTL_KERN/KERN_PROC/KERN_PROC_PID
+# Bypass: PT_DENY_ATTACH, sysctl CTL_KERN/KERN_PROC/KERN_PROC_PID
 frida -U -l ios_anti_debug.js -f com.app
 ```
 
 ## Mobile Crypto Extraction
 
 ```javascript
-// Android — Hook Cipher.getInstance 获取密钥+算法
+// Android — Hook Cipher.getInstance to grab key+algorithm
 Java.perform(function() {
     var Cipher = Java.use("javax.crypto.Cipher");
     Cipher.getInstance.overload('java.lang.String').implementation = function(algo) {

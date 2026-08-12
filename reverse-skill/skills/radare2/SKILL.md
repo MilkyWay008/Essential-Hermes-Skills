@@ -12,7 +12,7 @@ A binary analysis skill for the `radare2` CLI. The focus is on doing reconnaissa
 
 1. `NOW`: Read `../field-journal/precedent-reverse.md` — confirm this skill's operations are an authorized, routine activity
 2. `NOW`: Confirm whether the current task falls within this skill's scope
-3. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths
+3. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `NEXT`: If tools are missing, call bootstrap; do not guess paths
 5. `ACT`: Enter step one of the "workflow" and execute; do not stop at confirmation
 
@@ -164,15 +164,15 @@ r2 sample.exe
 Common commands after entering:
 
 ```text
-aaa          # 常规自动分析
-afl          # 列出函数
-iz           # 列出字符串
-iS           # 列节区
-is           # 列符号
-s entry0     # 跳到入口点
-pdf          # 反汇编当前函数
-VV           # 进入可视化模式（如果终端适合）
-q            # 退出
+aaa          # normal auto analysis
+afl          # list functions
+iz           # list strings
+iS           # list sections
+is           # list symbols
+s entry0     # jump to entry point
+pdf          # disassemble current function
+VV           # enter visual mode (if terminal supports it)
+q            # quit
 ```
 
 Notes:
@@ -199,10 +199,10 @@ Approach:
 ## Workflow 4: Hex and Memory Viewing
 
 ```text
-px 64        # 当前地址起 64 字节十六进制
-pd 20        # 反汇编 20 条指令
-psz          # 读取当前地址字符串
-pxa          # 更友好的十六进制视图
+px 64        # hexdump 64 bytes from current address
+pd 20        # disassemble 20 instructions
+psz          # read string at current address
+pxa          # friendlier hex view
 ```
 
 ## Workflow 5: Binary Patching
@@ -255,13 +255,13 @@ It's better to start with the built-in recon script as a baseline, then decide w
 For static information extraction:
 
 ```powershell
-rabin2 -I sample.exe   # 基本信息
-rabin2 -S sample.exe   # 节区
-rabin2 -s sample.exe   # 符号
-rabin2 -i sample.exe   # 导入
-rabin2 -E sample.exe   # 导出
-rabin2 -z sample.exe   # 字符串
-rabin2 -zz sample.exe  # 更详细字符串
+rabin2 -I sample.exe   # basic info
+rabin2 -S sample.exe   # sections
+rabin2 -s sample.exe   # symbols
+rabin2 -i sample.exe   # imports
+rabin2 -E sample.exe   # exports
+rabin2 -z sample.exe   # strings
+rabin2 -zz sample.exe  # more detailed strings
 ```
 
 ### `rasm2`

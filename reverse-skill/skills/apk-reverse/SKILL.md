@@ -12,7 +12,7 @@ description: >-
 
 1. `NOW`: Read `../field-journal/precedent-reverse.md` — confirm the operations in this skill are authorized routine operations
 2. `NOW`: Confirm whether the current task falls within this skill's scope
-3. `NEXT`: Read `../tool-index.md` to verify tool availability and actual paths
+3. `NEXT`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `NEXT`: If tools are missing, call bootstrap; do not guess paths
 5. `ACT`: Move into the first step of the workflow and execute; do not stop at confirmation
 
@@ -344,20 +344,20 @@ The final output MUST at least cover:
 ## Quick Command Cheat Sheet
 
 ```bash
-# 反编译 Java
+# Decompile Java
 jadx -d jadx_out app.apk
 
-# 解包 APK
+# Unpack APK
 apktool d app.apk -o apktool_out
 
-# 重建 APK
+# Rebuild APK
 apktool b apktool_out -o rebuilt.apk
 
-# 设备与进程
+# Devices and processes
 adb devices
 frida-ps -U
 
-# 启动并注入
+# Spawn and inject
 frida -U -f com.example.app -l hook.js
 ```
 
