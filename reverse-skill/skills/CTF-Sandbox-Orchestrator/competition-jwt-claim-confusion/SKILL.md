@@ -11,6 +11,8 @@ Use this skill when the decisive bug is not just "there is a JWT," but how heade
 
 Reply in Simplified Chinese unless the user explicitly requests English.
 
+> **Tool fallback:** this challenge brief does not install tools. If a referenced tool (IDA, Ghidra, r2, Frida, binwalk, jadx, etc.) is missing: install it via the orchestrator bootstrap (`../../../scripts/bootstrap-reverse.ps1` / `.sh`, manifest-only) or switch to its equivalent per the equivalent-tools table in `../../RULES.md` (e.g. IDA→Ghidra/r2, binwalk→unblob). Never fake a missing tool.
+
 ## Quick Start
 
 1. Split the token path into parse, key lookup, signature or decryption, claim validation, and final acceptance.

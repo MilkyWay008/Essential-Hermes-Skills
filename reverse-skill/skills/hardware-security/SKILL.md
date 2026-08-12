@@ -40,6 +40,8 @@ description: Use for authorized hardware and embedded interface security researc
 | bus pirate / flipper (lab) | Multi-protocol |
 | binwalk / flashrom | Extraction |
 
+> **Tool fallback:** binwalk is manifest-installable (winget ReFirmLabs v2) or `cargo install binwalk` (v3, manual). If missing: **unblob** (pip) as equivalent. Ghidra/radare2 via `ghidra-mcp`/`r2` (see `../RULES.md` equivalent-tools table).
+
 ## References
 
 - `references/debug-interface-triage.md`

@@ -37,6 +37,8 @@ description: Use for authorized RF/SDR security research including signal identi
 | URH / GNU Radio | analysis |
 | Inspectrum | signals |
 
+> **Tool fallback:** SDR tools (GNU Radio, rtl-sdr, Universal Radio Hacker) are manual installs — see each tool's docs. If a tool is missing, switch to the closest equivalent (e.g. `urh` instead of GNU Radio Companion) per the equivalent-tools table in `../RULES.md`.
+
 ## References
 
 - `references/sdr-lab-rules.md`

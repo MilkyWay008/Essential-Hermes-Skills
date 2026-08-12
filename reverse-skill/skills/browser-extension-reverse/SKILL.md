@@ -56,6 +56,8 @@ description: Use for authorized reverse engineering of browser extensions (Chrom
 | js-reverse toolchain | deep JS |
 | YARA | malicious extension rules |
 
+> **Tool fallback:** Frida / jshookmcp are manifest-installable (pip / npm). If missing: **objection** (wraps Frida) or Hermes native `browser_*` tools for CDP observation; heavy JS obfuscation → `js-reverse` module (see `../RULES.md` equivalent-tools table).
+
 ## References
 
 - `references/extension-analysis.md`

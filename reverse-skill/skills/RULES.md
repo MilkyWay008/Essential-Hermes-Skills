@@ -109,7 +109,41 @@ Read in order:
 
 ### Routing Decisions
 - Route not matched → do NOT force-fit into existing skill, propose new skill creation
-- One path blocked → switch: static↔dynamic, Java↔Native, IDA↔r2, tool X↔equivalent tool Y
+- One path blocked → switch: static↔dynamic, Java↔Native, IDA↔r2, tool X↔equivalent tool Y (see the table below)
+- **Equivalent tools table** (when the primary tool is missing or a path is blocked, use the alternative — do NOT invent a workflow around an unavailable tool):
+
+  | Primary tool | Equivalent / fallback | Notes |
+  |------|------|------|
+  | IDA Pro / idalib-mcp | **Ghidra** (ghidra-mcp) / **radare2 (r2, rabin2)** | r2 is in the bootstrap manifest; Ghidra via ghidra-mcp |
+  | jadx | **apktool + ghidra** (fallback: jadx-gui bundled with jadx) | jadx is manifest-installable (`github-release-zip`); apktool too |
+  | JEB Pro | **jadx / ghidra** (dalvik) or **IDA / radare2** (native) | jeb-pro is manual-license; do NOT auto-install |
+  | Frida / frida-ps | **objection** (wraps frida) — if frida itself is absent, install it first | frida is manifest-installable (pip) |
+  | binwalk | **unblob** (pip) / **binwalk v2** (winget ReFirmLabs) | binwalk is in the manifest (winget, v2); Rust v3 needs `cargo install` (manual) |
+  | Volatility 2/3 | **MemProcFS / strings + ghidra** for triage | Volatility is NOT in the manifest — manual (pip install volatility3) |
+  | Ghidra (native) | **r2 / IDA** | ghidra-mcp is manifest-installable |
+  | x64dbg / ollydbg | **IDA / r2** (static) + **Frida** (dynamic) | |
+  | Burp Suite | **OWASP ZAP** | burpsuite-mcp needs Burp installed (manual); ZAP is a free fallback |
+  | sqlmap | **manual SQLi testing** (ffuf/nuclei for detection) | sqlmap is kali-manifest |
+  | hashcat | **john the ripper** | both kali-manifest |
+  | nmap | **masscan** (fast port scan) | nmap is manifest-installable (winget/apt) |
+  | nuclei | **nikto / wpscan** (per-target) | nuclei is kali-manifest |
+  | gobuster | **ffuf / feroxbuster** | all kali-manifest |
+  | mimikatz | **lsassy / secretsdump (impacket)** | |
+  | Cobalt Strike | **Sliver / Mythic / Havoc** | open-source C2 equivalents |
+  | BloodHound | **sharphound** (collector) — needs the same graph DB | |
+  | ghidriff | **Diaphora / BinDiff / radare2 bindiff** | patch-diff workflows |
+  | BinDiff | **Diaphora / ghidriff** | |
+  | wireshark (GUI) | **tshark** (CLI, same engine) | |
+  | seclists | **rockyou.txt / SecLists mirror (github)** | seclists is manifest-installable |
+  | winPEAS / linPEAS | **PEASS-ng** (same project, both included) | |
+  | ROPgadget | **pwntools (ROP module) / Ropper** | pwntools is manifest-installable |
+  | gdb + GEF/pwndbg | **r2 / pwntools debugging** | |
+  | `ilspycmd` / dnSpyEx | **pythonnet reflection (clr.Reflection)** — dnlib-equivalent | .NET reverse module |
+  | de4dot | **ilspycmd / pythonnet** | |
+  | Playwright / Puppeteer / Selenium | **Hermes native `browser_*` tools** (browser_navigate/snapshot/click/type, @eN refs) | zero install — prefer native |
+  | jshookmcp | **js-reverse-mcp** (same MCP niche) / manual CDP | both manifest-registered |
+
+  Rule: `tool-index.md` says "no" for a tool → try its equivalent from this table FIRST, then bootstrap the primary if the equivalent is insufficient.
 - Cross-module tasks → combine multiple skills per routing.md "Path Crossing" section
 
 ### Experience Reuse

@@ -65,6 +65,8 @@ vol -f mem.dmp windows.cmdline
 | Eric Zimmerman tools | Windows artifacts |
 | Autopsy / FTK Imager | Disk |
 
+> **Tool fallback:** Volatility is NOT in the bootstrap manifest — manual `pip install volatility3`. If missing: triage with **MemProcFS / strings + Ghidra** first (see the equivalent-tools table in `../RULES.md`). tshark ships with Wireshark.
+
 ## References
 
 - `references/forensics-triage.md`

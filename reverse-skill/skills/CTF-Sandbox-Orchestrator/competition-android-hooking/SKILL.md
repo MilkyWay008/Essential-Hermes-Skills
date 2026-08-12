@@ -11,6 +11,8 @@ Use this skill when the decisive path runs through an Android app's live trust b
 
 Reply in Simplified Chinese unless the user explicitly requests English.
 
+> **Tool fallback:** this challenge brief does not install tools. If a referenced tool (IDA, Ghidra, r2, Frida, binwalk, jadx, etc.) is missing: install it via the orchestrator bootstrap (`../../../scripts/bootstrap-reverse.ps1` / `.sh`, manifest-only) or switch to its equivalent per the equivalent-tools table in `../../RULES.md` (e.g. IDA→Ghidra/r2, binwalk→unblob). Never fake a missing tool.
+
 ## Quick Start
 
 1. Preserve the original APK, extracted resources, and decompiled output before patching or resigning.

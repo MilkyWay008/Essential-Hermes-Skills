@@ -11,6 +11,8 @@ Use this skill when the decisive path is an encrypted ZIP/PKZIP archive rather t
 
 Reply in Simplified Chinese unless the user explicitly requests English. Keep commands and tool output in their original form.
 
+> **Tool fallback:** this challenge brief does not install tools. If a referenced tool (IDA, Ghidra, r2, Frida, binwalk, jadx, etc.) is missing: install it via the orchestrator bootstrap (`../../../scripts/bootstrap-reverse.ps1` / `.sh`, manifest-only) or switch to its equivalent per the equivalent-tools table in `../../RULES.md` (e.g. IDA→Ghidra/r2, binwalk→unblob). Never fake a missing tool.
+
 ## Quick Start
 
 1. Preserve the original archive, compute a hash, and work on a copy under the analysis project's `work/<case>/` directory.

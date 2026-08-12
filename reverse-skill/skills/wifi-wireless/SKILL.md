@@ -40,6 +40,8 @@ description: Use for authorized wireless security assessment including Wi-Fi cap
 | hashcat | password assessment |
 | Wireshark | management frame analysis |
 
+> **Tool fallback:** aircrack-ng, wifite, hashcat are Kali-manifest (manual on other platforms). If a capture/analysis tool is missing, use the equivalent (e.g. **tshark** for capture analysis, **john** instead of hashcat) per the equivalent-tools table in `../RULES.md`.
+
 ## References
 
 - `references/wireless-lab-rules.md`
