@@ -36,13 +36,15 @@ if ($LASTEXITCODE -ne 0) {
 $fileList = @($files -split "`0" | Where-Object { $_ -ne '' })
 Write-Host "Packaging $($fileList.Count) tracked files -> $OutPath"
 
-# Stage into a temp dir preserving the reverse-skill/ prefix
+# Stage into a temp dir under a reverse-skill/ subfolder so the zip keeps the
+# top-level folder (Compress-Archive on "$tmp\*" would strip it, PS 5.1 quirk).
 $tmp = Join-Path ([IO.Path]::GetTempPath()) ("zip-dist-" + [guid]::NewGuid().ToString('N'))
-New-Item -ItemType Directory -Path $tmp | Out-Null
+$stage = Join-Path $tmp 'reverse-skill'
+New-Item -ItemType Directory -Path $stage -Force | Out-Null
 try {
     foreach ($f in $fileList) {
         $src = Join-Path $RepoRoot $f
-        $dst = Join-Path $tmp $f
+        $dst = Join-Path $stage $f
         $dstDir = Split-Path -Parent $dst
         New-Item -ItemType Directory -Path $dstDir -Force | Out-Null
         Copy-Item $src $dst -Force

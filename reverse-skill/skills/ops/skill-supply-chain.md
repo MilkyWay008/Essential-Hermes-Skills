@@ -4,7 +4,7 @@
 > Retrieved: 2026-07-17  
 > Applies when installing/writing/merging **any** skill, MCP, or bootstrap script
 
-Static audit of this package's **executable script surface** (backdoors / database deletion / pipe execution): [`docs/PACKAGE-SECURITY-AUDIT.md`](../../docs/PACKAGE-SECURITY-AUDIT.md).
+Static audit of this package's **executable script surface** (backdoors / database deletion / pipe execution): [`../../docs/PACKAGE-SECURITY-AUDIT.md`](../../../../docs/PACKAGE-SECURITY-AUDIT.md).
 
 ## 1. Why reverse-skill manages this separately
 

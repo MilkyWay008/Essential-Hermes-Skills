@@ -180,12 +180,12 @@ Solution:
 
 | Tool | Purpose | Auto-installable |
 |------|------|-----------|
-| pe-sieve | Detect hooks / injections in processes | ✓ |
+| pe-sieve | Detect hooks / injections in processes | Manual (see bootstrap block below) |
 | API Monitor v2 | Dynamically observe API calls and hooks | Semi-auto (manual download) |
-| SysWhispers3 | Generate direct / indirect syscall stubs | ✓ (git clone + python) |
-| Hell's Gate POC | Dynamic SSN resolution reference implementation | ✓ (git clone) |
+| SysWhispers3 | Generate direct / indirect syscall stubs | Manual (git clone + python — see below) |
+| Hell's Gate POC | Dynamic SSN resolution reference implementation | Manual (git clone — see below) |
 | windbg + IDA | Statically reverse EDR DLLs / kernel callbacks | ✗ (install yourself) |
-| Sysmon + olaf config | Local verification environment | ✓ |
+| Sysmon + olaf config | Local verification environment | Manual (Sysinternals — see below) |
 
 ### Bootstrap Commands
 

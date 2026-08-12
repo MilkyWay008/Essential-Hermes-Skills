@@ -636,10 +636,10 @@ This skill orchestrates 20+ tools across recon, exploitation, and lateral moveme
 
 | Tool | Install path | Auto-installable |
 |------|------|-----------|
-| subfinder, amass, httpx, naabu, nuclei, dnsx, katana, gau | `go install` (ProjectDiscovery / OWASP toolkits) | ✓ |
+| subfinder, amass, httpx, naabu, nuclei, dnsx, katana, gau | `go install` (ProjectDiscovery / OWASP toolkits) | Manual — `go install` per tool; not in bootstrap manifest |
 | nmap | `winget install Insecure.Nmap` (Windows) / `apt install nmap` (Linux) | ✓ |
-| whatweb, wpscan, hydra, responder, sqlmap, metasploit, aircrack-ng, fluxion | `apt install` (Kali / Ubuntu) | ✓ |
-| impacket, bloodhound, certipy, coercer, evil-winrm, crackmapexec | `pip install` | ✓ |
+| whatweb, wpscan, hydra, responder, sqlmap, metasploit, aircrack-ng, fluxion | `apt install` (Kali / Ubuntu) | Manual — `apt`; not in bootstrap manifest |
+| impacket, bloodhound, certipy, coercer, evil-winrm, crackmapexec | `pip install` | Manual — `pip`; not in bootstrap manifest |
 | mimikatz, winPEAS, linpeas, GodPotato, PrintSpoofer, Cobalt Strike, Sliver, Havoc, Mythic | Manual download from project releases | ✗ (install yourself) |
 
 ### Bootstrap Commands
@@ -659,7 +659,7 @@ bash ../scripts/bootstrap-reverse.sh -c "nmap" --start-services
 | Need | Route to |
 |------|--------|
 | Deep Web vulnerability exploitation | `../pentest-tools/SKILL.md` |
-| Detailed internal network AD attack steps | `pentest-tools/references/network-attack-defense.md` |
+| Detailed internal network AD attack steps | `../pentest-tools/references/network-attack-defense.md` |
 | Reverse-engineering malicious samples | `../reverse-engineering/SKILL.md` |
 | APK reverse engineering (mobile penetration) | `../apk-reverse/SKILL.md` |
 | JS frontend signature bypass | `../js-reverse/SKILL.md` |

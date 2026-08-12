@@ -566,13 +566,13 @@ function Ensure-McpServer {
     Write-Host "  MCP server '$ServerName' is installed but NOT auto-registered." -ForegroundColor Yellow
     Write-Host "  To use it, register the server in your Hermes profile's config.yaml:" -ForegroundColor Yellow
     Write-Host "    mcp_servers:" -ForegroundColor Cyan
-    Write-Host "      $ServerName:" -ForegroundColor Cyan
+    Write-Host "      ${ServerName}:" -ForegroundColor Cyan
     foreach ($key in $ServerDefinition.Keys | Sort-Object) {
         $value = $ServerDefinition[$key]
         if ($value -is [string]) {
-            Write-Host "        $key: '$value'" -ForegroundColor Cyan
+            Write-Host "        ${key}: '${value}'" -ForegroundColor Cyan
         } else {
-            Write-Host "        $key: $($value | ConvertTo-Json -Compress)" -ForegroundColor Cyan
+            Write-Host "        ${key}: $($value | ConvertTo-Json -Compress)" -ForegroundColor Cyan
         }
     }
     Write-Host "  (or add it to your smart-mcp-proxy config and reload the proxy)" -ForegroundColor Yellow

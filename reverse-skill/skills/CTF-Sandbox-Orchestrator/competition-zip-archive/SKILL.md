@@ -26,7 +26,7 @@ Use the normal tool index and bootstrap path before guessing an executable locat
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File skills/scripts/refresh-tool-index.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File skills/scripts/bootstrap-reverse.ps1 -Capability bkcrack
+powershell -NoProfile -ExecutionPolicy Bypass -File ../../scripts/bootstrap-reverse.ps1 -Capability bkcrack
 ```
 
 On Kali, use the equivalent capability command:

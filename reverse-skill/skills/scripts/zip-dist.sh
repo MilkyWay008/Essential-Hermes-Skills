@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# zip-dist.sh — build a clean release zip from git-tracked files only
+# zip-dist.sh — build a clean release archive from git-tracked files only
 # Usage:
 #   bash scripts/zip-dist.sh [-o ../reverse-skill-dist.zip]
-# Why git ls-files? The working tree contains untracked junk that must never
-# ship: reports/ (un-desensitized pentest samples — anti-leak policy), .trash/,
-# *.bak backups. `git ls-files` excludes all of it by construction. If you
-# want the sample CTF report, copy it in deliberately.
-# The zip contains the pack as a folder named reverse-skill/ (same layout as
-# the repo), so extraction yields one tidy folder.
+# Why git archive? The working tree contains untracked junk that must never
+# ship: reports/ (un-desensitized pentest samples - anti-leak policy), .trash/,
+# *.bak backups. `git archive` excludes all of it by construction. If you want
+# the sample CTF report, copy it in deliberately.
+# The archive contains the pack as a folder named reverse-skill/ (same layout
+# as the repo), so extraction yields one tidy folder.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # .../reverse-skill/skills/scripts
@@ -20,10 +20,6 @@ while [[ $# -gt 0 ]]; do
     *) echo "Unknown arg: $1" >&2; exit 2 ;;
   esac
 done
-
-if [[ -z "$OUT_PATH" ]]; then
-  OUT_PATH="$(dirname "$PACK_ROOT")/reverse-skill-dist.zip"
-fi
 
 # locate the enclosing git work tree (repo root is the PARENT of the pack dir)
 # NOTE: use (cd ... && git) not `git -C <path>` — native git.exe can't chdir
@@ -41,34 +37,33 @@ if [[ ! -d "$PACK_ROOT" ]]; then
   exit 2
 fi
 
-# tracked paths relative to git root, filtered to the pack dir
-# core.quotepath=false -> CJK filenames come out literal, not \NNN-escaped
-PACK_REL="reverse-skill"
-FILES="$(cd "$GIT_ROOT" && git -c core.quotepath=false ls-files -- "$PACK_REL/")"
-if [[ -z "$FILES" ]]; then
-  echo "ERROR: no tracked files under '$PACK_REL' — nothing to package." >&2
-  exit 2
+COUNT="$(cd "$GIT_ROOT" && git ls-files -- reverse-skill/ | wc -l)"
+
+# git archive: single fast pass, tracked-only, keeps the reverse-skill/ prefix.
+# IMPORTANT (MSYS git quirk): `git archive -o <file>` silently writes NOTHING
+# on this host — always capture stdout with a redirect instead.
+# Prefer zip when the zip binary exists (git's builtin zip), else tar.gz.
+USE_ZIP=0
+if command -v zip >/dev/null 2>&1; then
+  USE_ZIP=1
 fi
 
-TMP="$(mktemp -d)"
-trap 'rm -rf "$TMP"' EXIT
-
-COUNT=0
-while IFS= read -r f; do
-  rel="${f#"$PACK_REL"/}"          # strip pack prefix -> reverse-skill/<rel>
-  dst="$TMP/reverse-skill/$rel"
-  mkdir -p "$(dirname "$dst")"
-  cp "$GIT_ROOT/$f" "$dst"
-  COUNT=$((COUNT + 1))
-done <<< "$FILES"
+if [[ -z "$OUT_PATH" ]]; then
+  OUT_PATH="$(dirname "$PACK_ROOT")/reverse-skill-dist.zip"
+fi
+if [[ "$OUT_PATH" != *.zip && "$OUT_PATH" != *.tar.gz && "$OUT_PATH" != *.tgz ]]; then
+  OUT_PATH="$OUT_PATH.zip"
+fi
 
 echo "Packaging $COUNT tracked files -> $OUT_PATH"
 rm -f "$OUT_PATH"
-if command -v zip >/dev/null 2>&1; then
-  (cd "$TMP" && zip -qr "$OUT_PATH" reverse-skill)
+
+if [[ $USE_ZIP -eq 1 ]]; then
+  (cd "$GIT_ROOT" && git archive --format=zip HEAD -- reverse-skill/) > "$OUT_PATH"
 else
   OUT_PATH="${OUT_PATH%.zip}.tar.gz"
-  tar -czf "$OUT_PATH" -C "$TMP" reverse-skill
+  (cd "$GIT_ROOT" && git archive --format=tar HEAD -- reverse-skill/) | gzip > "$OUT_PATH"
 fi
+
 SIZE="$(du -h "$OUT_PATH" | cut -f1)"
 echo "Done: $OUT_PATH ($SIZE)"
