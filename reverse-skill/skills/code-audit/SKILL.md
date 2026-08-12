@@ -63,6 +63,14 @@ Optional ATT&CK / CWE identifiers
 | gosec / staticcheck | Go |
 | SpotBugs / FindSecBugs | Java |
 
+### Tool installation
+
+- Semgrep: `pip install semgrep` (or the Docker image `returntocorp/semgrep`).
+- Bandit: `pip install bandit`.
+- gosec: `go install github.com/securego/gosec/v2/cmd/gosec@latest` (not a pip package).
+- CodeQL: CLI bundle from https://github.com/github/codeql-cli-binaries/releases (some queries need a GitHub token).
+- SpotBugs / FindSecBugs: from https://spotbugs.github.io/ (Java; not pip).
+
 ## References
 
 - `references/sast-review-checklist.md`

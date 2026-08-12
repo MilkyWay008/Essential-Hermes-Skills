@@ -269,6 +269,8 @@ const token = fakeEnv.AWSCInner._modules['fy'].getToken({});
 
 ### Approach A: Selenium + native CDP events (recommended, highest success rate)
 
+> Install: `pip install selenium playwright`, then `playwright install chromium` (downloads the Chromium browser binary). Required before using the Selenium/Playwright approaches below.
+
 ```python
 from selenium import webdriver
 

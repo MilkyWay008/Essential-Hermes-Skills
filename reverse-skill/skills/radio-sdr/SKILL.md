@@ -27,6 +27,8 @@ description: Use for authorized RF/SDR security research including signal identi
 □ Conclusions focus on: whether unauthorized control is possible / hardening recommendations
 ```
 
+> **Requirement**: REQUIRES Linux with RTL-SDR/HackRF hardware and GUI access (GNU Radio Companion). On Windows/headless: stop and ask the user; this is a receive-only research skill, not automatable headless.
+
 ## Toolchain
 
 | Tool | Purpose |

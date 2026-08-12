@@ -63,6 +63,13 @@ description: Use for authorized security testing of desktop thick clients includ
 | Sysinternals | Windows surface |
 | asar / nexe detection | Electron |
 
+### Tool installation
+
+- Burp: Community Edition from https://portswigger.net/burp/communitydownload.
+- mitmproxy: `pip install mitmproxy`.
+- Process Monitor / API Monitor / Sysinternals suite: Microsoft Sysinternals (https://learn.microsoft.com/sysinternals) — Windows binaries, not pip.
+- dnSpy / IDA / Ghidra: see `../dotnet-reverse/`, `../ida-reverse/`, `../ghidra-reverse/`.
+
 ## References
 
 - `references/thick-client-checklist.md`

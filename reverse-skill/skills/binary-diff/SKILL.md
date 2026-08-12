@@ -257,6 +257,10 @@ found_struct_offset → idapro_set_comments(addr=insn_va, comment="{struct_name}
 
 ## LLM Selection Recommendations
 
+The symbol-migration comparison pass must be executed by an **external LLM API** that the agent calls programmatically — a Hermes agent cannot swap its own model mid-task. Call the API with `curl` or Python `requests`/`httpx` using an API key the user provides (see "On-Demand Bootstrap" below), and parse the YAML response programmatically.
+
+The table below is guidance for **which external model to call** for a given pass:
+
 | Model | Best for | Cost | Speed |
 |------|---------|------|------|
 | DeepSeek V3 | Small-to-medium functions (<200 lines), batch processing | Extremely low | Fast |
@@ -264,7 +268,7 @@ found_struct_offset → idapro_set_comments(addr=insn_va, comment="{struct_name}
 | Claude Sonnet | Medium-to-large functions needing reasoning | Medium | Fast |
 | Claude Opus | Extremely complex functions needing deep understanding | High | Slow |
 
-Recommended strategy: default to DeepSeek; automatically upgrade when context limits are hit or results are inaccurate.
+Recommended strategy: default the external API calls to DeepSeek; escalate to a stronger external model (GPT-4o/Claude) per call when context limits are hit or results are inaccurate — never as a self-model swap.
 
 ## Notes
 

@@ -53,6 +53,13 @@ description: Use for reverse engineering stripped Go and Rust binaries including
 | radare2 | Quick strings |
 | strings / rabin2 | Triage |
 
+### Tool installation
+
+- GoReSym: `go install github.com/mandiant/GoReSym@latest`.
+- redress: `go install github.com/goretk/redress@latest`.
+- radare2 / rabin2: `apt install radare2` / `brew install radare2`, or binaries from https://rada.re/n/.
+- IDA/Ghidra Go/Rust plugins: see `../ida-reverse/`, `../ghidra-reverse/`.
+
 ## References
 
 - `references/go-rust-notes.md`

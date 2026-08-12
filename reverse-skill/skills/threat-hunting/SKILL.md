@@ -64,6 +64,13 @@ Example: attacker uses living-off-the-land for lateral movement
 | osquery | endpoint hunting |
 | Atomic Red Team | detection validation (lab) |
 
+### Tool installation
+
+- Sigma CLI / sigmac: `pip install sigma-cli` (sigmac is included; the standalone `sigmac` script is deprecated).
+- YARA: Python bindings via `pip install yara-python`; the `yara` CLI ships with the YARA project (https://github.com/VirusTotal/yara) or distro packages.
+- osquery: installers from https://osquery.io/downloads (not pip).
+- Atomic Red Team: `git clone https://github.com/redcanaryco/atomic-red-team` (not pip).
+
 ## References
 
 - `references/hunting-loop.md`

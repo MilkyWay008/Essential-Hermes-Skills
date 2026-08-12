@@ -39,6 +39,12 @@ description: Use for authorized database security assessment covering PostgreSQL
 | nuclei | known exposure templates |
 | Cloud RDS console audit | configuration |
 
+### Tool installation
+
+- `sqlmap`: `pip install sqlmap` (or `apt install sqlmap` on Debian/Ubuntu).
+- `nuclei`: `go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest`, or a prebuilt release from https://github.com/projectdiscovery/nuclei/releases.
+- Official DB CLIs (`psql`, `mysql`/`mysqlsh`, `sqlcmd`, `mongosh`, `redis-cli`) come from each vendor's installer or distro packages — not pip.
+
 ## References
 
 - `references/db-misconfig-checklist.md`

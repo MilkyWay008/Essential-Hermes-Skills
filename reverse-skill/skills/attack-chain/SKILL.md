@@ -628,6 +628,32 @@ touch -t 202301010000 /path/to/file
 
 ---
 
+## On-Demand Bootstrap
+
+This skill orchestrates 20+ tools across recon, exploitation, and lateral movement. When a tool is missing, do not just report an error — bootstrap it via the unified bootstrap system or the install path below.
+
+### Tool Dependencies
+
+| Tool | Install path | Auto-installable |
+|------|------|-----------|
+| subfinder, amass, httpx, naabu, nuclei, dnsx, katana, gau | `go install` (ProjectDiscovery / OWASP toolkits) | ✓ |
+| nmap | `winget install Insecure.Nmap` (Windows) / `apt install nmap` (Linux) | ✓ |
+| whatweb, wpscan, hydra, responder, sqlmap, metasploit, aircrack-ng, fluxion | `apt install` (Kali / Ubuntu) | ✓ |
+| impacket, bloodhound, certipy, coercer, evil-winrm, crackmapexec | `pip install` | ✓ |
+| mimikatz, winPEAS, linpeas, GodPotato, PrintSpoofer, Cobalt Strike, Sliver, Havoc, Mythic | Manual download from project releases | ✗ (install yourself) |
+
+### Bootstrap Commands
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "..\scripts\bootstrap-reverse.ps1" -Capability @('nmap') -StartServices
+```
+
+```bash
+bash scripts/bootstrap-reverse.sh -c "nmap" --start-services
+```
+
+**Windows:** most of this toolchain is Linux-first — recommend WSL2 Ubuntu or Kali VM; run `bash scripts/bootstrap-reverse.sh` from WSL.
+
 ## Relationship to Other Skills in This Pack
 
 | Need | Route to |

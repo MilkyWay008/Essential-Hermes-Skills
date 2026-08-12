@@ -29,6 +29,8 @@ description: Use for authorized wireless security assessment including Wi-Fi cap
 □ Report: encryption type, isolation, portal bypass, recommendations
 ```
 
+> **HARDWARE REQUIREMENT**: requires a Linux host (Kali preferred) WITH a wireless adapter that supports monitor mode. On Windows: stop and ask the user — this skill cannot run without the hardware; advise WSL2 does NOT expose the wireless adapter to monitor mode.
+
 ## Toolchain
 
 | Tool | Purpose |

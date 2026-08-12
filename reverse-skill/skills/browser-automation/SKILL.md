@@ -196,6 +196,8 @@ npm run doctor:network
 | OpenReverse | ✗ | manual clone + npm install | experimental stage, heavy dependencies |
 | mitmproxy | ✗ | manual install | OpenReverse network-observation dependency |
 
+> **Hermes-native alternative**: Hermes agents have built-in browser tools (`browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`) that speak the same `@eN` ref model — you can complete browser scenarios with zero npm installs. Use agent-browser only when the native tools are unavailable.
+
 ### Bootstrap Triggers
 
 - Browser operations missing Playwright → auto bootstrap

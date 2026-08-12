@@ -138,6 +138,8 @@ When adding skills, follow the standard process in `CONTRIBUTING.md`:
 
 ## On-Demand Bootstrap
 
+**Step 0 — Cold start:** If `tool-index.md` is missing at cold start, run `scripts/refresh-tool-index.ps1` (Windows) or `bash scripts/refresh-tool-index.sh` (Linux/macOS) BEFORE reading `tool-index.md` — the index only exists after the refresh script runs.
+
 When a workflow finds a missing tool, do not just report an error. Call:
 
 ```powershell

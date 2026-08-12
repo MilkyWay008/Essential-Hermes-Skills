@@ -38,6 +38,13 @@ description: Use for authorized email security review including phishing analysi
 | urlscan / sandbox | Links and attachments |
 | Tenant admin center | Policies |
 
+### Tool installation
+
+- No pip packages required — `dig`/`nslookup` are OS utilities, not pip-installable.
+- `dig` is not on Windows git-bash by default — use `nslookup`/`Resolve-DnsName` on Windows, or install `bind-utils` on Linux.
+- `urlscan` is a web service (https://urlscan.io) — use the web UI or API; no local install.
+- Mail client "View Source" is built into the mail client itself; no install.
+
 ## References
 
 - `references/email-auth-checklist.md`

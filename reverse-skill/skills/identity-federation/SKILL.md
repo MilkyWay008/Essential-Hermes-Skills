@@ -39,6 +39,12 @@ description: Use for authorized assessment of federated identity systems includi
 | Browser DevTools | Redirect chains |
 | IdP admin logs | Audit |
 
+### Tool installation
+
+- `jwt_tool`: `git clone https://github.com/ticarpi/jwt_tool`, then `cd jwt_tool && pip install -r requirements.txt` (core deps: `requests`, `termcolor`, `pycryptodomex`).
+- Burp + SAML Raider: Burp Community from https://portswigger.net/burp/communitydownload; SAML Raider installs from Burp's BApp Store.
+- Browser DevTools: built into the browser; no install.
+
 ## References
 
 - `references/sso-flow-checklist.md`

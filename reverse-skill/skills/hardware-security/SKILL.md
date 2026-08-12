@@ -29,6 +29,8 @@ description: Use for authorized hardware and embedded interface security researc
 □ Extract image → hand off to firmware-pentest / ghidra
 ```
 
+> **Physical hardware + human required**: This skill requires PHYSICAL hardware + a human. The agent's job: identify the interface (UART/JTAG/SWD), give the user exact wiring + command steps, ask the user to perform the physical connection and report back. Never attempt to skip hardware steps.
+
 ## Toolchain
 
 | Tool | Purpose |

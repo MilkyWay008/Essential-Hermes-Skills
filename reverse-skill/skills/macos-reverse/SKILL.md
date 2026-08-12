@@ -1,9 +1,12 @@
 ---
 name: macos-reverse
 description: Use for authorized macOS and Mach-O reverse engineering including codesign, Objective-C/Swift recovery, endpoint security surfaces, and Apple platform malware analysis.
+compatibility: macOS host required — otool, codesign, spctl, class-dump, lldb, jtool2 are macOS-only and do not run on Windows/Linux
 ---
 
 # macOS / Mach-O Reverse Engineering
+
+> **Host requirement**: REQUIRES a macOS host (or macOS VM) — otool/codesign/spctl/class-dump do not run on Windows/Linux. If the agent runs on Windows: stop and ask the user to either run this on a Mac or provide a macOS VM/remote; do not attempt to install these on Windows.
 
 ## ACTION REQUIRED (execute immediately after reading)
 

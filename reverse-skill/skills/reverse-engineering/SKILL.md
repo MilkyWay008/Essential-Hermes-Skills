@@ -2,7 +2,7 @@
 name: reverse-engineering
 description: Provides reverse engineering techniques. Use when the main job is to understand how a compiled, obfuscated, packed, or virtualized target works before exploiting or solving it, including binaries, APKs, WASM, firmware, custom VMs, bytecode, malware-like loaders, and anti-debug or anti-analysis logic. Do not use it when the vulnerability is already understood and the remaining task is exploitation; use pwn-chain instead. Do not use it for pure web workflows, log or disk forensics, or standalone crypto problems unless reversing the implementation is the real blocker.
 license: MIT
-compatibility: Requires a filesystem-based code agent or CLI with shell access, Python 3, and internet access for tool installation.
+compatibility: Requires a filesystem-based code agent or CLI with shell access, Python 3, and internet access for tool installation. On Windows, the apt/brew toolchains require WSL2 Ubuntu or a Kali VM; pip install works on native Windows Python.
 ---
 
 # Reverse Engineering
@@ -42,6 +42,10 @@ pip install frida-tools angr qiling uncompyle6 capstone lief z3-solver
 # For Python 3.9+ bytecode: build pycdc from source
 git clone https://github.com/zrax/pycdc && cd pycdc && cmake . && make
 ```
+
+**Windows (WSL2 / Kali VM):**
+
+Windows: the apt/brew install blocks below require WSL2 Ubuntu or a Kali VM — run them inside WSL. `pip install` works natively on Windows Python.
 
 **Linux (apt):**
 ```bash
