@@ -92,6 +92,17 @@ It **especially boosts the 7 src-hunter playbooks** that carry `mcp__jshook__*` 
 
 **Not required** — every module works without it (the 7 playbooks note their fallback inline), so the pack stays self-sufficient on any machine. Install it when you want the full power; the agent will also mention this upgrade on its own when a task clearly benefits. Details: `skills/pentest-tools/src-hunter/references/tools/mcp-jshook.md` → *Install & Upgrade Path*.
 
+## Packaging a release (zip/tar)
+
+Always build distribution archives from **git-tracked files** — never `zip -r` the working tree. The working tree contains untracked junk that must never ship: `reports/` (un-desensitized pentest samples — anti-leak policy), `.trash/`, and `*.bak` backups. Use the bundled scripts:
+
+```bash
+bash skills/scripts/zip-dist.sh              # -> ../reverse-skill-dist.zip (or .tar.gz if zip missing)
+powershell -File skills/scripts/zip-dist.ps1 # -> <repo>/reverse-skill-dist.zip
+```
+
+Both build from `git ls-files` only, so the junk is excluded by construction. The archive contains the pack as a `reverse-skill/` folder (same layout as the repo). If you deliberately want the sample CTF report in the archive, copy it in manually.
+
 ## How it works
 
 1. Task arrives → router (or the matching module's trigger) fires

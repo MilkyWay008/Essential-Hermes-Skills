@@ -25,7 +25,7 @@
       "skill": "mobile-reverse/SKILL.md",
       "keywords": [
         {
-          "must": "\\bipa\\b|ios.?reverse|objection|mobsf|mobile.?reverse|ios.?逆向"
+          "must": "\\bipa\\b|ios.?reverse|objection|mobsf|mobile.?reverse|ios.?逆向|\\biphone\\b|\\bipad\\b|\\bios\\b|苹果"
         },
         {
           "must": "越狱",
