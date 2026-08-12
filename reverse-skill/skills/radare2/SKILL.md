@@ -124,7 +124,7 @@ For when you've just received a binary file.
 
 For binaries with import tables (PE/ELF/Mach-O, etc.), **MUST** first complete the import table check and record it as Evidence before entering function-level analysis or dynamic steps:
 
-1. Run `rabin2 -i <sample>` (or the imports section of `recon.ps1` output)
+1. Run `rabin2 -i <sample>` (or the imports section of `scripts/recon.ps1` output)
 2. Write the full/categorized import table result into Evidence (suggested id: `E-imports` or `E-triage-imports`), at least including:
    - The reproduction command (`repro_command`)
    - Key import category summary: network / file / crypto / process injection / registry / other suspicious APIs

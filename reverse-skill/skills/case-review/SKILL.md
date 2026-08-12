@@ -43,7 +43,7 @@ No network access or third-party package is required.
 Run the review against the existing case directory:
 
 ```bash
-python3 skills/case-review/scripts/review_case.py work/<case> --format markdown
+python3 scripts/review_case.py work/<case> --format markdown
 ```
 
 Confirm that `scope.md`, `timeline.md`, `workitems.md`, and `evidence/` are present. A non-strict review reports scope warnings while a strict review treats warnings as handoff blockers.
@@ -72,7 +72,7 @@ An offline observation may use `repro_command: n/a` only when its `notes` field 
 Use JSON when another tool needs stable fields:
 
 ```bash
-python3 skills/case-review/scripts/review_case.py work/<case> --format json
+python3 scripts/review_case.py work/<case> --format json
 ```
 
 ## Suggested Next Steps (pick one number)
@@ -88,7 +88,7 @@ python3 skills/case-review/scripts/review_case.py work/<case> --format json
 When an Evidence record contains both `content_hash` and `artifact_path`, verify the case-local artifact:
 
 ```bash
-python3 skills/case-review/scripts/review_case.py work/<case> --verify-hashes --strict
+python3 scripts/review_case.py work/<case> --verify-hashes --strict
 ```
 
 The script accepts `sha256:<64 hex characters>` and checks that the artifact remains inside the case root. A hash mismatch is a hard failure.
@@ -96,7 +96,7 @@ The script accepts `sha256:<64 hex characters>` and checks that the artifact rem
 The PowerShell Evidence helper can record a hash while appending a record:
 
 ```powershell
-powershell -File skills/scripts/append-evidence.ps1 -CaseRoot work\<case> -Id E-001 -Title "Sample hash" -ReproCommand "sha256sum evidence/sample.bin" -ArtifactPath "evidence\sample.bin"
+powershell -File ../scripts/append-evidence.ps1 -CaseRoot work\<case> -Id E-001 -Title "Sample hash" -ReproCommand "sha256sum evidence/sample.bin" -ArtifactPath "evidence\sample.bin"
 ```
 
 ## Suggested Next Steps (pick one number)
@@ -112,7 +112,7 @@ powershell -File skills/scripts/append-evidence.ps1 -CaseRoot work\<case> -Id E-
 Use strict mode before a final report or specialist handoff:
 
 ```bash
-python3 skills/case-review/scripts/review_case.py work/<case> --strict --format markdown > work/<case>/report/case-review.md
+python3 scripts/review_case.py work/<case> --strict --format markdown > work/<case>/report/case-review.md
 ```
 
 The command is read-only with respect to the case unless shell redirection is explicitly used to save its output. The review is not legal advice and does not replace organizational evidence handling procedures.

@@ -16,7 +16,7 @@ description: >-
 3. `NEXT`: If tools are missing, call bootstrap — don't guess paths
 4. `ACT`: Move to the first step of the "Workflow" and execute it — don't stop at confirmation
 
-For writing style, tone, and voice guidance, use `Skill(ce:writer)` with **The Engineer** persona.
+For writing style, tone, and voice guidance, follow the project's documented style conventions (see the module's references/ for tone guidance).
 
 ## Documentation Output for Security / Reverse-Engineering Tasks
 
@@ -148,8 +148,8 @@ For README, API endpoint, and file organization templates, see [references/templ
 
 ## Related Skills
 
-- `Skill(ce:writer)` - Writing style, tone, and voice (load The Engineer persona)
-- `Skill(ce:visualizing-with-mermaid)` - Architecture and flow diagrams
+- Writing style, tone, and voice guidance — follow documented conventions
+- Architecture and flow diagrams — use the agent's diagram tools (e.g. Mermaid)
 
 
 ---

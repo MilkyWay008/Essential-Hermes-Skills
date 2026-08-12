@@ -196,7 +196,7 @@ Step 5: 迭代
 
 - Compare one function at a time (avoid context explosion)
 - Use deepseek for medium functions (<200 lines)
-- Switch to gpt-4o or claude for very large functions (>500 lines)
+- For very large functions (>500 lines), break the analysis into smaller passes and note any ambiguity for the user rather than attempting a single pass
 - Use concurrent calls to improve speed (10-20 concurrent)
 - Cache results to avoid repeated calls
 

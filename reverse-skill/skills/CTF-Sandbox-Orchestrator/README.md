@@ -58,7 +58,7 @@ The current repository covers multiple skill directions, for example:
 ## Repository Structure
 
 ```text
-E:\WorkSpace\competition
+CTF-Sandbox-Orchestrator/
 ├─ ctf-sandbox-orchestrator
 ├─ competition-web-runtime
 ├─ competition-agent-cloud
@@ -74,7 +74,6 @@ Where:
 - `ctf-sandbox-orchestrator`: master-control entry point
 - `competition-*`: specialized sub-skills
 - `references/`: routing matrix and domain reference notes used by the master controller
-- `agents/openai.yaml`: invocation constraints and entry control for each skill
 
 ## Recommended Usage
 

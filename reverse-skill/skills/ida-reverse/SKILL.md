@@ -28,7 +28,7 @@ description: >-
 
 2. **Files under `C:\Windows\System32\` cannot be opened due to permission issues**
    - idalib cannot directly read files under the System32 directory
-   - **Solution**: `open.ps1` auto-detects and copies the file to a `temp directory` before opening
+   - **Solution**: `scripts/open.ps1` auto-detects and copies the file to a `temp directory` before opening
 
 3. **Starting the server command blocks the conversation**
    - After starting, `idalib-mcp` keeps outputting INFO logs to the console
@@ -50,15 +50,15 @@ description: >-
    - The latest `main` branch version is installed
 
 7. **idalib timeout leaves orphaned worker processes holding lock files**
-   - After the first `open.ps1` timeout, idalib's python worker child process becomes an orphan and keeps holding `.id0`/`.id1`/`.nam` files
+   - After the first `scripts/open.ps1` timeout, idalib's python worker child process becomes an orphan and keeps holding `.id0`/`.id1`/`.nam` files
    - Any subsequent tool or manual drag into the IDA GUI reports "insufficient permissions"
-   - **Solution**: `start.ps1` now uses `taskkill /F /T` to kill the process tree, leaving no orphans
-   - **Fallback**: `open.ps1` now auto-degrades — when an old database is detected as locked, it copies it to Temp with a GUID prefix
+   - **Solution**: `scripts/start.ps1` now uses `taskkill /F /T` to kill the process tree, leaving no orphans
+   - **Fallback**: `scripts/open.ps1` now auto-degrades — when an old database is detected as locked, it copies it to Temp with a GUID prefix
 
 8. **Opening with auto-analysis looks like a hang**
    - `idalib_open(run_auto_analysis=true)` may not respond for a long time, but the backend is still opening and analyzing
    - Previously the user saw "PowerShell with no output" and could easily misjudge it as a hung script
-   - **Current solution**: `open.ps1` adds `-TimeoutSeconds` and switches to background request + foreground polling + periodic progress output
+   - **Current solution**: `scripts/open.ps1` adds `-TimeoutSeconds` and switches to background request + foreground polling + periodic progress output
    - When polling finds the session ready it returns `OK:filename:session_id` early; on timeout it returns `ERR:open_timeout_xxs`
 
 ### Workflow Principles
@@ -202,7 +202,7 @@ ERR:open_timeout_600s
 - Debugger tools are hidden by default; enable them via the URL parameter `?ext=dbg`
 
 ### Session Management
-- `idapro_idalib_open(input_path)` — ⚠️ has a schema validation BUG; use the `open.ps1` script instead
+- `idapro_idalib_open(input_path)` — ⚠️ has a schema validation BUG; use the `scripts/open.ps1` script instead
 - `idapro_idalib_list()` — list all sessions
 - `idapro_idalib_current()` — the session bound to the current context
 - `idapro_idalib_switch(session_id)` — switch to another session
@@ -281,8 +281,8 @@ After analysis is complete, generate `report.md` recording findings and steps.
 5. **On obfuscated code** — first do preprocessing such as string decryption, import-hash removal, and control-flow-flattening removal
 6. **C++ STL code** — use FLIRT/Lumina to identify library functions before analyzing business logic
 7. **Don't brute-force** — analysis should derive solutions from the disassembly, using simple Python only for auxiliary computation
-8. **On "No database bound"** — no binary has been opened yet; run `open.ps1` first
-9. **On "Failed to open database"** — old database files may be locked; `open.ps1` will auto-degrade to a Temp copy (output includes the `(temp copy)` marker)
+8. **On "No database bound"** — no binary has been opened yet; run `scripts/open.ps1` first
+9. **On "Failed to open database"** — old database files may be locked; `scripts/open.ps1` will auto-degrade to a Temp copy (output includes the `(temp copy)` marker)
 10. **When opening GUI/complex samples with auto-analysis** — add `-TimeoutSeconds 600` by default; don't mistake long `INFO:opening:...` output for a hung script
 
 ---
@@ -308,7 +308,7 @@ This skill's entry scripts are wired into the unified bootstrap system.
 
 | Tool | Auto-installable | Installation method | Notes |
 |------|-----------|---------|------|
-| idalib-mcp | ✓ | pip install (from GitHub) | `start.ps1` auto-installs it when missing |
+| idalib-mcp | ✓ | pip install (from GitHub) | `scripts/start.ps1` auto-installs it when missing |
 | IDA Pro itself | ✗ | Commercial software, manual install required | Set the `IDADIR` environment variable to point at the installation directory |
 
 ### Installation Steps (Verified)

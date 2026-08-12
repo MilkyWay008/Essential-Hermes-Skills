@@ -111,11 +111,11 @@ is_kali() {
 
 platform_doc() {
   case "$PLATFORM" in
-    macos) echo "docs/platforms/macos.md" ;;
+    macos) echo "$SKILL_ROOT/README.md" ;;
     linux)
-      if is_kali; then echo "kali/README-kali.md"; else echo "docs/platforms/linux.md"; fi
+      if is_kali; then echo "$SKILL_ROOT/../kali/README-kali.md"; else echo "$SKILL_ROOT/README.md"; fi
       ;;
-    *) echo "PLATFORMS.md" ;;
+    *) echo "$SKILL_ROOT/README.md" ;;
   esac
 }
 
@@ -582,7 +582,7 @@ ensure_ghidra_mcp() {
       fi
       ;;
   esac
-  log_warn "ghidra-mcp requires local Ghidra MCP plugin/server setup. See docs/platforms/$( [[ "$PLATFORM" == macos ]] && echo macos || echo linux ).md"
+  log_warn "ghidra-mcp requires local Ghidra MCP plugin/server setup. See $SKILL_ROOT/README.md for setup guidance."
 }
 
 ensure_seclists() {
@@ -600,13 +600,18 @@ ensure_proxycat() {
 
 ensure_burpsuite_mcp() {
   local bridge_json
-  bridge_json=$(python3 - "$REPO_ROOT/burp-mcp-full/mcp-bridge.js" <<'PY'
+  if [[ -f "$REPO_ROOT/burp-mcp-full/mcp-bridge.js" ]]; then
+    bridge_json=$(python3 - "$REPO_ROOT/burp-mcp-full/mcp-bridge.js" <<'PY'
 import json, sys
 print(json.dumps({"command":"node","args":[sys.argv[1]]}))
 PY
 )
-  write_mcp_server "burpsuite" "$bridge_json"
-  manual_required burpsuite-mcp "Build burp-mcp-full and load build/libs/burp-mcp-full.jar in BurpSuite Extensions."
+    write_mcp_server "burpsuite" "$bridge_json"
+    manual_required burpsuite-mcp "Build burp-mcp-full and load build/libs/burp-mcp-full.jar in BurpSuite Extensions."
+  else
+    manual_required burpsuite-mcp "Burp MCP bridge lives at the pack root (burp-mcp-full/) which is not part of the skills/ install; build it from the repo"
+    return 0
+  fi
 }
 
 ensure_nmap() {
@@ -655,6 +660,14 @@ ensure_pentestswarm() {
   else
     manual_required pentestswarm "Install Go 1.24+ or Docker, then install Pentest-Swarm-AI and ensure pentestswarm is on PATH."
   fi
+}
+
+ensure_bkcrack() {
+  if has_cmd bkcrack; then log_ok "bkcrack ready: $(cmd_path bkcrack)"; return 0; fi
+  case "$PLATFORM" in
+    macos) install_brew bkcrack || manual_required bkcrack "brew install bkcrack" ;;
+    linux) manual_required bkcrack "git clone https://github.com/kimci86/bkcrack.git && cmake -S . -B build && cmake --build build" ;;
+  esac
 }
 
 ensure_binwalk() {
@@ -736,6 +749,7 @@ ensure_capability() {
     nmap) ensure_nmap ;;
     pentestswarm) ensure_pentestswarm ;;
     binwalk) ensure_binwalk ;;
+    bkcrack) ensure_bkcrack ;;
     yara) ensure_yara ;;
     pwntools) ensure_pwntools ;;
     *) log_err "No bootstrap definition for capability: $name"; return 1 ;;

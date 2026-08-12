@@ -41,6 +41,7 @@ Reply in Simplified Chinese unless the user explicitly requests English.
 ## Read This Reference
 
 - Load `references/routing-runtime.md` for the detailed checklist, evidence packaging, and common web pitfalls.
+- For cookie/HMAC signing-key-reuse auth bypass chains, see `references/cookie-hmac-key-reuse-auth-bypass.md`.
 - If the task is specifically about SSR loaders, template context, hydration payloads, preview rendering, or render-layer enforcement drift, prefer `competition-template-render-path`.
 - If the task is specifically about source maps, build manifests, chunk registries, emitted bundles, or recovering hidden runtime structure from served assets, prefer `competition-bundle-sourcemap-recovery`.
 - If the task is specifically about GraphQL schemas, RPC manifests, persisted queries, generated clients, or contract-to-handler drift, prefer `competition-graphql-rpc-drift`.

@@ -98,7 +98,7 @@ install_hint() {
     macos:binwalk) echo "brew: brew install binwalk" ;;
     macos:yara) echo "brew: brew install yara" ;;
     macos:pwntools) echo "pipx: pipx install pwntools" ;;
-    *) echo "see PLATFORMS.md and docs/platforms/${PLATFORM}.md" ;;
+    *) echo "see $SKILL_ROOT/README.md for setup guidance" ;;
   esac
 }
 
@@ -134,7 +134,6 @@ TOOLS=(
   "jeb-pro|apk-reverse|Commercial Android/ARM decompiler (manual licensed install)|jeb,jeb_wincon|jeb --version|$HOME/tools/JEB/jeb;$HOME/JEB/jeb;/opt/jeb/jeb"
   "anything-analyzer|browser-automation|Browser/HTTP analyzer MCP project|none|none|$HOME/tools/anything-analyzer;$REPO_ROOT/../anything-analyzer"
   "burp-mcp-full|burp-mcp|Local Burp MCP extension and stdio bridge|none|none|$REPO_ROOT/burp-mcp-full/mcp-bridge.js"
-  "binwalk|firmware-pentest|Firmware extraction and analysis|binwalk|binwalk --version|"
   "yara|malware-analysis|Malware rule matching engine|yara|yara --version|"
   "pwntools|reverse-engineering|CTF pwn exploit development framework|pwn|pwn --version|"
 )
@@ -210,14 +209,14 @@ done
   echo ""
   case "$PLATFORM" in
     linux)
-      echo "- Read \`docs/platforms/linux.md\` for ordinary Linux setup."
-      echo "- If the host is Kali, read \`kali/README-kali.md\` instead."
+      echo "- Read \`$SKILL_ROOT/README.md\` for ordinary Linux setup."
+      echo "- If the host is Kali, read \`$SKILL_ROOT/../kali/README-kali.md\` instead."
       ;;
     macos)
-      echo "- Read \`docs/platforms/macos.md\` for Homebrew and app-bundle setup."
+      echo "- Read \`$SKILL_ROOT/README.md\` for Homebrew and app-bundle setup."
       ;;
     *)
-      echo "- Read \`PLATFORMS.md\` and choose the closest platform guide."
+      echo "- Read \`$SKILL_ROOT/README.md\` and choose the closest platform guide."
       ;;
   esac
   echo "- Register MCP servers in your Agent client; tool availability does not imply MCP registration."

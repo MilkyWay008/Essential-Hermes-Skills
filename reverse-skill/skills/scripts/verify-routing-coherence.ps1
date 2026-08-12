@@ -132,10 +132,9 @@ foreach ($n in @('community-security-skills', 'skill-supply-chain', 're-agent-wo
     else { Bad "hub missing surface for $n" }
 }
 
-# RULES.md / RULES_zh.md MUST gate case-init/scope before ACT (injection + CRITICAL + chain)
+# RULES.md MUST gate case-init/scope before ACT (injection + CRITICAL + chain)
 $rulesEn = Join-Path $packageRoot 'RULES.md'
-$rulesZh = Join-Path $packageRoot 'RULES_zh.md'
-foreach ($rp in @($rulesEn, $rulesZh)) {
+foreach ($rp in @($rulesEn)) {
     $name = Split-Path $rp -Leaf
     if (-not (Test-Path -LiteralPath $rp)) { Bad "missing $name"; continue }
     $rt = Get-Content -LiteralPath $rp -Raw -Encoding UTF8

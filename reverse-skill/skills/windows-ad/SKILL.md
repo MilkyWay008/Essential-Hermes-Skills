@@ -69,7 +69,7 @@ bloodhound-python -d domain.local -u user -p pass -c All -ns <DC>
 - `references/ad-attack-paths.md`
 - `../pentest-tools/references/network-attack-defense.md`
 - `../attack-chain/`
-- seeds: `field-journal/seed-005_ad-certipy-esc1.md` `seed-007_ntlm-relay-coercer.md` `seed-013_kerberoasting-spn.md`
+- seeds: `../field-journal/seed-005_ad-certipy-esc1.md` `../field-journal/seed-007_ntlm-relay-coercer.md` `../field-journal/seed-013_kerberoasting-spn.md`
 
 ## Routing Context
 

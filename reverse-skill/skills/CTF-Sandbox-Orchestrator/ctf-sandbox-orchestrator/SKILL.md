@@ -63,6 +63,7 @@ Load only the relevant reference files. Do not bulk-load every reference.
 - Identity, AD, Windows host, enterprise messaging: read `references/identity-windows.md`
 - Routing matrix and child-skill selection rules: read `references/router-matrix.md`
 - Result formatting and evidence packaging: read `references/reporting.md`
+- Curated tool/resource quick reference by challenge type: read `references/ctf-resources-digest.md`
 
 If the task is clearly dominated by one domain and the specialized skill exists, route to it internally from this skill. Treat every child skill below as downstream-only. Prefer this internal routing flow over making the user invoke child skills manually:
 

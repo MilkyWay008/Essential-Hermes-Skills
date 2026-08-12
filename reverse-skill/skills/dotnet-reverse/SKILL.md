@@ -10,8 +10,6 @@ license: MIT
 compatibility: >-
   Requires a filesystem-based code agent or CLI with shell access, Windows host preferred (dnSpyEx is a Windows
   GUI); Linux/macOS can use ILSpy/de4dot CLI + mono/dotnet runtime.
-allowed-tools: Bash Read Write Edit Glob Grep Task WebFetch WebSearch
-metadata: {"user-invocable": "false"}
 ---
 
 # .NET / C# Reverse Engineering Guide
@@ -33,7 +31,7 @@ Use this skill first when the task falls into any of the following scenarios:
 - Deobfuscate protectors such as ConfuserEx / SmartAssembly / Babel / Eazfuscator / .NET Reactor
 - Reverse the decryption and C2 logic of .NET loaders / info-stealers / RATs
 - Patch C# programs (change branches, change constants, keygen)
-- Analyze the Mono/Unity managed layer before IL2CPP (note: IL2CPP output is native — use `reverse-engineering/` + seed-014)
+- Analyze the Mono/Unity managed layer before IL2CPP (note: IL2CPP output is native — use `../reverse-engineering/` + `../field-journal/seed-014_unity-il2cpp-reverse.md`)
 
 If the target is a pure native binary (C/C++/Go/Rust compiled, no CLR), use `reverse-engineering/`, `ida-reverse/`, or `radare2/` instead.
 
@@ -167,7 +165,7 @@ Enter this skill when the user says any of the following:
 
 ## When to Switch Out
 
-- IL2CPP-compiled Unity games → `reverse-engineering/` + `seed-014_unity-il2cpp-reverse.md` (IL2CPP is native; dnSpy does not apply)
+- IL2CPP-compiled Unity games → `reverse-engineering/` + `../field-journal/seed-014_unity-il2cpp-reverse.md` (IL2CPP is native; dnSpy does not apply)
 - NativeAOT artifacts → `reverse-engineering/` (same as above, native)
 - Pure native PE (no CLR) → `reverse-engineering/` / `ida-reverse/`
 - Need to batch-migrate symbols/functions to another version → `binary-diff/`

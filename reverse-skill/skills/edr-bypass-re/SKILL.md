@@ -41,7 +41,7 @@ Use this skill when delivering implants to authorized target hosts and evading m
 | Scenario | What to use |
 |------|--------|
 | Full-chain attack-defense (from external network to domain controller) | `attack-chain/` |
-| Internal lateral movement / AD attacks | `pentest-tools/network-attack-defense.md` |
+| Internal lateral movement / AD attacks | `../pentest-tools/references/network-attack-defense.md` |
 | Deliver an implant past EDR on a specific host | **this skill** |
 | Pure static evasion (obfuscation / packing) | `malware-analysis/` (reverse perspective) |
 
@@ -190,7 +190,11 @@ sysmon64.exe -i sysmonconfig.xml
 ### Bootstrap Commands
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File "&lt;SKILL_ROOT&gt;\skills\scripts\bootstrap-reverse.ps1" -Capability @('pe-sieve','syswhispers3','sysmon') -StartServices
+# pe-sieve, SysWhispers3, and Sysmon are NOT in bootstrap-manifest.json — manual install required:
+#   - pe-sieve:     download pe-sieve64.exe from https://github.com/hasherezade/pe-sieve/releases
+#   - SysWhispers3: git clone https://github.com/klezVirus/SysWhispers3
+#   - Sysmon:       https://learn.microsoft.com/sysinternals/downloads/sysmon (+ olaf config)
+powershell -NoProfile -ExecutionPolicy Bypass -File "&lt;SKILL_ROOT&gt;\skills\scripts\bootstrap-reverse.ps1" -StartServices
 ```
 
 ## Routing Context
@@ -202,7 +206,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "&lt;SKILL_ROOT&gt;\skills\s
 
 **Peer references**:
 
-- `pentest-tools/network-attack-defense.md` — how to combine with this skill during internal lateral movement
+- `../pentest-tools/references/network-attack-defense.md` — how to combine with this skill during internal lateral movement
 - `malware-analysis/` — reverse perspective on how detection vendors write rules
 - `field-journal/` — write back lessons after each engagement
 
