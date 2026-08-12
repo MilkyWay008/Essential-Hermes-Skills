@@ -18,12 +18,14 @@ NETWORK_PROFILE=""
 SAMPLE=""
 PRESET=""
 IN_SCOPE_ASSETS=()
+PROJECT_ROOT=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -Hint|--hint) HINT="${2:-}"; shift 2 ;;
     -CaseName|--case-name) CASE_NAME="${2:-}"; shift 2 ;;
     -PackageRoot|--package-root) PACKAGE_ROOT="${2:-}"; shift 2 ;;
+    -ProjectRoot|--project-root) PROJECT_ROOT="${2:-}"; shift 2 ;;
     -AuthStatus|--auth-status) AUTH_STATUS="${2:-}"; shift 2 ;;
     -AuthGranted|--auth-granted) AUTH_GRANTED=1; shift ;;
     -AuthBasis|--auth-basis) AUTH_BASIS="${2:-}"; shift 2 ;;
@@ -104,7 +106,8 @@ if [[ -n "$NETWORK_PROFILE" ]]; then
   esac
 fi
 
-CASE_ROOT="$PACKAGE_ROOT/work/$CASE_NAME"
+if [[ -z "$PROJECT_ROOT" ]]; then PROJECT_ROOT="$(pwd)"; fi  # caller cwd, matching case-init.ps1
+CASE_ROOT="$PROJECT_ROOT/work/$CASE_NAME"
 mkdir -p "$CASE_ROOT/evidence" "$CASE_ROOT/notes" "$CASE_ROOT/report"
 
 auth_status_resolved="pending"

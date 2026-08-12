@@ -30,13 +30,13 @@ CONFIG_PATH="$SKILLS_ROOT/config/routing.json"
 
 PYTHON=""
 for candidate in python3 python; do
-  if command -v "$candidate" >/dev/null 2>&1; then
+  if command -v "$candidate" >/dev/null 2>&1 && "$candidate" -c 'import json,sys' >/dev/null 2>&1; then
     PYTHON="$candidate"
     break
   fi
 done
 if [[ -z "$PYTHON" ]]; then
-  echo 'ERROR: Python 3 is required by the Bash structured router.' >&2
+  echo 'ERROR: a working Python 3 is required by the Bash structured router (found none — the Windows Store python alias prints "Python was not found" and does not count).' >&2
   exit 2
 fi
 if [[ ! -f "$CONFIG_PATH" ]]; then
