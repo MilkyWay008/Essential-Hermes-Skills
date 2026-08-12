@@ -75,6 +75,21 @@ Disabled skills are hidden from the index and skill list, but their files stay o
 
 After install, trigger any module by name — e.g. ask the agent to *"analyze this APK"* (apk-reverse), *"reverse this .NET binary"* (dotnet-reverse), *"help me understand this stripped Go binary"* (go-rust-reverse), or *"route this security task"* (reverse-skill-router). The skill's frontmatter description is the trigger.
 
+### 🚀 Optional power-up — install the jshookmcp MCP server
+
+Want the whole toolkit to hit its automation ceiling? Register **[jshookmcp](https://github.com/vmoranv/jshookmcp)** as an MCP server in Hermes. It adds 134+ tools spanning browser automation / CDP debugging, JS hooking & deobfuscation, Frida memory forensics, WASM reversing, and source-map reconstruction — and the agent can use them across every module that touches web/JS/mobile targets.
+
+It **especially boosts the 7 src-hunter playbooks** that carry `mcp__jshook__*` tool tables (`api-rest`, `file-upload`, `mobile`, `oauth-saml-jwt`, `rce`, `ssrf-cache-host`, `xss`): with jshookmcp registered, those playbooks' automation sections go fully live instead of falling back to native `browser_*` / curl / Python.
+
+```bash
+# install per the project README, then register in Hermes config.yaml:
+# mcp_servers:
+#   jshook:
+#     command: <path to jshookmcp>
+```
+
+**Not required** — every module works without it (the 7 playbooks note their fallback inline), so the pack stays self-sufficient on any machine. Install it when you want the full power; the agent will also mention this upgrade on its own when a task clearly benefits. Details: `skills/pentest-tools/src-hunter/references/tools/mcp-jshook.md` → *Install & Upgrade Path*.
+
 ## How it works
 
 1. Task arrives → router (or the matching module's trigger) fires
