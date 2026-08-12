@@ -1,18 +1,18 @@
-# 通用 Scope 契约（任务启动硬门槛）
+# Generic Scope Contract (hard gate before task start)
 
-> **MUST**：任何安全/逆向/渗透任务在 **ACT 之前** 在用户项目或 `work/<case>/` 落地 `scope.md`。  
-> 无 scope → 只允许读文档/路由，**禁止** 对目标主动扫描、Hook、利用。  
-> 模板可复制；字段名保持英文键，便于脚本校验。
+> **MUST**: every security/reversing/pentest task materializes `scope.md` in the user project or `work/<case>/` **before ACT**.  
+> No scope → only doc/routing reads allowed; **forbidden** to actively scan, hook, or exploit targets.  
+> Template is copyable; field names keep English keys for script validation.
 
-## 如何初始化
+## How to Initialize
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File skills\scripts\case-init.ps1 -Hint "<任务一句话>" -CaseName "my-case"
-# 默认产出：当前分析项目的 work/<case>/scope.md 等
-# 从其他目录调用 skill 时显式指定：-ProjectRoot "C:\path\to\analysis-project"
+powershell -NoProfile -ExecutionPolicy Bypass -File skills\scripts\case-init.ps1 -Hint "<one-line task description>" -CaseName "my-case"
+# Default output: work/<case>/scope.md etc. in the current analysis project
+# When invoking the skill from another directory, specify explicitly: -ProjectRoot "C:\path\to\analysis-project"
 ```
 
-## scope.md 完整模板
+## Full scope.md Template
 
 ```markdown
 # Case Scope
@@ -43,9 +43,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File skills\scripts\case-init.ps1
 ## network_profile
 - mode: offline | lab_only | authorized_target_only | unrestricted_lab
 - notes: |
-    offline = 无对外发包（纯静态/本地样本）
-    lab_only = 仅 lab/VM IP
-    authorized_target_only = 仅 in_scope 资产
+    offline = no outbound packets (purely static/local samples)
+    lab_only = lab/VM IPs only
+    authorized_target_only = in_scope assets only
 - MUST NOT use unrestricted against production without written auth
 
 ## deliverables
@@ -68,26 +68,26 @@ powershell -NoProfile -ExecutionPolicy Bypass -File skills\scripts\case-init.ps1
   - [ ] out_of_scope reviewed
 ```
 
-## 路由挂钩（AI 必须执行）
+## Routing Hooks (AI MUST execute)
 
 ```text
 RULES / MASTER-ROUTING / SKILL:
   1) master-route → PRIMARY
-  2) case-init 或手写 scope.md
-  3) auth 未 granted → STOP，只允许补授权材料
-  4) ready_for_act = true → 打开 PRIMARY SKILL.md → ACT
+  2) case-init or hand-write scope.md
+  3) auth not granted → STOP; only authorization materials may be added
+  4) ready_for_act = true → open PRIMARY SKILL.md → ACT
 ```
 
-## network_profile 速查
+## network_profile Quick Reference
 
-| mode | 允许 | 禁止 |
+| mode | allowed | forbidden |
 |------|------|------|
-| `offline` | 静态分析、本地文件、模拟 | 任意外连、公网 RPC |
-| `lab_only` | lab/CTF 靶机网段 | 生产/未授权 IP |
-| `authorized_target_only` | in_scope 列表 | 列表外资产 |
-| `unrestricted_lab` | 隔离实验网（书面） | 互联网生产 |
+| `offline` | static analysis, local files, simulation | any external connection, public RPC |
+| `lab_only` | lab/CTF target ranges | production/unauthorized IPs |
+| `authorized_target_only` | in_scope list | assets outside the list |
+| `unrestricted_lab` | isolated lab network (written) | internet production |
 
-## 特色
+## Highlights
 
-- 纯 Markdown，**无数据库**  
-- 与 `tool-index` / bootstrap 正交：scope 管「能不能打」，tool-index 管「用什么打」
+- Pure Markdown, **no database**  
+- Orthogonal to `tool-index` / bootstrap: scope governs "may we attack", tool-index governs "with what"

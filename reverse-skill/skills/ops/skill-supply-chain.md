@@ -33,12 +33,12 @@ We use **documentation latches + tool truth sources** instead of building anothe
 ## 3. MUST checklist for installing external skills
 
 ```text
-□ 来源：官方 org / 已审计列表（如 ToB curated）/ 用户自有
-□ 阅读全部 SKILL.md + scripts/* + package 依赖
-□ 无神秘外连、无读取 ~/.ssh / 浏览器库 的默认步骤
-□ 与本包路由冲突时：以本包 MASTER-ROUTING + scope 为准
-□ 不复制进 monorepo 除非走 CONTRIBUTING 与脱敏
-□ 更新 skills/references/community-security-skills.md 记录来源日期
+□ Source: official org / audited list (e.g. ToB curated) / user-owned
+□ Read all of SKILL.md + scripts/* + package dependencies
+□ No mysterious outbound connections; no default steps that read ~/.ssh / browser stores
+□ On conflict with this pack's routing: defer to this pack's MASTER-ROUTING + scope
+□ Don't copy into the monorepo unless via CONTRIBUTING and redaction
+□ Update skills/references/community-security-skills.md to record the source date
 ```
 
 ## 4. Boundaries with bootstrap / MCP
@@ -58,10 +58,10 @@ We use **documentation latches + tool truth sources** instead of building anothe
 ## 6. Quick self-check (before merging any external material)
 
 ```powershell
-# 列出将引入的脚本扩展名
+# List the extensions of the scripts being introduced
 Get-ChildItem -Recurse -Include *.ps1,*.sh,*.py,*.js | Select-Object FullName
-# 粗搜危险模式（人工复核，非完备）
-# 在外部目录执行：Select-String -Pattern 'Invoke-WebRequest|curl .\\||wget .\\||~/.ssh|exfil'
+# Coarse search for dangerous patterns (human review; not exhaustive)
+# Run in the external directory: Select-String -Pattern 'Invoke-WebRequest|curl .\\||wget .\\||~/.ssh|exfil' 
 ```
 
 ## 7. Related

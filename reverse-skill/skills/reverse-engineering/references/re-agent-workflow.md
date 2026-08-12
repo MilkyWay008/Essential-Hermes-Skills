@@ -1,66 +1,67 @@
-# RE Agent 工作流门闩（静态↔动态）
+# RE Agent Workflow Gates (Static ↔ Dynamic)
 
-> 来源启发：binary-re 阶段划分、社区 RE skill（Frida/r2/Ghidra/IDA 循环）、Cerberus 三头环（静/动/插桩）  
-> 日期：2026-07-17  
-> 适用：`reverse-engineering/`、`ida-reverse/`、`radare2/`、与 cre 角色交接
+> Inspirational sources: binary-re phase division, community RE skills (Frida/r2/Ghidra/IDA loops), Cerberus three-head ring (static/dynamic/instrumentation)  
+> Date: 2026-07-17  
+> Applies to: `reverse-engineering/`, `ida-reverse/`, `radare2/`, and handoffs with the cre role
 
-## 0. 启动
-
-```text
-□ scope.md：offline 样本路径 或 授权设备/靶机
-□ tool-index：file/strings/r2/ida/frida 等实际路径
-□ 角色：cre（ops/role-map）
-```
-
-## 1. Triage（5–15 分钟）
+## 0. Startup
 
 ```text
-□ file / DIE / 熵 / 壳特征
-□ strings / rabin2 -z 捡漏
-□ 架构/链接/是否 .NET/Go/Rust/加壳
-□ MUST 导入/导出表：rabin2 -i / -E（或 IDA imports / 等价物）
-□ 产出：E-triage（MUST 含 imports 分类摘要：网络/文件/加密/注入/注册表）+ 假设清单（勿过早下结论）
+□ scope.md: offline sample path or authorized device/target
+□ tool-index: actual paths for file/strings/r2/ida/frida etc.
+□ role: cre (ops/role-map)
 ```
 
-**阶段门闩（Triage → Static/Dynamic）**：E-triage 中未记录 imports 摘要前，MUST NOT 进入 Dynamic，也 MUST NOT 声称「基础分诊完成」。导入表解析失败时仍 MUST 把失败输出写入 Evidence，不得跳过。用户要求「重做导入表检查」时 MUST 重做 imports 步骤本身，禁止改换其他分析步骤。
+## 1. Triage (5–15 minutes)
+
+```text
+□ file / DIE / entropy / packer characteristics
+□ strings / rabin2 -z sweep
+□ architecture/linking/.NET/Go/Rust/packed
+□ MUST imports/exports: rabin2 -i / -E (or IDA imports / equivalent)
+□ Output: E-triage (MUST include imports classification summary: network/file/crypto/injection/registry) + hypothesis list (no premature conclusions)
+```
+
+**Phase gate (Triage → Static/Dynamic)**: until the imports summary is recorded in E-triage, MUST NOT enter Dynamic, and MUST NOT claim "basic triage complete". If the import table fails to parse, the failure output MUST still be written to Evidence — skipping is not allowed. When the user asks to "redo the import table check", the imports step itself MUST be redone; substituting other analysis steps is forbidden.
 
 ## 2. Static
 
-| 工具 | 何时 |
+| Tool | When |
 |------|------|
-| radare2 / rabin2 | 快速函数/导入/字符串（imports 已在 Triage MUST 完成） |
-| IDA / Ghidra（MCP 或 headless） | 深挖、交叉引用、类型；survey 阶段复核 imports 分类 |
+| radare2 / rabin2 | Fast functions/imports/strings (imports already MUST-completed in Triage) |
+| IDA / Ghidra (MCP or headless) | Deep dive, cross-references, types; re-check imports classification during survey |
 | jadx / dnSpy | Android / .NET |
-| OLLVM 文档 | 控制流平坦化怀疑 |
+| OLLVM docs | When control flow flattening is suspected |
 
 ```text
-□ 确认 E-imports / E-triage 已含导入表 Evidence（缺失则先补，禁止后置）
-□ 定位关键函数（加密/校验/网络/授权）
-□ 记录地址/符号 → Evidence
-□ 一条路不通 → 换工具（IDA?r2?Ghidra）
+□ Confirm E-imports / E-triage already contains the import-table Evidence (fill it first if missing; deferring is forbidden)
+□ Locate key functions (crypto/validation/network/licensing)
+□ Record addresses/symbols → Evidence
+□ If one path fails → switch tools (IDA?r2?Ghidra)
 ```
 
-**无 MCP 时**：可用导出反编译文本再分析（对照 P4nda0s reverse-skills / IDA-NO-MCP 思路），仍写 Evidence 路径。
+**Without MCP**: export decompiled text and analyze it (per P4nda0s reverse-skills / IDA-NO-MCP approach); still record the Evidence path.
 
 ## 3. Dynamic
 
 ```text
-□ Frida / gdb / emulator：验证静态假设
-□ 反调试/反 Frida → reverse-engineering/anti-analysis
-□ Android：root 检测 / SSL pinning 绕过脚本按需生成，**须在授权设备**
-□ 崩溃日志驱动下一轮 hook（自适应循环）
+□ Frida / gdb / emulator: validate static hypotheses
+□ Anti-debug / anti-Frida → reverse-engineering/anti-analysis
+□ Android: generate root detection / SSL pinning bypass scripts as needed, **only on authorized devices**
+□ Crash logs drive the next hook round (adaptive loop)
 ```
 
 ## 4. Synthesis
 
 ```text
-□ Finding：算法/校验逻辑/可利用点
-□ Path：callflow 或 solve 步骤挂 E-*
-□ 报告 docs-generator + 可选图
-□ field-journal 脱敏
+□ Finding: algorithm/validation logic/exploitable points
+□ Path: callflow or solve steps attached to E-*
+□ Report via docs-generator + optional diagrams
+□ field-journal, desensitized
 ```
 
-## 5. 与「堆 RE skill 插件」的差异
+## 5. Differences From "Stacked RE Skill Plugins"
 
-- 本包用 **阶段门闩 + tool-index**，不默认启用 Hex-Rays「unsafe 全自动执行」类插件  
-- 动态插桩默认 **offline/lab** network_profile  
+- This pack uses **phase gates + tool-index**; it does not enable Hex-Rays-style "unsafe full-auto execution" plugins by default  
+- Dynamic instrumentation defaults to the **offline/lab** network_profile
+

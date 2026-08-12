@@ -1,239 +1,240 @@
-# AI Agent 服从性工程 — 让 AI 读完工作流后真正干活
+# AI Agent Obedience Engineering — Getting AI to Actually Work After Reading the Workflow
 
-> 来源：2026 年多来源综合（Anthropic Skill Engineering、Microsoft Code Words、Strands Steering Hooks、Gradient Flow Harness Engineering）
-> 适用场景：AI 编码 Agent（各种 agent CLI / IDE 内嵌 agent 等客户端）读完 README/RULES.md 后只确认不执行、跳过步骤、自作主张省略关键操作
+> Source: 2026 multi-source synthesis (Anthropic Skill Engineering, Microsoft Code Words, Strands Steering Hooks, Gradient Flow Harness Engineering)
+> When to use: AI coding agents (various agent CLIs / IDE-embedded agents) that, after reading README/RULES.md, only acknowledge without executing, skip steps, or take liberties omitting critical operations
 
 ---
 
-## 核心问题诊断
+## Core Problem Diagnosis
 
-AI Agent "读了工作流但不干活"的根因不是模型能力不够，而是**自然语言指令存在语义逃逸空间**：
+The root cause of an AI agent "reading the workflow but not doing the work" is not model capability, but **semantic escape room in natural-language instructions**:
 
-| 根因 | 解释 |
+| Root cause | Explanation |
 |------|------|
-| **上下文注意力衰减** | 长文档中部的内容被 LLM 注意力机制降权，Agent 实际只"看到"开头和结尾 |
-| **语义覆盖** | 模型优化"帮助性"时会创造性重解释显式指令（如把 MUST DO X 理解成"建议做 X"） |
-| **被动语言被当可选** | "Ready for next step → invoke X" 被当作建议而非指令 |
-| **无状态强制** | 缺少外部状态机验证工作流顺序，Agent 可跳过步骤而不被发现 |
-| **沉默状态腐化** | Agent 产出结构正确但语义错误的结果，错误静默累积 |
+| **Context attention decay** | Content in the middle of long documents is down-weighted by the LLM attention mechanism; the agent effectively only "sees" the beginning and end |
+| **Semantic overriding** | When optimizing for "helpfulness," the model creatively reinterprets explicit instructions (e.g. reading MUST DO X as "suggested to do X") |
+| **Passive language treated as optional** | "Ready for next step → invoke X" is treated as a suggestion rather than an instruction |
+| **No state enforcement** | No external state machine validates workflow order, so the agent can skip steps undetected |
+| **Silent state corruption** | The agent produces results that are structurally correct but semantically wrong; errors accumulate silently |
 
 ---
 
-## 技术 1：指令置顶原则（Critical-First Pattern）
+## Technique 1: Instruction-First Principle (Critical-First Pattern)
 
-**把"下一步做什么"放在最前面，上下文放在后面。**
+**Put "what to do next" at the very top, and context after it.**
 
 ```
-WRONG (Agent 忽略):
-  [70 行项目背景和工具列表]
-  → "下一步：运行 bootstrap 安装缺失工具"
+WRONG (agent ignores):
+  [70 lines of project background and tool list]
+  → "Next step: run bootstrap to install missing tools"
 
-CORRECT (Agent 执行):
-  "## 立即执行：运行 `bootstrap-reverse.ps1` 检查并安装缺失工具
-   → 完成后读取 routing.md 确定进入哪个 skill"
-  [然后是项目背景和工具列表]
+CORRECT (agent executes):
+  "## Execute now: run `bootstrap-reverse.ps1` to check and install missing tools
+   → after it finishes, read routing.md to decide which skill to enter"
+  [then project background and tool list]
 ```
 
-**原理**：LLM 对提示词首尾内容赋予最高注意力权重。中间内容可能被完全忽略。
+**Why**: LLMs assign the highest attention weight to the beginning and end of a prompt. Middle content may be completely ignored.
 
-**应用到本项目**：
-- RULES.md 的"路由入口"章节应在触发关键词之后、执行原则之前
-- 每个 SKILL.md 的第一个 section 应该是"立即执行"而非"适用场景"
+**Applying to this project**:
+- The "routing entry" section of RULES.md should come after the trigger keywords but before the execution principles
+- The first section of every SKILL.md should be "Execute now" rather than "When to use"
 
 ---
 
-## 技术 2：指令性语言替换（Directive Over Suggestive）
+## Technique 2: Directive Language Over Suggestive
 
-将所有"建议性"语言替换为 RFC 2119 级别的指令性语言：
+Replace all "suggestive" language with RFC 2119-level directive language:
 
-| 弱语言（Agent 可能跳过） | 强语言（Agent 强制执行） |
+| Weak language (agent may skip) | Strong language (agent must execute) |
 |---|---|
-| "可以尝试..." | **MUST**: 你必须执行... |
-| "Ready for next step → invoke X" | **NOW**: 立即调用 X，不要等待确认 |
-| "建议先读 routing.md" | **REQUIRED**: 进入任何子模块前必须先读完 routing.md |
-| "如果缺工具可以 bootstrap" | **NO EXCUSE**: 缺工具时唯一正确操作是调用 bootstrap，禁止手动安装猜测 |
-| "记得更新 field-journal" | **CHECKLIST ENFORCED**: 任务完成后逐项打勾 Checklist，未完成不得声称任务结束 |
-| "应该..." | **MUST** / **MUST NOT** |
+| "You can try..." | **MUST**: you must execute... |
+| "Ready for next step → invoke X" | **NOW**: invoke X immediately, do not wait for confirmation |
+| "It's suggested to read routing.md first" | **REQUIRED**: you must read routing.md fully before entering any submodule |
+| "If tools are missing you can bootstrap" | **NO EXCUSE**: when tools are missing, the only correct action is calling bootstrap; manual install-by-guessing is forbidden |
+| "Remember to update field-journal" | **CHECKLIST ENFORCED**: tick the Checklist item by item after the task; you may not claim task completion without it |
+| "You should..." | **MUST** / **MUST NOT** |
 
-**关键模式**：
+**Key patterns**:
 ```
-MUST — 违反 = 任务失败
-MUST NOT — 违反 = 安全违规
-SHOULD — 不做需要说明原因
-MAY — 真正可选的
+MUST — violation = task failure
+MUST NOT — violation = security breach
+SHOULD — not doing it requires explaining why
+MAY — genuinely optional
 ```
 
 ---
 
-## 技术 3：借口反驳表（Excuse Rebuttal Table）
+## Technique 3: Excuse Rebuttal Table
 
-**这是本项目最关键的补丁。** AI Agent 在遇到阻力时会自动生成"合理借口"来跳过步骤。预先列出常见借口并逐一反驳：
+**This is the most critical patch for this project.** When AI agents hit friction, they auto-generate "reasonable excuses" to skip steps. Pre-list common excuses and rebut each one:
 
-| Agent 常见借口 | 反驳（强制执行） |
+| Common agent excuse | Rebuttal (enforced) |
 |---|---|
-| "这一步可以省略，我直接..." | **禁止跳过。** 行为链中的每一步都是必需的。如果你认为可以跳过，先输出具体原因，由用户决定。 |
-| "根据我的判断，这不是必需的" | **你的判断在此处不适用。** 列出你用来判断的具体标准，并解释为什么这个标准允许跳过明确写出的步骤。 |
-| "用户大概不需要这个" | **永远不要替用户做决定。** 把所有选项呈现给用户，标注推荐但不要隐藏备选。 |
-| "我已经知道怎么做，不需要读 X" | **先读 X 再行动。** 即使你确定知道怎么做，X 中可能包含本次任务特定的约束。读完只需 2 秒。 |
-| "为了节省时间，我可以并行跳过..." | **节省时间的正确方式是并行执行独立步骤，不是跳过步骤。** 如果两个步骤互不依赖，并行做；如果依赖，顺序做。 |
-| "这个工具我以前用过，知道路径" | **禁止猜测路径。** 必须从 tool-index 获取实际路径，不同机器的安装位置不同。 |
-| "任务已经基本完成了，不需要 checklist" | **任务完成的唯一定义是 Checklist 全部打勾。** 未完成 Checklist 的任务不算完成。 |
-| "我没找到 tool-index，我就直接猜路径" | **缺文件比猜错路径安全 100 倍。** tool-index 缺失时先运行 refresh-tool-index.ps1 生成。 |
-| "用户没明确说要报告，我就不写了" | **报告是默认行为，不是可选。** 安全任务完成后必须生成报告，除非用户明确说"不要报告"。 |
-| "这个太简单了不需要记录 journal" | **简单任务也有踩坑价值。** 至少记录：目标类型 + 用了什么 + 有无意外，一行也行。 |
-| "用户让我重做导入表/某一步，但我改做了别的更有用的步骤" | **重做 = 重做被点名的同一步。** 用户要求重做 X（如导入表检查）时 MUST 重新执行 X 并更新对应 Evidence；禁止用其他步骤冒充完成，禁止静默跳过 X。 |
+| "This step can be omitted, I'll just..." | **Skipping is forbidden.** Every step in the behavior chain is required. If you think a step can be skipped, first output the specific reason and let the user decide. |
+| "Based on my judgment, this isn't necessary" | **Your judgment does not apply here.** List the specific criteria you used, and explain why those criteria permit skipping an explicitly written step. |
+| "The user probably doesn't need this" | **Never decide for the user.** Present all options to the user, mark your recommendation, but never hide alternatives. |
+| "I already know how, no need to read X" | **Read X first, then act.** Even if you're sure you know how, X may contain constraints specific to this task. Reading takes 2 seconds. |
+| "To save time, I can skip ahead in parallel..." | **The right way to save time is running independent steps in parallel, not skipping steps.** If two steps don't depend on each other, do them in parallel; if they depend, do them in order. |
+| "I've used this tool before, I know the path" | **Guessing paths is forbidden.** You must get the actual path from tool-index; install locations differ between machines. |
+| "The task is basically done, no need for the checklist" | **The only definition of task completion is every Checklist box ticked.** A task with an incomplete Checklist is not complete. |
+| "I couldn't find tool-index, so I just guessed the path" | **A missing file is 100x safer than a wrong guessed path.** When tool-index is missing, first run refresh-tool-index.ps1 to generate it. |
+| "The user didn't explicitly ask for a report, so I won't write one" | **Reporting is default behavior, not optional.** A security task must produce a report when done, unless the user explicitly says "no report". |
+| "This was too simple to log in the journal" | **Simple tasks also have pitfall value.** At minimum record: target type + what you used + any surprises; one line is fine. |
+| "The user asked me to redo the import table / a step, but I did something more useful instead" | **Redo = redo the exact step that was named.** When the user asks to redo X (e.g. import table check), you MUST re-execute X and update the corresponding Evidence; impersonating completion with other steps is forbidden, silently skipping X is forbidden. |
 
 
-**使用方式**：将本表放在 RULES.md 或其他指令文件末尾附近（高注意力区域）。Agent 在找借口之前先看到反驳。
+**How to use**: place this table near the end of RULES.md or other instruction files (high-attention zone). The agent sees the rebuttals before it can make excuses.
 
 ---
 
-## 技术 4：Skill 工程五模式（Anthropic 2026 官方）
+## Technique 4: Five Skill Engineering Patterns (Anthropic 2026 official)
 
-| 模式 | 适用场景 | 关键技巧 |
+| Pattern | Best for | Key tricks |
 |---|---|---|
-| **Linear Flow 线性流** | 步骤清晰的流程（部署、安装） | 提供安全默认值，用否定指令（"MUST NOT use --force"） |
-| **Decision Tree 决策树** | 平台导航、故障诊断 | 树形导航 + `references/` 渐进加载 |
-| **Iterative Loop 迭代循环** | TDD、审查-修复循环 | 硬规则前置 + **借口反驳表**阻断走捷径 |
-| **Baton Loop 接力循环** | 多会话、多 Agent 协作 | 状态外化到 `next-prompt.md`（退出前 MUST 写入） |
-| **Multi-Phase + Checkpoints** | 多天复杂工作流 | 编排器"父"skill + 人工 Go/No-Go 检查点，标注时间成本 |
+| **Linear Flow** | Well-defined step sequences (deploy, install) | Provide safe defaults, use negative directives ("MUST NOT use --force") |
+| **Decision Tree** | Platform navigation, troubleshooting | Tree navigation + progressive loading from `references/` |
+| **Iterative Loop** | TDD, review-fix loops | Hard rules up front + **excuse rebuttal table** to block shortcuts |
+| **Baton Loop** | Multi-session, multi-agent collaboration | Externalize state to `next-prompt.md` (MUST write before exiting) |
+| **Multi-Phase + Checkpoints** | Multi-day complex workflows | Orchestrator "parent" skill + human Go/No-Go checkpoints, annotate time cost |
 
-**本项目对应**：
-- 完整行为链 = Linear Flow（15 步顺序执行）
-- 路由矩阵 = Decision Tree（三维度匹配）
-- Checklist = Multi-Phase Checkpoint（每一步必须打勾）
-- Field Journal = Baton Loop（跨会话状态外化）
-
----
-
-## 技术 5：In-Band 强制校验（Steering Hooks 思想）
-
-不依赖 AI "自觉"，而是在 Prompt 中嵌入自我校验指令：
-
-```
-每次声称"任务完成"前，MUST 先自检：
-1. 我有没有跳过行为链中的任何一步？哪一步？
-2. 我有没有猜过任何工具路径？如果有，实际的 tool-index 路径是什么？
-3. Checklist 全部打勾了吗？没打勾的为什么？
-4. 如果以上任何一项答案是"有"/"没打勾"，则任务未完成，
-   回到对应步骤重新执行，不要声明完成。
-```
-
-这种方法让 Agent 在说"做完了"之前先自我审计，比外部校验更即时。
+**Mapping to this project**:
+- Full behavior chain = Linear Flow (15 steps executed in order)
+- Routing matrix = Decision Tree (three-dimension matching)
+- Checklist = Multi-Phase Checkpoint (every step must be ticked)
+- Field Journal = Baton Loop (cross-session state externalization)
 
 ---
 
-## 技术 6：不透明标识符（Code Words）— 适用于 API/工具参数
+## Technique 5: In-Band Forced Validation (Steering Hooks idea)
 
-Microsoft 2026 研究发现：语义化参数名会触发模型"帮忙优化"的倾向。
+Don't rely on AI "conscientiousness"; embed self-validation instructions in the prompt:
 
 ```
-WRONG: { "query": "...", "top": 9 }        → 68.4% 参数遵循率
-CORRECT: { "query": "...", "code": "alpha" } → 100% 参数遵循率
+Before claiming "task complete", you MUST self-check:
+1. Did I skip any step in the behavior chain? Which one?
+2. Did I guess any tool path? If so, what is the actual tool-index path?
+3. Is every Checklist box ticked? If not, why?
+4. If any answer above is "yes"/"not ticked", the task is NOT complete —
+   go back to the corresponding step and re-execute; do not declare completion.
 ```
 
-**应用场景**：
-- 需要在 bootstrap 脚本中传递精确配置时，用短代码代替语义参数
-- 工具调用中需要强保证的参数，使用 code word 映射
+This makes the agent self-audit before saying "done", which is more immediate than external validation.
 
 ---
 
-## 技术 7：双 AI 审查回路（Dual Validation）
+## Technique 6: Opaque Identifiers (Code Words) — for API/tool parameters
+
+Microsoft 2026 research found that semantic parameter names trigger the model's "help optimize" tendency.
 
 ```
-AI A（执行者）写出输出
+WRONG: { "query": "...", "top": 9 }        → 68.4% parameter adherence
+CORRECT: { "query": "...", "code": "alpha" } → 100% parameter adherence
+```
+
+**When to use**:
+- When precise config must be passed into bootstrap scripts, use short codes instead of semantic parameters
+- For parameters in tool calls that need strong guarantees, use code-word mapping
+
+---
+
+## Technique 7: Dual AI Review Loop (Dual Validation)
+
+```
+AI A (executor) produces output
   ↓
-AI B（审查者）对照规则检查
-  ↓ 通过
-输出给用户
-  ↓ 不通过
-退回 AI A 修正，附带具体违规引用
+AI B (reviewer) checks against rules
+  ↓ pass
+output to user
+  ↓ fail
+returned to AI A for fixes, with specific violation citations
 ```
 
-**本项目中的应用**：
-- 在 RULES.md 中内嵌一个"自审查"步骤：Agent 在输出报告前先用自己的能力对照 Checklist 逐项检查
-- 如果发现有项目未完成，自己回到对应步骤补做
+**Application in this project**:
+- Embed a "self-review" step in RULES.md: before outputting a report, the agent checks itself item by item against the Checklist using its own capability
+- If it finds unfinished items, it goes back to the corresponding step and completes them
 
 ---
 
-## 技术 8：上下文窗口布局优化
+## Technique 8: Context Window Layout Optimization
 
-LLM 注意力分布（高→低）：
+LLM attention distribution (high → low):
 ```
-[开头 10%] ████████████ ← 最高注意力，放"立即行动"指令
-[中部 80%]  ████░░░░░░░░ ← 注意力递减，放参考材料
-[结尾 10%]  ████████████ ← 注意力回升，放"禁止跳过"和 Checklist
+[first 10%] ████████████ ← highest attention; put "act now" instructions
+[middle 80%]  ████░░░░░░░░ ← decreasing attention; put reference material
+[last 10%]  ████████████ ← attention rebounds; put "no skipping" and Checklist
 ```
 
-**具体应用**：
-1. **开头 10%**：立即执行指令 + 触发关键词
-2. **中部 80%**：详细工作流、参考链接、工具列表
-3. **结尾 10%**：借口反驳表 + 硬性 Checklist + 禁止行为清单
+**Concrete application**:
+1. **First 10%**: execute-now instructions + trigger keywords
+2. **Middle 80%**: detailed workflow, reference links, tool list
+3. **Last 10%**: excuse rebuttal table + hard Checklist + forbidden-actions list
 
 ---
 
-## 实战 Prompt 模板
+## Practical Prompt Templates
 
-### 模板 A：强制启动模板（嵌入 RULES.md 开头）
+### Template A: Forced-Start Template (embed at the top of RULES.md)
 
 ```markdown
-## CRITICAL: 读完本文后你必须立即执行以下操作（不要只确认，要实际执行）
+## CRITICAL: After reading this file you must immediately execute the following (don't just acknowledge, actually execute)
 
-1. **NOW**: 检测本文件所在目录 → 这就是包根目录
-2. **NOW**: 如果是首次使用，将本规则写入全局配置（见全局注入章节）
-3. **NEXT**: 读取 `skills/SKILL.md` → `skills/routing.md` → 确定进入哪个子 skill
-4. **NEXT**: 读取 `skills/tool-index.md` 确认工具状态
-5. **THEN**: 开始执行实际任务，不要停留在"已读"状态
+1. **NOW**: detect the directory containing this file → that is the pack root
+2. **NOW**: if first use, write these rules into the global config (see Global Injection section)
+3. **NEXT**: read `skills/SKILL.md` → `skills/routing.md` → decide which sub-skill to enter
+4. **NEXT**: read `skills/tool-index.md` to confirm tool status
+5. **THEN**: start the actual task; do not stay in "read" state
 
-如果你只回复"已读"、"已完成"、"我理解了"而没有实际执行上述步骤，
-你就是失败了。用户需要的是工具被安装好、代码被分析完、漏洞被验证，
-不是一个确认消息。
+If you only reply "acknowledged", "done", "I understand" without actually executing the steps above,
+you have failed. The user needs tools installed, code analyzed, vulnerabilities validated —
+not a confirmation message.
 ```
 
-### 模板 B：子模块入口模板（嵌入每个 SKILL.md 开头）
+### Template B: Submodule Entry Template (embed at the top of every SKILL.md)
 
 ```markdown
-## ACTION REQUIRED（读完后立即执行，不要等）
+## ACTION REQUIRED (execute immediately after reading, don't wait)
 
-读完本文件后：
-1. 确认你理解了本 skill 的适用场景
-2. 检查本机是否有所需工具（读 `../tool-index.md`）
-3. 如果缺工具 → 调用 bootstrap
-4. 如果有工具 → 开始工作流第一步
-5. 如果你不确定 → 列出具体问题，不要沉默
+After reading this file:
+1. Confirm you understand this skill's applicable scenarios
+2. Check whether this machine has the required tools (read `../tool-index.md`)
+3. If tools are missing → call bootstrap
+4. If tools exist → start workflow step 1
+5. If unsure → list the specific questions; don't stay silent
 ```
 
-### 模板 C：任务完成自检模板（嵌入每个 SKILL.md 末尾）
+### Template C: Task-Completion Self-Check Template (embed at the end of every SKILL.md)
 
 ```markdown
-## 任务完成自检（声称完成前 MUST 逐项确认）
+## Task Completion Self-Check (MUST confirm item by item before claiming completion)
 
-□ 我实际执行了行为链中的每一步（没有跳过）
-□ 我没有猜测任何工具路径（都来自 tool-index.md）
-□ 我产生了可复现的命令/脚本/报告（不是只描述了步骤）
-□ 我更新了 field-journal（如有踩坑）
-□ 我执行了完成后 Checklist（报告 + 图表 + 经验回写）
+□ I actually executed every step of the behavior chain (none skipped)
+□ I guessed no tool paths (all from tool-index.md)
+□ I produced reproducible commands/scripts/reports (not just described steps)
+□ I updated field-journal (if pitfalls were hit)
+□ I ran the completion Checklist (report + diagrams + lessons written back)
 ```
 
 ---
 
-## 禁止行为（从 Agent 服从性角度补充）
+## Forbidden Behaviors (from an agent-obedience angle)
 
-- 禁止读完 RULES.md 后只回复"已理解，请告诉我具体任务"
-  → 正确做法：执行全局注入 → 读 SKILL.md → 读 routing.md → 确定入口
-- 禁止说"步骤 1-4 已经完成"但实际只是读了一遍
-  → 正确做法：区分"已读文档"和"已执行操作"，后者产生实际副作用
-- 禁止在未执行 Checklist 的情况下说"任务完成"
-  → Checklist 是任务完成的唯一定义
-- 禁止用"根据经验"替代读取 tool-index
-  → 路径在不同机器上不同，看 tool-index 是唯一定位方式
+- Forbidden: after reading RULES.md, only replying "understood, please tell me the specific task"
+  → Correct: run global injection → read SKILL.md → read routing.md → determine the entry point
+- Forbidden: saying "steps 1-4 are done" when you only read them
+  → Correct: distinguish "document read" from "operation executed"; the latter produces real side effects
+- Forbidden: saying "task complete" without executing the Checklist
+  → The Checklist is the only definition of task completion
+- Forbidden: replacing reading tool-index with "based on experience"
+  → Paths differ between machines; reading tool-index is the only reliable way
 
 ---
 
-## 总结：如果只能改一件事
+## Summary: If You Can Only Change One Thing
 
-**在 RULES.md 最开头加一段"立即行动"指令**，用粗体、CRITICAL、NOW 等强指令词。
+**Add an "act now" directive block at the very top of RULES.md**, using strong directive words like bold, CRITICAL, NOW.
 
-这是投入产出比最高的修改。大多数 Agent 的"不干活"行为来自：读完文件后自动进入"等待用户指令"模式。一段强制的"立即行动"指令可以打破这个模式。
+This is the highest ROI change. Most agent "not working" behavior comes from auto-entering "wait for user instruction" mode after reading a file. A mandatory "act now" block breaks that pattern.
 
-如果还要改第二件事：**加借口反驳表**。Agent 在遇到第一个阻力时就会找借口停下，提前堵死这些借口。
+If you change a second thing: **add the excuse rebuttal table**. Agents find an excuse to stop at the first friction; block those excuses in advance.
+

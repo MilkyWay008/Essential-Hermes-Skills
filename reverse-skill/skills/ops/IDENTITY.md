@@ -47,11 +47,11 @@
 ## Healthy relationship with Z3r0
 
 ```text
-Z3r0 = 红队操作系统 / 团队协作平台
-reverse-skill = Agent 的安全作业路由器 + 说明书
+Z3r0 = red-team operating system / team collaboration platform
+reverse-skill = the Agent's secure job router + manual
 
-可选未来：把本包 skill 内容挂进 Z3r0 sandbox-local skills
-当前：零依赖 Z3r0 安装即可完整工作
+Optional future: mount this pack's skill content into Z3r0 sandbox-local skills
+Currently: works fully with a zero-dependency Z3r0 install
 ```
 
 ## Relationship with the "800+ community micro-skills"

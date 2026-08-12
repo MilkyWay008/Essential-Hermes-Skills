@@ -1,18 +1,18 @@
-# Protocol reverse 速查
+# Protocol Reverse Cheatsheet
 
-> 适用：`protocol-reverse` skill · 2026-07-18
+> Applies to: `protocol-reverse` skill · 2026-07-18
 
-## 常见布局模式
+## Common Layout Patterns
 
-| 模式 | 特征 | 提示 |
+| Pattern | Signature | Hint |
 |------|------|------|
-| 定长头+体 | 前 2/4 字节长度 | 注意是否包含头长 |
-| 魔数 | 固定 `0xDEAD` 等 | 便于流再同步 |
-| TLV | type-length-value 重复 | type 枚举即消息字典 |
-| Protobuf | 字段号 varint | `protoc --decode_raw` |
-| 加密帧 | 熵高、无明文 URL | 先找 nonce/IV 邻域 |
+| Fixed-length header + body | First 2/4 bytes = length | Check whether header length is included |
+| Magic number | Fixed `0xDEAD` etc. | Helps resync the stream |
+| TLV | type-length-value repeats | The type enum is the message dictionary |
+| Protobuf | varint field numbers | `protoc --decode_raw` |
+| Encrypted frames | High entropy, no plaintext URLs | First look for the nonce/IV neighborhood |
 
-## 最小 Python 骨架
+## Minimal Python Skeleton
 
 ```python
 import struct
@@ -22,8 +22,9 @@ def parse_frame(buf: bytes):
     return {"magic": magic, "type": msg_type, "body": body}
 ```
 
-## PCAP 提取 TCP payload
+## Extract TCP Payloads from PCAP
 
 ```bash
 tshark -r cap.pcap -Y "tcp.port==4433" -T fields -e tcp.payload | head
 ```
+

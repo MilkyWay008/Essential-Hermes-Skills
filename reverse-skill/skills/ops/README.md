@@ -1,26 +1,26 @@
-# ops — reverse-skill 作战契约层
+# ops - reverse-skill Operations Contract Layer
 
-Z3r0 启发、**本包形态**实现：
+Inspired by Z3r0, implemented in **this pack's form**:
 
-| 文件 | 用途 |
+| File | Purpose |
 |------|------|
-| [IDENTITY.md](IDENTITY.md) | 我们是谁 / 不做平台 |
-| [scope-contract.md](scope-contract.md) | 启动 scope + network_profile |
-| [evidence-finding-path.md](evidence-finding-path.md) | 证据链 |
-| [role-map.md](role-map.md) | 角色→skill + 交接 |
-| [timeline-workitem.md](timeline-workitem.md) | 时间线与覆盖 |
-| [sandbox-profile.md](sandbox-profile.md) | 工具对照 |
-| [skill-supply-chain.md](skill-supply-chain.md) | Agent Skill/MCP 供应链安全（AST10 精简） |
-| [case-review/](../case-review/) | Evidence 图完整性审查与报告交接 |
+| [IDENTITY.md](IDENTITY.md) | Who we are / not a platform |
+| [scope-contract.md](scope-contract.md) | Startup scope + network_profile |
+| [evidence-finding-path.md](evidence-finding-path.md) | Evidence chain |
+| [role-map.md](role-map.md) | Role->skill + handoff |
+| [timeline-workitem.md](timeline-workitem.md) | Timeline and coverage |
+| [sandbox-profile.md](sandbox-profile.md) | Tool mapping |
+| [skill-supply-chain.md](skill-supply-chain.md) | Agent Skill/MCP supply-chain security (AST10 distilled) |
+| [case-review/](../case-review/) | Evidence-graph integrity review and report handoff |
 
-相关 references（非孤儿，从本 hub / MASTER / SKILL 可达）：
+Related references (not orphans; reachable from this hub / MASTER / SKILL):
 
-- `../references/community-security-skills.md` — 社区 skill 生态对照  
-- `../references/domain-coverage-map.md` — 本包领域覆盖  
-- `../attack-chain/references/lifecycle-checklist.md` — 攻击链阶段门闩  
-- `../reverse-engineering/references/re-agent-workflow.md` — RE 四阶段  
-- `../pentest-tools/references/recon-pipeline.md` — 授权侦察 + Evidence 门  
+- `../references/community-security-skills.md` - community skill-ecosystem survey  
+- `../references/domain-coverage-map.md` - this pack's domain coverage  
+- `../attack-chain/references/lifecycle-checklist.md` - attack-chain stage gates  
+- `../reverse-engineering/references/re-agent-workflow.md` - four RE stages  
+- `../pentest-tools/references/recon-pipeline.md` - authorized recon + Evidence gate  
 
-- 脚本：`../scripts/case-init.ps1`
-- 校验：`../scripts/verify-routing-coherence.ps1`（含 ops 契约检查）
-- 审查：`../case-review/scripts/review_case.py`（只读 Evidence 图检查）
+- Scripts: `../scripts/case-init.ps1`
+- Validation: `../scripts/verify-routing-coherence.ps1` (incl. ops-contract checks)
+- Review: `../case-review/scripts/review_case.py` (read-only Evidence-graph check)

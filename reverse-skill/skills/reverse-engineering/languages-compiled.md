@@ -528,16 +528,16 @@ def char_at(n, offset):
 
 ## .NET / C# Binary Reversing
 
-.NET 托管程序（C# 编译的 exe/dll）有完整独立工作流，详见 [`../dotnet-reverse/SKILL.md`](../dotnet-reverse/SKILL.md)。
+.NET managed programs (C#-compiled exe/dll) have a complete standalone workflow — see [`../dotnet-reverse/SKILL.md`](../dotnet-reverse/SKILL.md).
 
-**速查要点：**
-- 识别：PE 头 CLR runtime header 非零、`mscoree.dll` 导入、`mscorlib`/`System.Private.CoreLib` 字符串
-- 工具：**dnSpyEx**（反编译+调试+IL 编辑，Windows GUI）/ **ILSpy**（CLI）/ **de4dot**（脱混淆）/ **dnlib**（脚本化）
-- 脱混淆：ConfuserEx / SmartAssembly / Babel / .NET Reactor → `de4dot`，详见 [`../dotnet-reverse/references/obfuscators.md`](../dotnet-reverse/references/obfuscators.md)
-- **IL 优先**：关键判断与 patch 用 IL 编辑器而非 C# 反编译器（避免编译器生成代码重编译失真）
-- 红队 Sharp* 工具（Rubeus/SharpHound）分析 → [`../dotnet-reverse/references/sharp-tools.md`](../dotnet-reverse/references/sharp-tools.md)
+**Quick reference:**
+- Identify: PE header CLR runtime header non-zero, `mscoree.dll` import, `mscorlib`/`System.Private.CoreLib` strings
+- Tools: **dnSpyEx** (decompile+debug+IL edit, Windows GUI) / **ILSpy** (CLI) / **de4dot** (deobfuscation) / **dnlib** (scripting)
+- Deobfuscation: ConfuserEx / SmartAssembly / Babel / .NET Reactor → `de4dot` — see [`../dotnet-reverse/references/obfuscators.md`](../dotnet-reverse/references/obfuscators.md)
+- **IL-first**: make critical judgments and patches in the IL editor, not the C# decompiler (avoids recompiled-code distortion from compiler-generated code)
+- Red-team Sharp* tool (Rubeus/SharpHound) analysis → [`../dotnet-reverse/references/sharp-tools.md`](../dotnet-reverse/references/sharp-tools.md)
 
-**边界：** IL2CPP / NativeAOT 编译产物是 native（无 CLR），不走 dnSpy → 走 `ida-reverse/` / `radare2/`（见 [seed-014](../field-journal/seed-014_unity-il2cpp-reverse.md)）。Codegate 2013 两阶段 XOR+AES-CBC 模式见 [tools.md](tools.md#net-analysis) `.NET Analysis` 段。
+**Boundary:** IL2CPP / NativeAOT outputs are native (no CLR) — skip dnSpy, use `ida-reverse/` / `radare2/` (see [seed-014](../field-journal/seed-014_unity-il2cpp-reverse.md). For the two-stage XOR+AES-CBC pattern (Codegate 2013), see the `.NET Analysis` section of [tools.md](tools.md#net-analysis).
 
 ---
 

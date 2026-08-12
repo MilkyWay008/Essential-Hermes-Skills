@@ -1,10 +1,11 @@
-# 代码审计清单（精简）
+# Code Audit Checklist (condensed)
 
-- [ ] 所有外部输入入口列表
-- [ ] 鉴权/鉴权中间件覆盖
-- [ ] 多租户 ID 是否绑定会话
-- [ ] 反序列化 / pickle / YAML load
-- [ ] SSRF 出网与协议限制
-- [ ] 密钥与 token 存储
-- [ ] 文件上传路径与类型
-- [ ] 危险 exec/system/Runtime
+- [ ] List of all external input entry points
+- [ ] AuthN/authZ middleware coverage
+- [ ] Multi-tenant IDs bound to the session
+- [ ] Deserialization / pickle / YAML load
+- [ ] SSRF egress and protocol restrictions
+- [ ] Secret and token storage
+- [ ] File upload paths and types
+- [ ] Dangerous exec/system/Runtime calls
+

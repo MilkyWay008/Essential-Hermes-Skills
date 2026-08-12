@@ -1,19 +1,19 @@
-# Frida 实战脚本速查
+# Frida Practical Script Cheatsheet
 
-> 精选自 [awesome-frida](https://github.com/dweinstein/awesome-frida)、[Frida-Mobile-Scripts](https://github.com/m0bilesecurity/Frida-Mobile-Scripts)、[frida-codeshare-scripts](https://github.com/zengfr/frida-codeshare-scripts) 等开源项目。
-> 按场景分类，直接复制使用。
+> Curated from open-source projects such as [awesome-frida](https://github.com/dweinstein/awesome-frida), [Frida-Mobile-Scripts](https://github.com/m0bilesecurity/Frida-Mobile-Scripts), [frida-codeshare-scripts](https://github.com/zengfr/frida-codeshare-scripts).
+> Categorized by scenario; copy and use directly.
 
 ---
 
-## 通用 Hook 模板
+## Generic Hook Templates
 
-### Hook 任意 Java 方法
+### Hooking Any Java Method
 
 ```javascript
 Java.perform(function() {
     var TargetClass = Java.use("com.target.ClassName");
     
-    // Hook 无参方法
+    // hook a no-arg method
     TargetClass.methodName.implementation = function() {
         console.log("[*] methodName called");
         var ret = this.methodName();
@@ -21,7 +21,7 @@ Java.perform(function() {
         return ret;
     };
     
-    // Hook 有参方法
+    // hook a method with args
     TargetClass.methodName.overload('java.lang.String', 'int').implementation = function(str, num) {
         console.log("[*] methodName(" + str + ", " + num + ")");
         var ret = this.methodName(str, num);
@@ -31,7 +31,7 @@ Java.perform(function() {
 });
 ```
 
-### Hook 构造函数
+### Hooking Constructors
 
 ```javascript
 Java.perform(function() {
@@ -43,7 +43,7 @@ Java.perform(function() {
 });
 ```
 
-### 枚举所有方法
+### Enumerating All Methods
 
 ```javascript
 Java.perform(function() {
@@ -57,9 +57,9 @@ Java.perform(function() {
 
 ---
 
-## 加密/签名 Hook
+## Crypto/Signing Hooks
 
-### Hook AES 加解密
+### Hooking AES Encryption/Decryption
 
 ```javascript
 Java.perform(function() {
@@ -74,14 +74,14 @@ Java.perform(function() {
         return result;
     };
     
-    // 捕获密钥
+    // capture the key
     var SecretKeySpec = Java.use("javax.crypto.spec.SecretKeySpec");
     SecretKeySpec.$init.overload('[B', 'java.lang.String').implementation = function(key, algo) {
         console.log("[SecretKeySpec] algo=" + algo + " key=" + bytesToHex(key));
         this.$init(key, algo);
     };
     
-    // 捕获 IV
+    // capture the IV
     var IvParameterSpec = Java.use("javax.crypto.spec.IvParameterSpec");
     IvParameterSpec.$init.overload('[B').implementation = function(iv) {
         console.log("[IvParameterSpec] iv=" + bytesToHex(iv));
@@ -145,16 +145,16 @@ Java.perform(function() {
 
 ---
 
-## 网络请求 Hook
+## Network Request Hooks
 
-### Hook OkHttp3 请求/响应
+### Hooking OkHttp3 Requests/Responses
 
 ```javascript
 Java.perform(function() {
     var OkHttpClient = Java.use("okhttp3.OkHttpClient");
     var Interceptor = Java.use("okhttp3.Interceptor");
     
-    // Hook newCall 获取请求 URL
+    // hook newCall to get the request URL
     var RealCall = Java.use("okhttp3.RealCall");
     RealCall.execute.implementation = function() {
         var request = this.request();
@@ -170,7 +170,7 @@ Java.perform(function() {
 });
 ```
 
-### Hook URL 连接
+### Hooking URL Connections
 
 ```javascript
 Java.perform(function() {
@@ -201,9 +201,9 @@ Java.perform(function() {
 
 ---
 
-## 绕过类 Hook
+## Bypass-Class Hooks
 
-### 通用 SSL Pinning 绕过
+### Generic SSL Pinning Bypass
 
 ```javascript
 Java.perform(function() {
@@ -246,11 +246,11 @@ Java.perform(function() {
 });
 ```
 
-### 通用 Root 检测绕过
+### Generic Root Detection Bypass
 
 ```javascript
 Java.perform(function() {
-    // File.exists 绕过
+    // File.exists bypass
     var File = Java.use("java.io.File");
     var rootPaths = ["su", "Superuser", "magisk", "busybox", "xposed", 
                      "/system/xbin/su", "/system/bin/su", "/sbin/su",
@@ -267,7 +267,7 @@ Java.perform(function() {
         return this.exists();
     };
     
-    // Runtime.exec 绕过
+    // Runtime.exec bypass
     var Runtime = Java.use("java.lang.Runtime");
     Runtime.exec.overload('java.lang.String').implementation = function(cmd) {
         if (cmd.indexOf("su") !== -1 || cmd.indexOf("which") !== -1) {
@@ -277,13 +277,13 @@ Java.perform(function() {
         return this.exec(cmd);
     };
     
-    // Build.TAGS 绕过
+    // Build.TAGS bypass
     var Build = Java.use("android.os.Build");
     Build.TAGS.value = "release-keys";
 });
 ```
 
-### 反调试绕过
+### Anti-Debug Bypass
 
 ```javascript
 Java.perform(function() {
@@ -294,7 +294,7 @@ Java.perform(function() {
         return false;
     };
     
-    // TracerPid 检测绕过（native 层）
+    // TracerPid detection bypass (native layer)
     var fopen = Module.findExportByName("libc.so", "fopen");
     Interceptor.attach(fopen, {
         onEnter: function(args) {
@@ -302,14 +302,14 @@ Java.perform(function() {
         },
         onLeave: function(retval) {
             if (this.path && this.path.indexOf("/proc/") !== -1 && this.path.indexOf("/status") !== -1) {
-                // 可以进一步 hook fgets 修改 TracerPid
+                // can further hook fgets to modify TracerPid
             }
         }
     });
 });
 ```
 
-### 模拟器检测绕过
+### Emulator Detection Bypass
 
 ```javascript
 Java.perform(function() {
@@ -332,7 +332,7 @@ Java.perform(function() {
 
 ---
 
-## 数据存储 Hook
+## Data Storage Hooks
 
 ### Hook SharedPreferences
 
@@ -375,9 +375,9 @@ Java.perform(function() {
 
 ---
 
-## 脱壳 Hook
+## Unpacking Hooks
 
-### 通用 DEX Dump
+### Generic DEX Dump
 
 ```javascript
 Java.perform(function() {
@@ -390,7 +390,7 @@ Java.perform(function() {
                     var dexFile = dexElements[i].dexFile.value;
                     if (dexFile) {
                         console.log("[DEX] " + dexFile.getName());
-                        // 可以进一步 dump dex 内容
+                        // can further dump the dex content
                     }
                 }
             } catch(e) {}
@@ -416,10 +416,10 @@ Java.perform(function() {
 
 ---
 
-## 实用工具函数
+## Utility Functions
 
 ```javascript
-// 字节数组转十六进制
+// byte array to hex
 function bytesToHex(bytes) {
     if (!bytes) return "null";
     var hex = [];
@@ -429,13 +429,13 @@ function bytesToHex(bytes) {
     return hex.join('');
 }
 
-// 打印调用栈
+// print the call stack
 function printStack() {
     console.log(Java.use("android.util.Log").getStackTraceString(
         Java.use("java.lang.Throwable").$new()));
 }
 
-// 打印对象所有字段
+// print all fields of an object
 function printFields(obj) {
     var fields = obj.class.getDeclaredFields();
     fields.forEach(function(field) {
@@ -446,7 +446,7 @@ function printFields(obj) {
     });
 }
 
-// 搜索内存中的类实例
+// search for class instances in memory
 function findInstances(className) {
     Java.choose(className, {
         onMatch: function(instance) {
@@ -460,13 +460,13 @@ function findInstances(className) {
 
 ---
 
-## 参考资源
+## Reference Resources
 
-| 资源 | 说明 | 链接 |
+| Resource | Description | Link |
 |------|------|------|
-| Frida 官方文档 | API 参考 | https://frida.re/docs/ |
-| Frida CodeShare | 社区脚本分享 | https://codeshare.frida.re/ |
-| awesome-frida | 资源大全 | https://github.com/dweinstein/awesome-frida |
-| frida-codeshare-scripts | 全网最全脚本收集 | https://github.com/zengfr/frida-codeshare-scripts |
-| Objection | Frida 封装工具 | https://github.com/sensepost/objection |
-| r2frida | radare2 + Frida 集成 | https://github.com/nowsecure/r2frida |
+| Frida official docs | API reference | https://frida.re/docs/ |
+| Frida CodeShare | community script sharing | https://codeshare.frida.re/ |
+| awesome-frida | resource collection | https://github.com/dweinstein/awesome-frida |
+| frida-codeshare-scripts | the most complete script collection | https://github.com/zengfr/frida-codeshare-scripts |
+| Objection | Frida wrapper tool | https://github.com/sensepost/objection |
+| r2frida | radare2 + Frida integration | https://github.com/nowsecure/r2frida |

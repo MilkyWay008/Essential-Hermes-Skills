@@ -1,112 +1,112 @@
-# reverse-skill PRIMARY 快路径
+# reverse-skill PRIMARY Fast Path
 
-> 与 `scripts/master-route.ps1` 保持一致。
+> Kept in sync with `scripts/master-route.ps1`.
 
-## 执行契约
+## Execution Contract
 
 ```text
-1. 先路由后动手
-2. 输出 PRIMARY 路径 + 一句话依据
-3. case-init / scope.md（ops/scope-contract）— auth 未 granted 禁止对目标 ACT
-4. 指定 lead + specialist 角色（ops/role-map）
-5. 立即打开 PRIMARY 的 SKILL.md → ACTION REQUIRED
-6. 工具路径只认 tool-index；缺则 bootstrap（仅 manifest 能力）
-7. 过程追加 timeline / workitems；结论走 Evidence→Finding→Path
-8. 未命中 → 读 routing.md 全表或提议新 skill
+1. Route first, act second
+2. Output the PRIMARY path + a one-line rationale
+3. case-init / scope.md (ops/scope-contract) — no ACT on the target unless auth is granted
+4. Assign lead + specialist roles (ops/role-map)
+5. Open the PRIMARY SKILL.md immediately → ACTION REQUIRED
+6. Trust only tool-index for tool paths; if missing, bootstrap (manifest capabilities only)
+7. Append to timeline / workitems as you go; conclusions flow Evidence→Finding→Path
+8. No match → read the full routing.md table or propose a new skill
 ```
 
 ```powershell
-powershell -File skills\scripts\master-route.ps1 -Hint "<用户任务>"
-# 默认写出当前项目的 work/master-route-<ts>/route-scope.md；从其他目录调用时显式指定项目根
-powershell -File skills\scripts\master-route.ps1 -Hint "<用户任务>" -ProjectRoot "C:\path\to\analysis-project"
-powershell -File skills\scripts\case-init.ps1 -Hint "<用户任务>" -CaseName "my-case"
-# case 默认写入当前项目的 work/<case>/；-PackageRoot 保持兼容，-ProjectRoot 优先级更高
-powershell -File skills\scripts\case-init.ps1 -Hint "<用户任务>" -CaseName "my-case" -ProjectRoot "C:\path\to\analysis-project"
-# 一次成型可 ACT（授权 + 目标 + 网络档）：
-powershell -File skills\scripts\case-init.ps1 -Hint "<任务>" -CaseName "my-case" -AuthGranted -TargetUrl "https://target/" -NetworkProfile authorized_target_only
-# 冒烟：verify + 脚本解析 + 路由矩阵（含中文 Hint）
+powershell -File skills\scripts\master-route.ps1 -Hint "<user-task>"
+# By default writes to the current project's work/master-route-<ts>/route-scope.md; when calling from another directory, explicitly pass the project root
+powershell -File skills\scripts\master-route.ps1 -Hint "<user-task>" -ProjectRoot "C:\path\to\analysis-project"
+powershell -File skills\scripts\case-init.ps1 -Hint "<user-task>" -CaseName "my-case"
+# case defaults to the current project's work/<case>/; -PackageRoot kept for compatibility, -ProjectRoot takes precedence
+powershell -File skills\scripts\case-init.ps1 -Hint "<user-task>" -CaseName "my-case" -ProjectRoot "C:\path\to\analysis-project"
+# One-shot, ready to ACT (auth + target + network profile):
+powershell -File skills\scripts\case-init.ps1 -Hint "<task>" -CaseName "my-case" -AuthGranted -TargetUrl "https://target/" -NetworkProfile authorized_target_only
+# Smoke test: verify + script parsing + routing matrix (incl. Chinese Hint)
 powershell -File skills\scripts\smoke.ps1
-# ACT 前轻量 scope 门禁（未就绪 exit 2；-Force 仅警告）
+# Lightweight scope gate before ACT (exit 2 if not ready; -Force only warns)
 powershell -File skills\scripts\case-guard.ps1 -CaseRoot work\my-case
-# Evidence 追加
+# Evidence append
 powershell -File skills\scripts\append-evidence.ps1 -CaseRoot work\my-case -Id E-001 -Title "..." -ReproCommand "..."
 python3 skills/case-review/scripts/review_case.py work/<case> --verify-hashes --strict
 ```
 
-## 作战契约（ops）
+## Ops Contract
 
-| 文档 | 用途 |
+| Doc | Purpose |
 |------|------|
-| `ops/IDENTITY.md` | 我们是路由包，不是 Z3r0 平台 |
-| `ops/scope-contract.md` | 启动门槛 |
-| `ops/evidence-finding-path.md` | 证据链 |
-| `case-review/SKILL.md` | Evidence 图审查与报告交接 |
-| `ops/role-map.md` | 角色→skill |
-| `ops/timeline-workitem.md` | 时间线与覆盖 |
-| `ops/sandbox-profile.md` | 工具对照 |
-| `ops/skill-supply-chain.md` | 安装外部 skill/MCP 的安全门闩 |
-| `references/community-security-skills.md` | 社区 skill 生态（借鉴不并库） |
-| `reverse-engineering/references/re-agent-workflow.md` | RE：triage→static→dynamic→synthesis |
-| `pentest-tools/references/recon-pipeline.md` | 授权侦察流水线 + 证据门 |
+| `ops/IDENTITY.md` | We are a routing package, not a Z3r0 platform |
+| `ops/scope-contract.md` | Startup gate |
+| `ops/evidence-finding-path.md` | Evidence chain |
+| `case-review/SKILL.md` | Evidence graph review and report handoff |
+| `ops/role-map.md` | role → skill |
+| `ops/timeline-workitem.md` | Timeline and coverage |
+| `ops/sandbox-profile.md` | Tool comparison |
+| `ops/skill-supply-chain.md` | Safety latch for installing external skills/MCPs |
+| `references/community-security-skills.md` | Community skill ecosystem (borrow, don't merge) |
+| `reverse-engineering/references/re-agent-workflow.md` | RE: triage→static→dynamic→synthesis |
+| `pentest-tools/references/recon-pipeline.md` | Authorized recon pipeline + evidence gate |
 
-## 优先级（高 → 低）
+## Priority (high → low)
 
-| ID | 条件 | PRIMARY |
+| ID | Condition | PRIMARY |
 |----|------|---------|
 | **R1** | APK / smali / jadx / apktool | `apk-reverse/` |
 | **R2** | IPA / iOS / Objection / MobSF / mobile | `mobile-reverse/` |
-| **R3** | JS 签名 / 前端加密 / jshook / CDP | `js-reverse/` |
-| **R4** | DSL VM / fireye / 自定义 opcode VM | `reverse-engineering/dsl-vm-reverse/` |
+| **R3** | JS signing / front-end crypto / jshook / CDP | `js-reverse/` |
+| **R4** | DSL VM / fireye / custom opcode VM | `reverse-engineering/dsl-vm-reverse/` |
 | **R5** | .NET / dnSpy / de4dot / ConfuserEx | `dotnet-reverse/` |
-| **R9** | 恶意样本 / YARA / 沙箱 | `malware-analysis/` |
-| **R6** | IDA / 反编译 / 反汇编深挖 | `ida-reverse/` |
+| **R9** | Malicious samples / YARA / sandbox | `malware-analysis/` |
+| **R6** | IDA / decompilation / deep disassembly | `ida-reverse/` |
 | **R7** | radare2 / r2 | `radare2/` |
-| **R8** | 固件 / binwalk / IoT / EMBA | `firmware-pentest/` |
-| **R10** | 攻击链 / 红队 / 横向 / 完整渗透 | `attack-chain/` |
-| **R11** | Nmap / Nuclei / SQLMap / SRC / 渗透工具 | `pentest-tools/` |
-| **R12** | API / GraphQL / BOLA / JWT 攻击 | `api-security/` |
-| **R13** | SBOM / Trivy / 供应链 | `supply-chain-security/` |
-| **R14** | LLM / Prompt 注入 / Agent 安全 | `llm-security/` |
-| **R15** | bindiff / 符号迁移 / PDB | `binary-diff/` |
-| **R16** | N-day / 补丁差分 | `patch-diff-exploit/` |
-| **R17** | pwn / ROP / 堆栈利用 | `pwn-chain/` |
-| **R18** | EDR / 免杀 / syscall | `edr-bypass-re/` |
-| **R19** | 浏览器/桌面自动化 | `browser-automation/` |
-| **R20** | 报告 / writeup | `docs-generator/` |
-| **R39** | 图表 / Mermaid / Graphviz / PlantUML / 架构图 | `diagram-generator/` |
-| **R40** | Case / Evidence 图审查 | `case-review/` |
-| **R21** | 协议 / Protobuf / PCAP 协议 | `protocol-reverse/` |
-| **R22** | Ghidra / 开源反编译 | `ghidra-reverse/` |
-| **R23** | 云 / 容器 / K8s | `cloud-k8s/` |
+| **R8** | Firmware / binwalk / IoT / EMBA | `firmware-pentest/` |
+| **R10** | Attack chain / red team / lateral / full pentest | `attack-chain/` |
+| **R11** | Nmap / Nuclei / SQLMap / SRC / pentest tools | `pentest-tools/` |
+| **R12** | API / GraphQL / BOLA / JWT attacks | `api-security/` |
+| **R13** | SBOM / Trivy / supply chain | `supply-chain-security/` |
+| **R14** | LLM / prompt injection / agent security | `llm-security/` |
+| **R15** | bindiff / symbol migration / PDB | `binary-diff/` |
+| **R16** | N-day / patch diffing | `patch-diff-exploit/` |
+| **R17** | pwn / ROP / stack exploitation | `pwn-chain/` |
+| **R18** | EDR / AV evasion / syscall | `edr-bypass-re/` |
+| **R19** | Browser/desktop automation | `browser-automation/` |
+| **R20** | Reports / writeups | `docs-generator/` |
+| **R39** | Diagrams / Mermaid / Graphviz / PlantUML / architecture diagrams | `diagram-generator/` |
+| **R40** | Case / Evidence graph review | `case-review/` |
+| **R21** | Protocols / Protobuf / PCAP protocol | `protocol-reverse/` |
+| **R22** | Ghidra / open-source decompilation | `ghidra-reverse/` |
+| **R23** | Cloud / containers / K8s | `cloud-k8s/` |
 | **R24** | Windows / AD / Kerberos / AD CS | `windows-ad/` |
-| **R25** | 取证 / 内存转储 / 时间线 | `digital-forensics/` |
-| **R26** | 代码审计 / SAST / Semgrep | `code-audit/` |
-| **R27** | 威胁狩猎 / 检测工程 / 蓝队 | `threat-hunting/` |
-| **R28** | OT / ICS / 工控 | `ot-ics/` |
-| **R29** | Wi-Fi / 无线渗透 | `wifi-wireless/` |
-| **R30** | 浏览器扩展逆向 | `browser-extension-reverse/` |
+| **R25** | Forensics / memory dumps / timelines | `digital-forensics/` |
+| **R26** | Code audit / SAST / Semgrep | `code-audit/` |
+| **R27** | Threat hunting / detection engineering / blue team | `threat-hunting/` |
+| **R28** | OT / ICS / industrial control | `ot-ics/` |
+| **R29** | Wi-Fi / wireless pentest | `wifi-wireless/` |
+| **R30** | Browser extension reverse engineering | `browser-extension-reverse/` |
 | **R31** | macOS / Mach-O | `macos-reverse/` |
-| **R32** | 厚客户端安全 | `thick-client/` |
-| **R33** | Go / Rust 二进制 | `go-rust-reverse/` |
-| **R34** | 硬件调试口 / UART/JTAG | `hardware-security/` |
-| **R35** | 数据库安全 | `database-security/` |
-| **R36** | 邮件 / 钓鱼分析 | `email-security/` |
-| **R37** | 联邦身份 SAML/OIDC | `identity-federation/` |
-| **R38** | RF / SDR 研究 | `radio-sdr/` |
-| **R0** | 通用逆向 / 反调试 / OLLVM / 未知二进制 | `reverse-engineering/` |
+| **R32** | Thick client security | `thick-client/` |
+| **R33** | Go / Rust binaries | `go-rust-reverse/` |
+| **R34** | Hardware debug ports / UART/JTAG | `hardware-security/` |
+| **R35** | Database security | `database-security/` |
+| **R36** | Email / phishing analysis | `email-security/` |
+| **R37** | Federated identity SAML/OIDC | `identity-federation/` |
+| **R38** | RF / SDR research | `radio-sdr/` |
+| **R0** | General RE / anti-debug / OLLVM / unknown binaries | `reverse-engineering/` |
 
-未命中强关键词 → PRIMARY=`R0`，并提示打开 `routing.md`。
+No strong keyword matched → PRIMARY=`R0`, and prompt to open `routing.md`.
 
-## 边界
+## Boundaries
 
-| 任务 | 处理 |
+| Task | Handling |
 |------|------|
-| 纯 CTF 多类型编排 | `CTF-Sandbox-Orchestrator/` |
+| Pure multi-type CTF orchestration | `CTF-Sandbox-Orchestrator/` |
 
-## 读序
+## Reading Order
 
 ```text
 RULES.md → MASTER-ROUTING.md → PRIMARY SKILL.md
-  → (可选) routing.md 三轴 / field-journal
+  → (optional) routing.md three axes / field-journal
   → tool-index.md → bootstrap → ACT
 ```

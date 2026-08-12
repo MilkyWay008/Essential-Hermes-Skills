@@ -1,24 +1,24 @@
-# EDR Hook 调研速查
+# EDR Hook Survey Cheatsheet
 
-> 仅限授权红队 / 对抗演练 / 自有产品测试，禁止用于未授权目标。
+> Authorized red team / adversary simulation / own-product testing only. Using against unauthorized targets is forbidden.
 
-本文档汇总主流 EDR / AV 在用户态与内核态的监控点，供红队侦察阶段快速定位"该处理什么"。
+This document summarizes the user-mode and kernel-mode monitoring points of mainstream EDR/AV products, for quick "what needs to be handled" orientation during red team recon.
 
-## 1. 主流 EDR 指纹与 hook 模式速查
+## 1. Mainstream EDR Fingerprints and Hook Patterns
 
-| 厂商 / 产品 | 用户态组件 | 内核驱动 | 主要监控面 |
+| Vendor / product | User-mode component | Kernel driver | Main monitoring surface |
 |------------|-----------|---------|-----------|
-| CrowdStrike Falcon | `CSFalconService.exe`, `CSAgent.sys` 注入到目标进程 | `CSAgent.sys`, `CSBoot.sys` | 重内核 callback + ETW-TI；用户态 hook 较少（云查) |
-| Microsoft Defender for Endpoint (MDE) | `MsMpEng.exe`, `MpClient.dll` | `WdFilter.sys`, `WdBoot.sys`, `WdNisDrv.sys` | AMSI + ETW-TI + ntdll inline hook + kernel callback 全面 |
-| SentinelOne | `SentinelAgent.exe`, `SentinelHelperService.exe` | `SentinelMonitor.sys`, `SentinelDeviceControl.sys` | ntdll 用户态 hook 重 + 内核 callback + 自有 ETW provider |
-| Elastic Defend (原 Endpoint Security) | `elastic-endpoint.exe` | `elastic-endpoint-driver.sys` | 主要 ETW + 少量 ntdll hook，配合 Elastic Agent 上传 |
-| ESET | `ekrn.exe`, `eamsi.dll` | `eamonm.sys`, `epfwwfp.sys` | 用户态 hook 非常多（NtCreateFile / NtOpenProcess 等） |
-| Sophos Intercept X | `SophosFileScanner.exe`, `SophosNtpService.exe` | `SophosED.sys`, `hmpalert.sys` | ntdll hook + HMPA 内存防护 + 内核 callback |
-| Kaspersky | `avp.exe`, `klif.sys` | `klif.sys`, `klhk.sys` | 重用户态 hook + KLIF 自有微过滤 + 网络过滤驱动 |
-| Trend Micro Apex One | `TmListen.exe`, `TmCCSF.dll` | `tmcomm.sys`, `tmactmon.sys` | 用户态 hook + 行为监控驱动 |
-| Carbon Black | `RepMgr.exe`, `RepWAV.exe` | `ParityDriver.sys` | 偏内核 callback + ETW |
+| CrowdStrike Falcon | `CSFalconService.exe`, `CSAgent.sys` injected into target processes | `CSAgent.sys`, `CSBoot.sys` | Heavy kernel callbacks + ETW-TI; fewer user-mode hooks (cloud-based) |
+| Microsoft Defender for Endpoint (MDE) | `MsMpEng.exe`, `MpClient.dll` | `WdFilter.sys`, `WdBoot.sys`, `WdNisDrv.sys` | AMSI + ETW-TI + ntdll inline hooks + kernel callbacks, comprehensive |
+| SentinelOne | `SentinelAgent.exe`, `SentinelHelperService.exe` | `SentinelMonitor.sys`, `SentinelDeviceControl.sys` | Heavy ntdll user-mode hooks + kernel callbacks + own ETW provider |
+| Elastic Defend (formerly Endpoint Security) | `elastic-endpoint.exe` | `elastic-endpoint-driver.sys` | Mostly ETW + a few ntdll hooks, uploaded via Elastic Agent |
+| ESET | `ekrn.exe`, `eamsi.dll` | `eamonm.sys`, `epfwwfp.sys` | Very many user-mode hooks (NtCreateFile / NtOpenProcess etc.) |
+| Sophos Intercept X | `SophosFileScanner.exe`, `SophosNtpService.exe` | `SophosED.sys`, `hmpalert.sys` | ntdll hooks + HMPA memory protection + kernel callbacks |
+| Kaspersky | `avp.exe`, `klif.sys` | `klif.sys`, `klhk.sys` | Heavy user-mode hooks + KLIF own minifilter + network filter driver |
+| Trend Micro Apex One | `TmListen.exe`, `TmCCSF.dll` | `tmcomm.sys`, `tmactmon.sys` | User-mode hooks + behavior monitoring driver |
+| Carbon Black | `RepMgr.exe`, `RepWAV.exe` | `ParityDriver.sys` | Kernel callbacks + ETW oriented |
 
-### 快速指纹脚本
+### Quick Fingerprint Script
 
 ```powershell
 $edrSigs = @{
@@ -46,65 +46,65 @@ Get-ChildItem 'C:\Windows\System32\drivers\*.sys' |
     Select-Object Name, VersionInfo
 ```
 
-## 2. 用户态 ntdll hook 重点函数
+## 2. Key User-Mode ntdll Hook Functions
 
-EDR 几乎一定 hook 的 `ntdll.dll` 导出（按 ATT&CK 行为分组）：
+`ntdll.dll` exports that EDR almost certainly hooks (grouped by ATT&CK behavior):
 
-| 函数 | 监控的行为 | ATT&CK |
+| Function | Behavior monitored | ATT&CK |
 |------|-----------|--------|
-| `NtCreateThreadEx` | 远程线程注入、QueueUserAPC 注入 | T1055.002 / T1055.004 |
-| `NtAllocateVirtualMemory` | shellcode 申请 RWX 内存 | T1055 |
-| `NtAllocateVirtualMemoryEx` | 跨进程内存申请（Win10+ 新 API） | T1055 |
-| `NtProtectVirtualMemory` | 改页面权限 RW→RX | T1055 |
-| `NtWriteVirtualMemory` | 跨进程写 shellcode | T1055.012 |
-| `NtMapViewOfSection` | section-based 注入（Process Doppelganging / Ghosting） | T1055.013 |
-| `NtCreateSection` | 配合 MapViewOfSection | T1055.013 |
-| `NtOpenProcess` | 打开目标进程拿 handle | T1057 |
-| `NtQueueApcThread` / `NtQueueApcThreadEx` | APC 注入 | T1055.004 |
-| `NtCreateProcess` / `NtCreateProcessEx` / `NtCreateUserProcess` | 创建子进程（含 PPID spoof） | T1106 |
-| `NtSetContextThread` | 改线程上下文（线程劫持注入） | T1055.003 |
-| `NtResumeThread` | 注入完后恢复线程 | T1055 |
-| `NtQuerySystemInformation` | 枚举进程 / 驱动 / handle | T1057 / T1082 |
-| `NtAdjustPrivilegesToken` | 提权获取 SeDebugPrivilege 等 | T1134 |
-| `NtLoadDriver` | 加载内核驱动（BYOVD） | T1543.003 |
+| `NtCreateThreadEx` | remote thread injection, QueueUserAPC injection | T1055.002 / T1055.004 |
+| `NtAllocateVirtualMemory` | shellcode allocating RWX memory | T1055 |
+| `NtAllocateVirtualMemoryEx` | cross-process memory allocation (Win10+ new API) | T1055 |
+| `NtProtectVirtualMemory` | changing page permissions RW→RX | T1055 |
+| `NtWriteVirtualMemory` | writing shellcode cross-process | T1055.012 |
+| `NtMapViewOfSection` | section-based injection (Process Doppelganging / Ghosting) | T1055.013 |
+| `NtCreateSection` | paired with MapViewOfSection | T1055.013 |
+| `NtOpenProcess` | opening the target process for a handle | T1057 |
+| `NtQueueApcThread` / `NtQueueApcThreadEx` | APC injection | T1055.004 |
+| `NtCreateProcess` / `NtCreateProcessEx` / `NtCreateUserProcess` | creating child processes (incl. PPID spoofing) | T1106 |
+| `NtSetContextThread` | changing thread context (thread hijacking injection) | T1055.003 |
+| `NtResumeThread` | resuming threads after injection | T1055 |
+| `NtQuerySystemInformation` | enumerating processes / drivers / handles | T1057 / T1082 |
+| `NtAdjustPrivilegesToken` | privilege escalation for SeDebugPrivilege etc. | T1134 |
+| `NtLoadDriver` | loading kernel drivers (BYOVD) | T1543.003 |
 
-### 验证 hook 是否存在
+### Verifying Whether a Hook Exists
 
 ```powershell
-# 简单：把磁盘 ntdll 和当前进程的 ntdll 反汇编 diff
-# 1. 拿磁盘 ntdll
+# simple: disassemble-diff the on-disk ntdll against the current process's ntdll
+# 1. grab the on-disk ntdll
 copy C:\Windows\System32\ntdll.dll C:\temp\ntdll_clean.dll
 
-# 2. 在 windbg 中 attach 任意进程，导出当前 ntdll 的 .text 段
+# 2. attach any process in windbg, export the live ntdll .text section
 # .writemem c:\temp\ntdll_live.bin ntdll!.text L?<size>
 
-# 3. 用 IDA / radare2 反汇编 NtAllocateVirtualMemory，正常应该是：
+# 3. disassemble NtAllocateVirtualMemory in IDA / radare2; the normal form is:
 #    mov r10, rcx
 #    mov eax, <SSN>
 #    test byte ptr [...]
 #    jne ...
 #    syscall
 #    ret
-# 如果第一条变成 jmp <某地址>，那就是 hook
+# if the first instruction becomes jmp <some address>, that's a hook
 ```
 
-## 3. 内核 callback 监控点
+## 3. Kernel Callback Monitoring Points
 
-EDR 注册的常见内核回调（一律可被 `attack-chain` 中的 BYOVD 路线 unregister，但代价高）：
+Common kernel callbacks registered by EDR (all could be unregistered via the BYOVD route in `attack-chain`, but at high cost):
 
-| API | 注册的回调时机 | 防御方用途 |
+| API | Callback timing | Defender purpose |
 |-----|--------------|-----------|
-| `PsSetCreateProcessNotifyRoutineEx` | 进程创建 / 退出 | 拦截可疑 child process |
-| `PsSetCreateThreadNotifyRoutine` | 线程创建 / 退出 | 检测远程线程注入 |
-| `PsSetLoadImageNotifyRoutine` | DLL / EXE 加载到任意进程 | 模块完整性 / 未签名拦截 |
-| `CmRegisterCallback` / `CmRegisterCallbackEx` | 注册表操作 | 持久化检测 |
-| `ObRegisterCallbacks` | `OpenProcess` / `OpenThread` 句柄请求 | 防止 LSASS 句柄获取 (T1003.001) |
-| `MmRegisterPhysicalMemoryCallback` | 物理内存映射 | 防 DMA / 内存取证 |
-| `IoRegisterFsRegistrationChange` | 文件系统注册 | minifilter 协同 |
-| `KeRegisterNmiCallback` | NMI（极少 EDR 用） | 异常监控 |
-| `EtwRegister` (内核侧) | 内核 ETW 上报 | 跟 ETW-TI 共生 |
+| `PsSetCreateProcessNotifyRoutineEx` | process create / exit | intercept suspicious child processes |
+| `PsSetCreateThreadNotifyRoutine` | thread create / exit | detect remote thread injection |
+| `PsSetLoadImageNotifyRoutine` | DLL / EXE loaded into any process | module integrity / unsigned interception |
+| `CmRegisterCallback` / `CmRegisterCallbackEx` | registry operations | persistence detection |
+| `ObRegisterCallbacks` | `OpenProcess` / `OpenThread` handle requests | prevent LSASS handle acquisition (T1003.001) |
+| `MmRegisterPhysicalMemoryCallback` | physical memory mapping | anti-DMA / memory forensics |
+| `IoRegisterFsRegistrationChange` | filesystem registration | minifilter coordination |
+| `KeRegisterNmiCallback` | NMI (rarely used by EDR) | anomaly monitoring |
+| `EtwRegister` (kernel side) | kernel ETW reporting | symbiotic with ETW-TI |
 
-### 用 windbg 枚举已注册 callback
+### Enumerating Registered Callbacks With windbg
 
 ```text
 0: kd> dx -r1 nt!PspCreateProcessNotifyRoutine
@@ -115,112 +115,113 @@ EDR 注册的常见内核回调（一律可被 `attack-chain` 中的 BYOVD 路�
 0: kd> !object \Callback\ProcessObject
 ```
 
-或用 PChunter / DRVHV 这类工具，普通用户可视化看 callback 列表。
+Or use tools like PChunter / DRVHV for a visual callback list as a normal user.
 
-## 4. 静态 dump hook 表（IDA + windbg 流程）
+## 4. Statically Dumping Hook Tables (IDA + windbg workflow)
 
-### 流程 A：单进程比对
+### Workflow A: Single-Process Comparison
 
 ```text
-1. 找一个已被 EDR 注入用户态组件的进程（任意已存活进程）
+1. Find a process that EDR has already injected its user-mode component into (any surviving process)
 2. windbg attach (-pn target.exe)
-3. lm m ntdll  → 拿到模块基址
+3. lm m ntdll  → get the module base
 4. .writemem c:\temp\ntdll_live.bin ntdll+0x0 L?<image size>
-5. 把 C:\Windows\System32\ntdll.dll 复制为 c:\temp\ntdll_disk.dll
-6. 在 IDA 里加载两个文件，跳到 NtAllocateVirtualMemory：
-     - disk：标准 prologue
-     - live：第一条 jmp <0x7FFE000000xx>
-7. 跟着 jmp 目标地址 → 那就是 EDR 的 trampoline，dump 出来
-8. 进 trampoline 看它最终落到哪个 DLL，确认 EDR 模块名
+5. copy C:\Windows\System32\ntdll.dll to c:\temp\ntdll_disk.dll
+6. Load both files in IDA, jump to NtAllocateVirtualMemory:
+     - disk: standard prologue
+     - live: first instruction jmp <0x7FFE000000xx>
+7. Follow the jmp target → that's the EDR trampoline; dump it
+8. Enter the trampoline to see which DLL it finally lands in; confirm the EDR module name
 ```
 
-### 流程 B：批量 hook 表生成
+### Workflow B: Batch Hook Table Generation
 
-用 `HookHunter` 或自写脚本：
+Use `HookHunter` or a custom script:
 
 ```powershell
-# pseudo workflow，详见 references 提到的脚本
+# pseudo workflow; see the scripts referenced in the references
 $disk = Get-Content C:\Windows\System32\ntdll.dll -Encoding Byte
-$live = # 通过 OpenProcess + ReadProcessMemory 拿
-# 对比 .text 段每个 export 的前 16 字节
+$live = # obtained via OpenProcess + ReadProcessMemory
+# compare the first 16 bytes of every export in the .text section
 ```
 
-## 5. pe-sieve 自动检测
+## 5. pe-sieve Automatic Detection
 
-`pe-sieve` 是侦察 EDR hook 与 implant 自检的首选：
+`pe-sieve` is the first choice for recon of EDR hooks and implant self-checks:
 
 ```powershell
-# 基本扫描
+# basic scan
 pe-sieve64.exe /pid 1234
 
-# 推荐组合（含 shellcode 与 hook 检测）
+# recommended combo (shellcode + hook detection)
 pe-sieve64.exe /pid 1234 /shellc 3 /modules 3 /imp 3 /data 3 /dir hooks_dump
 
-# 关键参数：
-#   /shellc N    shellcode 扫描等级 (0-3)
-#   /modules N   模块完整性检查 (0-3)
-#   /imp N       IAT hook 检查
-#   /data N      数据段扫描
-#   /dir <path>  dump 输出目录
+# key parameters:
+#   /shellc N    shellcode scan level (0-3)
+#   /modules N   module integrity check (0-3)
+#   /imp N       IAT hook check
+#   /data N      data section scan
+#   /dir <path>  dump output directory
 ```
 
-输出会在 `hooks_dump/<pid>.<name>/` 下产生 `*.tag` 文件，列出 hook 地址：
+Output produces `*.tag` files under `hooks_dump/<pid>.<name>/` listing hook addresses:
 
 ```text
-modified_modules.tag 示例：
+modified_modules.tag example:
 71f10000;ntdll.dll
 71f1a3b0;hook;jmp_far
 71f1c020;hook;jmp_near
 ```
 
-可直接喂给 IDA 跳到对应 RVA 做后续分析。
+Feed directly into IDA and jump to the corresponding RVA for follow-up analysis.
 
-### 在 implant 中嵌入 pe-sieve（自检）
+### Embedding pe-sieve in an Implant (self-check)
 
-实战中常把 `pe-sieve` 编译为 lib (`libpe-sieve`)，让 implant 启动时先自检：如果 ntdll 有 hook，就触发 unhook 流程；如果发现自己被 hook 反而要小心，可能在沙箱里。
+In practice, compile `pe-sieve` as a lib (`libpe-sieve`) so the implant self-checks at startup: if ntdll has hooks, trigger the unhook flow; if it finds itself hooked, be careful — it might be in a sandbox.
 
-## 6. API Monitor v2 动态观察
+## 6. API Monitor v2 Dynamic Observation
 
-API Monitor v2（Rohitab）适合在 lab 里看 EDR 在何时何处插入 hook：
+API Monitor v2 (Rohitab) is good for watching in the lab where and when EDR inserts hooks:
 
 ```text
-1. 启动 API Monitor v2（管理员）
-2. API Filter 勾选：
+1. start API Monitor v2 (admin)
+2. in API Filter tick:
      - NT Native API → Memory Management
      - NT Native API → Process and Thread
-     - Windows Defender / AMSI（如果可见）
-3. Monitor New Process → 选择 implant 测试样本
-4. 观察：
-     - NtAllocateVirtualMemory 调用顺序
-     - 是否被 EDR DLL 中转
-5. 在 Modules tab 看哪些 EDR DLL 被 LoadLibrary 注入
+     - Windows Defender / AMSI (if visible)
+3. Monitor New Process → select the implant test sample
+4. observe:
+     - NtAllocateVirtualMemory call order
+     - whether it is relayed through an EDR DLL
+5. in the Modules tab, see which EDR DLLs were LoadLibrary-injected
 ```
 
-## 7. 常见 EDR DLL（用户态）速查
+## 7. Common EDR DLLs (user mode) Cheatsheet
 
-| DLL | 厂商 | 备注 |
+| DLL | Vendor | Notes |
 |-----|------|------|
 | `umppc*.dll` | Microsoft Defender | MpClient userland |
 | `mpoav.dll` | Microsoft Defender | AMSI provider |
 | `aswAMSI.dll` | Avast | AMSI provider |
 | `eamsi.dll` | ESET | AMSI provider |
-| `IDPMServiceClient.dll` | Sophos | HMPA 注入 |
-| `klsihk64.dll` | Kaspersky | 注入到目标进程 |
-| `CrowdStrike.Sensor.dll` | CrowdStrike | 旧版本，新版主要靠内核 |
-| `SentinelInjection64.dll` | SentinelOne | 用户态注入 |
-| `TmUmEvt64.dll` | Trend Micro | 行为监控 |
+| `IDPMServiceClient.dll` | Sophos | HMPA injection |
+| `klsihk64.dll` | Kaspersky | injected into target processes |
+| `CrowdStrike.Sensor.dll` | CrowdStrike | old versions; newer relies mainly on kernel |
+| `SentinelInjection64.dll` | SentinelOne | user-mode injection |
+| `TmUmEvt64.dll` | Trend Micro | behavior monitoring |
 
-确认目标 EDR 后，再决定逆向哪个 DLL 取 hook 表。
+After confirming the target EDR, decide which DLL to reverse for the hook table.
 
-## 参考链接
+## Reference Links
 
-- pe-sieve：<https://github.com/hasherezade/pe-sieve>
-- HollowsHunter：<https://github.com/hasherezade/hollows_hunter>
-- API Monitor v2：<http://www.rohitab.com/apimonitor>
-- MITRE ATT&CK T1562：<https://attack.mitre.org/techniques/T1562/>
-- MITRE ATT&CK T1055：<https://attack.mitre.org/techniques/T1055/>
-- ired.team EDR notes：<https://www.ired.team/offensive-security/defense-evasion>
+- pe-sieve: <https://github.com/hasherezade/pe-sieve>
+- HollowsHunter: <https://github.com/hasherezade/hollows_hunter>
+- API Monitor v2: <http://www.rohitab.com/apimonitor>
+- MITRE ATT&CK T1562: <https://attack.mitre.org/techniques/T1562/>
+- MITRE ATT&CK T1055: <https://attack.mitre.org/techniques/T1055/>
+- ired.team EDR notes: <https://www.ired.team/offensive-security/defense-evasion>
 
-## 路由回调
+## Routing Callback
 
-完成 hook 调研后，回到 `SKILL.md` 的 Step 3 选择绕过技术组合，然后按 `references/unhook-techniques.md` 与 `references/telemetry-blinding.md` 执行。
+After the hook survey, return to Step 3 of `SKILL.md` to select the bypass technique combination, then execute per `references/unhook-techniques.md` and `references/telemetry-blinding.md`.
+

@@ -1,11 +1,11 @@
-# Evidence → Finding → Path 证据链
+# Evidence → Finding → Path Chain
 
-> 灵感来自 Z3r0 Evidence Plane，落地为 **Markdown 字段契约**。  
-> reverse-skill 特色：与 `docs-generator` 报告模板、`field-journal` 脱敏回写、可复现命令绑定。
+> Inspired by the Z3r0 Evidence Plane, implemented as a **Markdown field contract**.  
+> reverse-skill feature: ties into `docs-generator` report templates, `field-journal` sanitized writeback, and reproducible commands.
 
-## 1. Evidence（不可变观察）
+## 1. Evidence (immutable observations)
 
-每条证据独立一段或表行：
+Each piece of evidence is its own paragraph or table row:
 
 ```markdown
 ### E-{nnn}
@@ -18,14 +18,14 @@
 - repro_command: |
     {exact command}
 - raw_excerpt: |
-    {脱敏摘录}
+    {sanitized excerpt}
 - linked_workitem: WI-{nnn} | n/a
 - supersedes: E-{nnn} | none
 ```
 
-**MUST**：Finding 引用的 Evidence 至少 1 条；`repro_command` 第三方可跑或标明离线限制。
+**MUST**: every Finding references at least 1 Evidence; `repro_command` must be runnable by a third party or flagged as offline-limited.
 
-**CLI helper**（写入 `work/<case>/evidence/E-*.md`）：
+**CLI helper** (writes `work/<case>/evidence/E-*.md`):
 
 ```powershell
 powershell -File skills/scripts/append-evidence.ps1 -CaseRoot work/<case> `
@@ -40,7 +40,7 @@ python3 skills/case-review/scripts/review_case.py work/<case> --verify-hashes --
 
 The review is read-only and checks scope fields, Evidence records, work item and timeline references, structured Findings, Paths, and artifact hash matches.
 
-## 2. Finding（安全/逆向结论）
+## 2. Finding (security/reversing conclusion)
 
 ```markdown
 ### F-{nnn}
@@ -59,17 +59,17 @@ The review is read-only and checks scope fields, Evidence records, work item and
 - optional_attack: {ATT&CK ID or empty}
 ```
 
-**MUST**：`evidence_ids` 非空；`status=validated` 时 confidence 不得为 low（除非标注 residual risk）。
+**MUST**: `evidence_ids` non-empty; when `status=validated`, confidence must not be low (unless residual risk is flagged).
 
-## 3. Path（攻击路径 / 调用路径 / 解题路径）
+## 3. Path (attack path / call path / solve path)
 
-统一叫 **Path**，按任务类型解释：
+Uniformly called **Path**, interpreted by task type:
 
-| 任务 | Path 含义 |
+| Task | Path meaning |
 |------|-----------|
-| 渗透 / 攻击链 | 攻击路径步骤 |
-| 逆向 | 关键调用/数据流步骤 |
-| CTF | 解题步骤 |
+| Pentest / attack chain | attack path steps |
+| Reversing | key call/data-flow steps |
+| CTF | solve steps |
 
 ```markdown
 ### P-{nnn}
@@ -83,34 +83,34 @@ The review is read-only and checks scope fields, Evidence records, work item and
 - residual_risks:
 ```
 
-**MUST**：每步可关联 Evidence；攻击路径终点 Finding 若声明「已拿权限/数据」必须有 validated 证据。
+**MUST**: every step links to Evidence; a terminal-path Finding claiming "obtained access/data" requires validated evidence.
 
-## 4. 报告中的位置
+## 4. Position in the report
 
-`docs-generator` 安全报告 **MUST** 含：
+The `docs-generator` security report **MUST** contain:
 
-1. Scope 摘要（链到 case `scope.md`）  
-2. Evidence 表或章节  
-3. Findings 列表（含 evidence_ids）  
-4. 至少 1 条 Path（攻击/调用/解题）  
-5. Timeline 摘要（可选全文链到 `timeline.md`）
+1. Scope summary (linked to case `scope.md`)  
+2. Evidence table or section  
+3. Findings list (including evidence_ids)  
+4. At least 1 Path (attack/call/solve)  
+5. Timeline summary (optional, linking to `timeline.md`)
 
-详见 `docs-generator/references/security-report-templates.md` 中 **Evidence Chain** 节。
+See the **Evidence Chain** section of `docs-generator/references/security-report-templates.md`.
 
-## 5. field-journal 挂钩
+## 5. field-journal Hook
 
-回写 journal 时 **SHOULD** 摘录：
+When writing back to the journal, **SHOULD** excerpt:
 
-- 3 条内关键 Evidence id + 命令  
-- 1 条核心 Finding  
-- 可复用 Path 模式一句话  
+- up to 3 key Evidence ids + commands  
+- 1 core Finding  
+- one sentence describing a reusable Path pattern  
 
-完整敏感内容只在用户项目报告中；journal **MUST** 脱敏（`anonymization.md`）。
+Full sensitive content stays only in the user project report; the journal **MUST** be sanitized (`anonymization.md`).
 
-## 6. 与 Z3r0 的差异（特色）
+## 6. Differences from Z3r0 (features)
 
 | Z3r0 | reverse-skill |
 |------|----------------|
-| PG 不可变行 + API | Markdown 文件 + hash 字段 |
-| UI 审阅队列 | 报告 + next-step 菜单 + journal |
-| ATT&CK 深度绑定 | 可选标签，不强制 UI |
+| PG immutable rows + API | Markdown files + hash fields |
+| UI review queue | report + next-step menu + journal |
+| deep ATT&CK binding | optional tags, no forced UI |
