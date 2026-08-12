@@ -71,3 +71,4 @@ master-route-*/
 mcps/
 # local experiment dirs (never ship)
 *-scope-*/
+.trash/

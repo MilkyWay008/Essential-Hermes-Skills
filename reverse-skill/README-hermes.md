@@ -32,28 +32,55 @@
 
 ## Install into Hermes
 
-### Option A — install individual modules (recommended)
+### Option A — install the whole pack as one folder (recommended)
 
-Copy only the module folders you need into your Hermes profile's skills directory:
-
-```bash
-# generic — replace <profile> with your Hermes profile name
-cp -r skills/apk-reverse ~/.hermes/skills/            # or your profile skills dir
-cp -r skills/ida-reverse ~/.hermes/skills/
-cp -r skills/malware-analysis ~/.hermes/skills/
-```
-
-Each module loads as a standalone skill with its own trigger description. No router required for single-module use.
-
-### Option B — install the whole pack (router + all modules)
-
-Copy the entire `skills/` content into your skills directory:
+Copy the entire `skills/` folder into your Hermes skills directory as a **single folder named `reverse-skill`**:
 
 ```bash
-cp -r skills/* ~/.hermes/skills/
+# Hermes sees one clean entry: ~/.hermes/skills/reverse-skill/
+cp -r skills ~/.hermes/skills/reverse-skill/
 ```
 
-This installs the `reverse-skill-router` (which dispatches across modules) plus all 43 specialist skills. The router fires when a task spans modules or the entrypoint is unclear.
+The folder contains the `SKILL.md` router (the pack's entry point) plus all 43 specialist modules nested inside. Hermes groups everything under `reverse-skill/` — one tidy folder, not 44 folders scattered in your skills root. The router fires when a task spans modules or the entrypoint is unclear; individual modules also fire on their own triggers (e.g. *"analyze this APK"* → `apk-reverse`).
+
+### Option B — install the whole pack, then hide the long-tail
+
+Same folder install as Option A, then disable the rarely-used modules so they don't clutter the Hermes skill index:
+
+```bash
+cp -r skills ~/.hermes/skills/reverse-skill/
+```
+
+Then in your Hermes `config.yaml`, add the modules you don't need day-to-day:
+
+```yaml
+skills:
+  disabled:
+    - radio-sdr
+    - ot-ics
+    - hardware-security
+    # ... add any module you rarely reach for
+```
+
+Disabled skills are hidden from the index and skill list, but their files stay on disk — a skill librarian (or `read_file` on the module's `SKILL.md` path) can still find them when a task actually needs them. Best of both worlds: a clean index, with the full pack one `read_file` away.
+
+> **Hidden ≠ unreachable through the router.** The router dispatches by **file path**, not through the skill index — it reads `MASTER-ROUTING.md`, `routing.json`, and each module's `SKILL.md` directly from disk. So a module you disabled is still fully reachable whenever the router routes to it; disabling only removes it from the skill index, never from the pack's routing.
+
+### Option C — cherry-pick individual modules
+
+Copy only the module folders you need — **into the same `reverse-skill/` folder**, not the skills root:
+
+```bash
+# keep everything grouped: ~/.hermes/skills/reverse-skill/<module>/
+mkdir -p ~/.hermes/skills/reverse-skill/
+cp -r skills/apk-reverse ~/.hermes/skills/reverse-skill/
+cp -r skills/ida-reverse ~/.hermes/skills/reverse-skill/
+cp -r skills/malware-analysis ~/.hermes/skills/reverse-skill/
+```
+
+Each module loads as a standalone skill with its own trigger description. No router required for single-module use — use this when you want just a few specialists without the full pack.
+
+> **Why the same folder?** Modules reference shared scaffolding via relative paths (`../scripts/case-init.ps1`, `../ops/scope-contract.md`, `../field-journal/precedent-auth.md`, `../tool-index.md`). Copying a module into the `reverse-skill/` folder keeps those paths resolving to the pack's shared files; copying it flat into the skills root would break them.
 
 ### Verify
 

@@ -69,29 +69,15 @@ Each skill is **self-contained**, **production-tested**, and documented with its
 
 ### 2. 🕵️ `reverse-skill` — Open Up Any Program and See What's Inside
 
-**What it is (plain English):** software is a black box — you see what it *shows* you, not what it *does*. When a program breaks, won't start, acts suspicious, or hides its logic, reverse-skill gives your agent the tools to open the box: read the code inside apps, find out why they crash, see what they send over the internet, and judge whether they're safe to trust. An 85-skill pack ported from the popular [reverse-skill](https://github.com/zhaoxuya520/reverse-skill) project (23.9k⭐).
+**What it is:** software is a black box — you see what it *shows* you, not what it *does*. When a program breaks, won't start, acts suspicious, or hides its logic, this 85-skill pack (ported from the popular [reverse-skill](https://github.com/zhaoxuya520/reverse-skill) project, 23.9k⭐) gives your agent the tools to open the box: read the code inside apps, find out why they crash, and judge whether they're safe.
 
-**Everyday examples of what this gets you:**
-- **"This app won't open anymore."** A program (say, QuickBooks) crashes on launch and the error message says nothing useful. reverse-skill inspects the compiled code, finds the missing dependency or corrupted check, and tells you exactly what broke — instead of guessing.
-- **"Is this downloaded file safe?"** You grabbed something from a sketchy site. The malware-analysis module dissects it safely — what it does, where it's trying to phone home — without running it on your machine.
-- **"Why can't I log in to this website?"** A login form sends encrypted parameters you can't reproduce in your own test script. The JS reverse module figures out how the signing works, so you can test your integration properly.
-- **"Why is my app calling home?"** Suspicious network traffic from a tool you use? reverse-skill traces what it sends, where, and why.
+**Everyday examples:**
+- **"This app won't open anymore."** A program (say, QuickBooks) crashes on launch and the error says nothing useful. reverse-skill inspects the compiled code, finds what broke, and tells you exactly why.
+- **"Is this downloaded file safe?"** You grabbed something from a sketchy site. The malware-analysis module dissects it — what it does, where it phones home — without running it on your machine.
 
-**Why coders and IT pros need this in their job:**
-- **Troubleshooting closed-source software** — when vendor code breaks and the error message lies, reverse engineering is how you find the truth instead of uninstalling and hoping
-- **Security audits** — before you trust a tool, a dependency, or an app in your environment, you can verify what it actually does
-- **Working with legacy or unknown code** — no source code? No problem. Read the compiled version
-- **CTF and security careers** — this is the exact skill set security jobs are built on
+**Why coders and IT pros need it:** troubleshooting closed-source software, security audits, and working with legacy code you don't have the source for.
 
-**Under the hood (for the technically curious):**
-- **Router-first design** — a `reverse-skill-router` skill reads the task, picks the PRIMARY module, and enforces the authorization contract (authorized-use only)
-- **Self-evolving** — each task writes lessons to `field-journal/`, so the next similar target skips trial-and-error
-- **On-demand tool bootstrap** — missing jadx/frida/ghidra? The bootstrap manifest provisions it (commercial tools stay manual-license-only)
-- **Cross-platform** — every helper ships as both PowerShell (`.ps1`) and POSIX shell (`.sh`) twins
-- **85 skills, one install** — copy the whole pack, or cherry-pick individual modules (each has its own English trigger description)
-- **Fully attributed** — a fork/port of the upstream project; deep reference content preserved verbatim (see the language note in `reverse-skill/README.md`)
-
-**Trigger phrases:** *"this app won't open" · "is this file safe" · "analyze this APK" · "reverse this .NET binary" · "why is this app calling home"* — any troubleshooting / security-audit / RE task
+**Trigger phrases:** *"this app won't open" · "is this file safe" · "analyze this APK" · "why is this app calling home"* — any troubleshooting / security-audit / RE task
 
 ---
 
