@@ -159,7 +159,7 @@ For English user requests, respond in English. For Chinese user requests, respon
 | Mermaid CLI (mmdc) | ✓ | npm install -g @mermaid-js/mermaid-cli | Renders Mermaid to PNG/SVG |
 | Graphviz (dot) | ✗ | Manual install | https://graphviz.org/download/ |
 | PlantUML | ✗ | Requires Java + plantuml.jar | https://plantuml.com/download |
-| Python (render script) | ✓ | Already in bootstrap | `scripts/render_diagram.py` dependencies |
+| Python (render script) | ✓ | Python itself | `scripts/render_diagram.py` degrades gracefully; renderers (`mmdc`/`dot`/`plantuml`) are external, install manually per script hints |
 
 ### Notes
 

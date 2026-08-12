@@ -549,6 +549,24 @@
       "canAutoInstall": true,
       "verifyCommand": "bkcrack",
       "kaliNote": "传统 ZipCrypto 已知明文攻击工具；Kali/Debian 可通过 apt 安装。"
+    },
+    {
+      "name": "js-reverse-mcp",
+      "bootstrapKind": "npm-mcp",
+      "npmPackage": "js-reverse-mcp@4.0.1",
+      "mcpNames": [
+        "js-reverse"
+      ],
+      "mcpCommand": "npx",
+      "mcpArgs": [
+        "-y",
+        "js-reverse-mcp@4.0.1"
+      ],
+      "mcpEnv": {},
+      "docsUrl": "https://github.com/zhizhuodemao/js-reverse-mcp",
+      "canAutoInstall": true,
+      "verifyCommand": "npx",
+      "pinnedVersion": "4.0.1"
     }
   ]
 }

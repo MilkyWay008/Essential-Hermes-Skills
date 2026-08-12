@@ -37,8 +37,9 @@ function Get-ListLine([string]$Text, [string]$Marker) {
   $lines = $Text -split "`r?`n"
   for ($i = 0; $i -lt $lines.Count; $i++) {
     if ($lines[$i] -match [regex]::Escape($Marker)) {
-      $inline = [regex]::Match($lines[$i], '）：(.+?)\s*$')
-      if ($inline.Success) { return $inline.Groups[1].Value }
+      # inline list after fullwidth or ASCII paren: "marker）：a, b" / "marker): a, b"
+      $inline = [regex]::Match($lines[$i], '[）：:]\s*(.+?)\s*$')
+      if ($inline.Success -and $inline.Groups[1].Value -match ',') { return $inline.Groups[1].Value }
       if ($i + 1 -lt $lines.Count) { return $lines[$i + 1] }
     }
   }
@@ -56,7 +57,7 @@ $rulesEn = Get-Content (Join-Path $Root 'RULES.md') -Raw -Encoding UTF8
 $skillMd = Get-Content (Join-Path $Root 'skills\SKILL.md') -Raw -Encoding UTF8
 
 $enList = Get-ListLine $rulesEn 'Supported capability names'
-$skList = Get-ListLine $skillMd '支持的能力'
+$skList = Get-ListLine $skillMd 'Supported capabilities'
 
 Check 'RULES.md capability list' (Test-ListHasAll $enList $capNames) "expected $($capNames.Count) capabilities: $($capNames -join ', ')"
 Check 'SKILL.md capability list' (Test-ListHasAll $skList $capNames) "expected $($capNames.Count) capabilities"

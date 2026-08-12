@@ -152,7 +152,7 @@ or (POSIX):
 bash scripts/bootstrap-reverse.sh -c "tool-name" --start-services
 ```
 
-Supported capabilities (per `scripts/bootstrap-manifest.json`): jadx, apktool, jeb-pro, frida, frida-ps, idalib-mcp, reqable-mcp, jshookmcp, **anything-analyzer**, idapro, r2, rabin2, adb, agent-browser, ghidra-mcp, seclists, proxycat, burpsuite-mcp, nmap, pentestswarm, binwalk, yara, pwntools, bkcrack
+Supported capabilities (per `scripts/bootstrap-manifest.json`): jadx, apktool, jeb-pro, frida, frida-ps, idalib-mcp, reqable-mcp, jshookmcp, js-reverse-mcp, anything-analyzer, idapro, r2, rabin2, adb, agent-browser, ghidra-mcp, seclists, proxycat, burpsuite-mcp, nmap, pentestswarm, binwalk, yara, pwntools, bkcrack
 
 > JEB Pro is registered as a **manual-license install** capability: bootstrap only prints guidance, never downloads or circumvents commercial licensing. Reqable MCP only registers the pinned official runtime; you must install the Reqable desktop client yourself.
 >

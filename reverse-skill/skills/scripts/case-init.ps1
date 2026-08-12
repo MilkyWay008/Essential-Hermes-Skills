@@ -150,7 +150,7 @@ if ((Test-Path $routeScript) -and $Hint) {
         $scopeRoute = Join-Path $tmp 'route-scope.md'
         if (Test-Path $scopeRoute) {
             $rt = Get-Content $scopeRoute -Raw -Encoding UTF8
-            if ($rt -match 'primary_skill:\s*skills/(\S+)') { $primary = $Matches[1] }
+            if ($rt -match 'primary_skill:\s*(?:skills/)?(\S+)') { $primary = $Matches[1] }
             if ($rt -match 'primary:\s*(\S+)') { $primaryId = $Matches[1] }
         }
     } finally {
@@ -234,14 +234,14 @@ $assetsBlock
   - $checkScope in_scope.assets non-empty OR offline sample path set
   - $checkNet network_profile.mode chosen
   - [ ] out_of_scope reviewed
-  - [ ] roles assigned (see skills/ops/role-map.md)
+  - [ ] roles assigned (see ops/role-map.md)
 
 ## ops_refs
-- skills/ops/scope-contract.md
-- skills/ops/evidence-finding-path.md
-- skills/ops/role-map.md
-- skills/ops/timeline-workitem.md
-- skills/ops/IDENTITY.md
+- ops/scope-contract.md
+- ops/evidence-finding-path.md
+- ops/role-map.md
+- ops/timeline-workitem.md
+- ops/IDENTITY.md
 "@
 
 $timeline = @"
@@ -249,7 +249,7 @@ $timeline = @"
 
 ## $created | lead | init
 - action: case-init
-- command_or_ref: skills/scripts/case-init.ps1
+- command_or_ref: scripts/case-init.ps1
 - result_summary: $timelineSummary
 - artifacts: [scope.md, workitems.md]
 - evidence_ids: []
@@ -273,8 +273,8 @@ $workitems = @"
 - [ ] field-journal anonymized
 
 ## Refs
-- skills/ops/timeline-workitem.md
-- skills/ops/evidence-finding-path.md
+- ops/timeline-workitem.md
+- ops/evidence-finding-path.md
 "@
 
 $utf8 = New-Object System.Text.UTF8Encoding $true
@@ -285,19 +285,19 @@ $utf8 = New-Object System.Text.UTF8Encoding $true
 $readmeNext = if ($ready) {
     @"
 1. Scope is ready_for_act=true (auth granted + in_scope set)
-2. Open primary skill: skills/$primary
+2. Open primary skill: $primary
 3. Append ``timeline.md``; update ``workitems.md``
-4. Append Evidence: ``skills/scripts/append-evidence.ps1 -CaseRoot <this dir> ...``
-5. Promote findings with Evidence chain (skills/ops/evidence-finding-path.md)
+4. Append Evidence: ``scripts/append-evidence.ps1 -CaseRoot <this dir> ...``
+5. Promote findings with Evidence chain (ops/evidence-finding-path.md)
 6. Report via docs-generator; journal via field-journal
 "@
 } else {
     @"
 1. Edit ``scope.md`` — set auth.status=granted and in_scope (or re-run with -AuthGranted -TargetUrl)
 2. Set ready_for_act when checklist complete
-3. Open primary skill: skills/$primary
+3. Open primary skill: $primary
 4. Append ``timeline.md``; update ``workitems.md``
-5. Promote findings with Evidence chain (skills/ops/evidence-finding-path.md)
+5. Promote findings with Evidence chain (ops/evidence-finding-path.md)
 6. Report via docs-generator; journal via field-journal
 "@
 }
@@ -311,7 +311,7 @@ $readmeNext
 
 Write-Host ("CASE -> {0}" -f $caseRoot) -ForegroundColor Green
 Write-Host ("PROJECT -> {0}" -f $projectRoot)
-Write-Host ("PRIMARY skill: skills/{0} ({1})" -f $primary, $primaryId)
+Write-Host ("PRIMARY skill: {0} ({1})" -f $primary, $primaryId)
 Write-Host ("auth.status={0} network_profile={1} ready_for_act={2}" -f $authStatusResolved, $networkMode, $readyStr)
 if ($ready) {
     Write-Host 'NEXT: open PRIMARY SKILL.md and ACT within scope' -ForegroundColor Green

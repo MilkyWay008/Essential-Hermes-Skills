@@ -53,46 +53,46 @@ python3 skills/case-review/scripts/review_case.py work/<case> --verify-hashes --
 
 | ID | Condition | PRIMARY |
 |----|------|---------|
+| **R4** | DSL VM / fireye / custom opcode VM | `reverse-engineering/dsl-vm-reverse/` |
 | **R1** | APK / smali / jadx / apktool | `apk-reverse/` |
 | **R2** | IPA / iOS / Objection / MobSF / mobile | `mobile-reverse/` |
 | **R3** | JS signing / front-end crypto / jshook / CDP | `js-reverse/` |
-| **R4** | DSL VM / fireye / custom opcode VM | `reverse-engineering/dsl-vm-reverse/` |
+| **R30** | Browser extension reverse engineering | `browser-extension-reverse/` |
+| **R31** | macOS / Mach-O | `macos-reverse/` |
+| **R33** | Go / Rust binaries | `go-rust-reverse/` |
 | **R5** | .NET / dnSpy / de4dot / ConfuserEx | `dotnet-reverse/` |
 | **R9** | Malicious samples / YARA / sandbox | `malware-analysis/` |
+| **R21** | Protocols / Protobuf / PCAP protocol | `protocol-reverse/` |
+| **R22** | Ghidra / open-source decompilation | `ghidra-reverse/` |
 | **R6** | IDA / decompilation / deep disassembly | `ida-reverse/` |
 | **R7** | radare2 / r2 | `radare2/` |
 | **R8** | Firmware / binwalk / IoT / EMBA | `firmware-pentest/` |
+| **R34** | Hardware debug ports / UART/JTAG | `hardware-security/` |
+| **R28** | OT / ICS / industrial control | `ot-ics/` |
+| **R17** | pwn / ROP / stack exploitation | `pwn-chain/` |
+| **R16** | N-day / patch diffing | `patch-diff-exploit/` |
+| **R18** | EDR / AV evasion / syscall | `edr-bypass-re/` |
+| **R24** | Windows / AD / Kerberos / AD CS | `windows-ad/` |
+| **R37** | Federated identity SAML/OIDC | `identity-federation/` |
+| **R23** | Cloud / containers / K8s | `cloud-k8s/` |
+| **R35** | Database security | `database-security/` |
+| **R25** | Forensics / memory dumps / timelines | `digital-forensics/` |
+| **R36** | Email / phishing analysis | `email-security/` |
+| **R29** | Wi-Fi / wireless pentest | `wifi-wireless/` |
+| **R38** | RF / SDR research | `radio-sdr/` |
+| **R32** | Thick client security | `thick-client/` |
+| **R26** | Code audit / SAST / Semgrep | `code-audit/` |
+| **R27** | Threat hunting / detection engineering / blue team | `threat-hunting/` |
 | **R10** | Attack chain / red team / lateral / full pentest | `attack-chain/` |
 | **R11** | Nmap / Nuclei / SQLMap / SRC / pentest tools | `pentest-tools/` |
 | **R12** | API / GraphQL / BOLA / JWT attacks | `api-security/` |
 | **R13** | SBOM / Trivy / supply chain | `supply-chain-security/` |
 | **R14** | LLM / prompt injection / agent security | `llm-security/` |
 | **R15** | bindiff / symbol migration / PDB | `binary-diff/` |
-| **R16** | N-day / patch diffing | `patch-diff-exploit/` |
-| **R17** | pwn / ROP / stack exploitation | `pwn-chain/` |
-| **R18** | EDR / AV evasion / syscall | `edr-bypass-re/` |
 | **R19** | Browser/desktop automation | `browser-automation/` |
+| **R40** | Case / Evidence graph review | `case-review/` |
 | **R20** | Reports / writeups | `docs-generator/` |
 | **R39** | Diagrams / Mermaid / Graphviz / PlantUML / architecture diagrams | `diagram-generator/` |
-| **R40** | Case / Evidence graph review | `case-review/` |
-| **R21** | Protocols / Protobuf / PCAP protocol | `protocol-reverse/` |
-| **R22** | Ghidra / open-source decompilation | `ghidra-reverse/` |
-| **R23** | Cloud / containers / K8s | `cloud-k8s/` |
-| **R24** | Windows / AD / Kerberos / AD CS | `windows-ad/` |
-| **R25** | Forensics / memory dumps / timelines | `digital-forensics/` |
-| **R26** | Code audit / SAST / Semgrep | `code-audit/` |
-| **R27** | Threat hunting / detection engineering / blue team | `threat-hunting/` |
-| **R28** | OT / ICS / industrial control | `ot-ics/` |
-| **R29** | Wi-Fi / wireless pentest | `wifi-wireless/` |
-| **R30** | Browser extension reverse engineering | `browser-extension-reverse/` |
-| **R31** | macOS / Mach-O | `macos-reverse/` |
-| **R32** | Thick client security | `thick-client/` |
-| **R33** | Go / Rust binaries | `go-rust-reverse/` |
-| **R34** | Hardware debug ports / UART/JTAG | `hardware-security/` |
-| **R35** | Database security | `database-security/` |
-| **R36** | Email / phishing analysis | `email-security/` |
-| **R37** | Federated identity SAML/OIDC | `identity-federation/` |
-| **R38** | RF / SDR research | `radio-sdr/` |
 | **R0** | General RE / anti-debug / OLLVM / unknown binaries | `reverse-engineering/` |
 
 No strong keyword matched → PRIMARY=`R0`, and prompt to open `routing.md`.

@@ -258,6 +258,8 @@ essential-hermes-skills/
 
 **MIT** — free to use, modify, and distribute. See [`LICENSE`](LICENSE).
 
+> **Mixed licensing:** the pack's `CTF-Sandbox-Orchestrator/` subtree ships under **GNU GPL v3** (its own preserved `LICENSE`) — respect GPLv3 terms when redistributing that subtree. See `reverse-skill/README.md` → Attribution & license for details.
+
 ---
 
 <p align="center">

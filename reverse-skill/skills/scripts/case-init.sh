@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # reverse-skill case initializer (bash parity of case-init.ps1 + offline/ctf presets)
 # Usage:
-#   bash skills/scripts/case-init.sh --hint "apk reverse" --case-name demo
-#   bash skills/scripts/case-init.sh --hint "local sample" --preset offline-sample --sample ./app.apk
-#   bash skills/scripts/case-init.sh --hint "ctf web" --preset ctf-public --target-url https://chal.example
+#   bash scripts/case-init.sh --hint "apk reverse" --case-name demo
+#   bash scripts/case-init.sh --hint "local sample" --preset offline-sample --sample ./app.apk
+#   bash scripts/case-init.sh --hint "ctf web" --preset ctf-public --target-url https://chal.example
 set -euo pipefail
 
 HINT=""
@@ -169,8 +169,8 @@ if [[ -f "$SCRIPT_DIR/master-route.sh" ]]; then
   set -e
   if [[ -f "$ROUTE_TMP/route-scope.md" ]]; then
     rt="$(cat "$ROUTE_TMP/route-scope.md")"
-    if printf '%s\n' "$rt" | grep -Eq '^[[:space:]]*-[[:space:]]*primary_skill:[[:space:]]*skills/'; then
-      primary="$(printf '%s\n' "$rt" | grep -E '^[[:space:]]*-[[:space:]]*primary_skill:[[:space:]]*skills/' | head -1 | sed -E 's/.*skills\///' | tr -d '\r')"
+    if printf '%s\n' "$rt" | grep -Eq '^[[:space:]]*-[[:space:]]*primary_skill:[[:space:]]*(skills/)?'; then
+      primary="$(printf '%s\n' "$rt" | grep -E '^[[:space:]]*-[[:space:]]*primary_skill:[[:space:]]*(skills/)?' | head -1 | sed -E 's/.*skills\///' | tr -d '\r')"
     fi
     if printf '%s\n' "$rt" | grep -Eq '^[[:space:]]*-[[:space:]]*primary:[[:space:]]*'; then
       primary_id="$(printf '%s\n' "$rt" | grep -E '^[[:space:]]*-[[:space:]]*primary:[[:space:]]*' | head -1 | sed -E 's/.*primary:[[:space:]]*//' | tr -d '\r')"
@@ -263,14 +263,14 @@ $assets_block
   - $check_scope in_scope.assets non-empty OR offline sample path set
   - $check_net network_profile.mode chosen
   - [ ] out_of_scope reviewed
-  - [ ] roles assigned (see skills/ops/role-map.md)
+  - [ ] roles assigned (see ops/role-map.md)
 
 ## ops_refs
-- skills/ops/scope-contract.md
-- skills/ops/evidence-finding-path.md
-- skills/ops/role-map.md
-- skills/ops/timeline-workitem.md
-- skills/ops/IDENTITY.md
+- ops/scope-contract.md
+- ops/evidence-finding-path.md
+- ops/role-map.md
+- ops/timeline-workitem.md
+- ops/IDENTITY.md
 EOF
 
 cat > "$CASE_ROOT/timeline.md" <<EOF
@@ -278,7 +278,7 @@ cat > "$CASE_ROOT/timeline.md" <<EOF
 
 ## $created | lead | init
 - action: case-init
-- command_or_ref: skills/scripts/case-init.sh
+- command_or_ref: scripts/case-init.sh
 - result_summary: $timeline_summary
 - artifacts: [scope.md, workitems.md]
 - evidence_ids: []
@@ -302,8 +302,8 @@ cat > "$CASE_ROOT/workitems.md" <<'EOF'
 - [ ] field-journal anonymized
 
 ## Refs
-- skills/ops/timeline-workitem.md
-- skills/ops/evidence-finding-path.md
+- ops/timeline-workitem.md
+- ops/evidence-finding-path.md
 EOF
 
 if [[ "$ready" == true ]]; then
@@ -311,10 +311,10 @@ if [[ "$ready" == true ]]; then
 # Case $CASE_NAME
 
 1. Scope is ready_for_act=true (auth granted + in_scope set)
-2. Open primary skill: skills/$primary
+2. Open primary skill: $primary
 3. Append \`timeline.md\`; update \`workitems.md\`
 4. Append Evidence under \`evidence/\`
-5. Promote findings with Evidence chain (skills/ops/evidence-finding-path.md)
+5. Promote findings with Evidence chain (ops/evidence-finding-path.md)
 6. Report via docs-generator; journal via field-journal
 EOF
 else
@@ -322,18 +322,18 @@ else
 # Case $CASE_NAME
 
 1. Edit \`scope.md\` — set auth.status=granted and in_scope
-   - or re-run: \`bash skills/scripts/case-init.sh --hint "..." --preset offline-sample --sample ./sample.apk\`
+   - or re-run: \`bash scripts/case-init.sh --hint "..." --preset offline-sample --sample ./sample.apk\`
    - or: \`--preset ctf-public --target-url https://...\`
 2. Set ready_for_act when checklist complete
-3. Open primary skill: skills/$primary
+3. Open primary skill: $primary
 4. Append \`timeline.md\`; update \`workitems.md\`
-5. Promote findings with Evidence chain (skills/ops/evidence-finding-path.md)
+5. Promote findings with Evidence chain (ops/evidence-finding-path.md)
 6. Report via docs-generator; journal via field-journal
 EOF
 fi
 
 echo "CASE -> $CASE_ROOT"
-echo "PRIMARY skill: skills/$primary ($primary_id)"
+echo "PRIMARY skill: $primary ($primary_id)"
 echo "auth.status=$auth_status_resolved network_profile=$network_mode ready_for_act=$ready_str"
 if [[ "$ready" == true ]]; then
   echo "NEXT: open PRIMARY SKILL.md and ACT within scope"

@@ -22,7 +22,7 @@ $configPath = Join-Path $skillsRoot 'config\routing.json'
 # --- 读取路由配置（单一事实源） ---
 if (-not (Test-Path -LiteralPath $configPath)) {
     Write-Host ("ERROR: routing config missing: {0}" -f $configPath) -ForegroundColor Red
-    Write-Host 'Restore skills/config/routing.json (git checkout / git pull) and retry.' -ForegroundColor Yellow
+    Write-Host 'Restore config/routing.json (git checkout / git pull) and retry.' -ForegroundColor Yellow
     exit 2
 }
 try {
@@ -144,20 +144,20 @@ $sb = New-Object System.Text.StringBuilder
 [void]$sb.AppendLine(("- hint: {0}" -f $Hint))
 [void]$sb.AppendLine(("- primary: {0}" -f $primary))
 [void]$sb.AppendLine(("- primary_label: {0}" -f $primaryLabel))
-[void]$sb.AppendLine(("- primary_skill: skills/{0}" -f $primaryPath))
+[void]$sb.AppendLine(("- primary_skill: {0}" -f $primaryPath))
 [void]$sb.AppendLine(("- confidence: {0}" -f $confidence))
 [void]$sb.AppendLine(("- project_root: {0}" -f $projectRoot))
 $sec = New-Object System.Collections.Generic.List[string]
 foreach ($d in $uniq) {
-    if ($d -ne $primary) { [void]$sec.Add(("skills/{0}" -f $cfg.routes.$d.skill)) }
+    if ($d -ne $primary) { [void]$sec.Add(("{0}" -f $cfg.routes.$d.skill)) }
 }
 $secText = if ($sec.Count -gt 0) { ($sec -join ', ') } else { '(none)' }
 [void]$sb.AppendLine(("- secondary: {0}" -f $secText))
 [void]$sb.AppendLine('')
 [void]$sb.AppendLine('## MUST open next')
 [void]$sb.AppendLine('')
-[void]$sb.AppendLine('1. skills/MASTER-ROUTING.md')
-[void]$sb.AppendLine(("2. skills/{0}" -f $primaryPath))
+[void]$sb.AppendLine('1. MASTER-ROUTING.md')
+[void]$sb.AppendLine(("2. {0}" -f $primaryPath))
 [void]$sb.AppendLine('')
 [void]$sb.AppendLine('## Notes')
 if ($notes.Count -eq 0) { [void]$sb.AppendLine('- (none)') }
@@ -167,7 +167,7 @@ foreach ($n in $notes) { [void]$sb.AppendLine(("- {0}" -f $n)) }
 $utf8 = New-Object System.Text.UTF8Encoding $true
 [System.IO.File]::WriteAllText((Join-Path $OutDir 'route-scope.md'), $sb.ToString(), $utf8)
 
-Write-Host ("PRIMARY -> skills/{0}" -f $primaryPath) -ForegroundColor Green
+Write-Host ("PRIMARY -> {0}" -f $primaryPath) -ForegroundColor Green
 Write-Host ("Label: {0} | confidence: {1}" -f $primaryLabel, $confidence)
 foreach ($n in $notes) { Write-Host ("NOTE: {0}" -f $n) -ForegroundColor Yellow }
 Write-Host ("Wrote {0}\route-scope.md" -f $OutDir)

@@ -108,6 +108,9 @@ Route tasks to the most appropriate skill module by target type, user intent, an
 | "symbol migration / cross-version compare" | `binary-diff/SKILL.md` — LLM batch migration |
 | "missing PDB / old version symbols" | `binary-diff/SKILL.md` — cross-version symbol migration |
 | "bindiff / function offset migration" | `binary-diff/SKILL.md` — binary diff |
+| "N-day / patch diff / Patch Tuesday / 补丁差分 / CVE 还原" | `patch-diff-exploit/SKILL.md` — patch→PoC→pre-patch host |
+| "pwn / ROP / ret2libc / heap exploit / kernel pwn / 栈溢出" | `pwn-chain/SKILL.md` — RE→exploit full pipeline |
+| "EDR bypass / AV evasion / syscall / AMSI / ETW patch / 免杀" | `edr-bypass-re/SKILL.md` — defensive-side reverse → targeted bypass |
 | "port scan / Nmap" | `pentest-tools/SKILL.md` — information gathering |
 | "vulnerability scan / Nuclei" | `pentest-tools/SKILL.md` — vulnerability detection |
 | "SQL injection / SQLMap" | `pentest-tools/SKILL.md` — web pentest |

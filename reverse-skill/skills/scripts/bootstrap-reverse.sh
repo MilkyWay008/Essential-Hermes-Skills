@@ -145,9 +145,9 @@ EOF
 }
 
 ALL_CAPABILITIES=(
-  jadx apktool jeb-pro frida frida-ps idalib-mcp jshookmcp reqable-mcp anything-analyzer idapro
+  jadx apktool jeb-pro frida frida-ps idalib-mcp jshookmcp js-reverse-mcp reqable-mcp anything-analyzer idapro
   r2 rabin2 adb agent-browser ghidra-mcp seclists proxycat burpsuite-mcp
-  nmap pentestswarm binwalk yara pwntools
+  nmap pentestswarm binwalk yara pwntools bkcrack
 )
 
 if $LIST_ONLY; then
@@ -486,6 +486,12 @@ ensure_jshookmcp() {
   write_mcp_server "jshook" '{"command":"npx","args":["-y","@jshookmcp/jshook@0.3.4"],"env":{"JSHOOK_BASE_PROFILE":"search"}}'
 }
 
+ensure_js_reverse_mcp() {
+  ensure_node_runtime
+  write_mcp_server "js-reverse" '{"command":"npx","args":["-y","js-reverse-mcp@4.0.1"]}'
+  log_ok "js-reverse-mcp registered as MCP server 'js-reverse'"
+}
+
 ensure_reqable_mcp() {
   ensure_node_runtime
   write_mcp_server "reqable-mcp" '{"command":"npx","args":["-y","reqable-mcp-server@1.0.1"]}'
@@ -736,6 +742,7 @@ ensure_capability() {
     frida|frida-ps) ensure_frida_tools ;;
     idalib-mcp) ensure_idalib_mcp ;;
     jshookmcp) ensure_jshookmcp ;;
+    js-reverse-mcp) ensure_js_reverse_mcp ;;
     reqable-mcp) ensure_reqable_mcp ;;
     anything-analyzer) ensure_anything_analyzer ;;
     idapro) ensure_idapro ;;

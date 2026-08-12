@@ -123,5 +123,4 @@ Re-run this checklist before merging any new skill's **executable scripts**; pur
 ## Sign-off
 
 - Audit performed: local static scan of the repo + manual review of critical paths  
-- Result: no backdoors / no automatic DB wipes; supply-chain hardening listed as a follow-up item  
-'@
+- Result: no backdoors / no automatic DB wipes; supply-chain hardening listed as a follow-up item

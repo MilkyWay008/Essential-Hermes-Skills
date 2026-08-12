@@ -77,7 +77,7 @@ Prioritize: read-only identification, traffic mirroring, offline firmware/config
 ## References
 
 - `references/ot-safe-assessment.md`
-- `../firmware-pentest/` `../protocol-reverse/` `../network` via pentest-tools
+- `../firmware-pentest/` `../protocol-reverse/` `../pentest-tools/` via pentest-tools
 
 ## Routing Context
 

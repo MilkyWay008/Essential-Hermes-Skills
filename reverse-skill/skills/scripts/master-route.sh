@@ -44,7 +44,7 @@ if [[ ! -f "$CONFIG_PATH" ]]; then
   exit 2
 fi
 
-if [[ -z "$PROJECT_ROOT" ]]; then PROJECT_ROOT="$PACKAGE_ROOT"; fi
+if [[ -z "$PROJECT_ROOT" ]]; then PROJECT_ROOT="$(pwd)"; fi  # caller cwd, matching master-route.ps1
 if [[ -z "$OUT_DIR" ]]; then
   OUT_DIR="$PROJECT_ROOT/work/master-route-$(date +%Y%m%d-%H%M%S)"
 fi
@@ -132,7 +132,7 @@ if not skill_path.is_file():
     raise SystemExit(2)
 
 out_dir.mkdir(parents=True, exist_ok=True)
-secondary = [f"skills/{routes[item]['skill']}" for item in selected_order if item != primary]
+secondary = [f"{routes[item]['skill']}" for item in selected_order if item != primary]
 lines = [
     "# reverse-skill Master route (PRIMARY)",
     f"- created: {datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat()}",
@@ -140,15 +140,15 @@ lines = [
     f"- hint: {hint}",
     f"- primary: {primary}",
     f"- primary_label: {route['label']}",
-    f"- primary_skill: skills/{primary_path}",
+    f"- primary_skill: {primary_path}",
     f"- confidence: {confidence}",
     f"- project_root: {project_root}",
     f"- secondary: {', '.join(secondary) if secondary else '(none)'}",
     "",
     "## MUST open next",
     "",
-    "1. skills/MASTER-ROUTING.md",
-    f"2. skills/{primary_path}",
+    "1. MASTER-ROUTING.md",
+    f"2. {primary_path}",
     "",
     "## Notes",
 ]
@@ -157,7 +157,7 @@ if not notes:
     lines.append("- (none)")
 (out_dir / "route-scope.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-print(f"PRIMARY -> skills/{primary_path}")
+print(f"PRIMARY -> {primary_path}")
 print(f"Label: {route['label']} | confidence: {confidence}")
 for note in notes:
     print(f"NOTE: {note}")

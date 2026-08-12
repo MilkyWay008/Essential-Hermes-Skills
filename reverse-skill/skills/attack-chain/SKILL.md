@@ -42,7 +42,7 @@ The following scenarios **MUST** first go through this Skill for full-chain plan
 - Only port scanning → go directly to `../pentest-tools/`
 - Only SQL injection → go directly to `../pentest-tools/`
 - Only APK reverse engineering → go directly to `../apk-reverse/`
-- Only domain penetration → go directly to `pentest-tools/references/network-attack-defense.md`
+- Only domain penetration → go directly to `../pentest-tools/references/network-attack-defense.md`
 
 ---
 
@@ -658,10 +658,10 @@ bash ../scripts/bootstrap-reverse.sh -c "nmap" --start-services
 
 | Need | Route to |
 |------|--------|
-| Deep Web vulnerability exploitation | `pentest-tools/SKILL.md` |
+| Deep Web vulnerability exploitation | `../pentest-tools/SKILL.md` |
 | Detailed internal network AD attack steps | `pentest-tools/references/network-attack-defense.md` |
 | Reverse-engineering malicious samples | `../reverse-engineering/SKILL.md` |
-| APK reverse engineering (mobile penetration) | `apk-reverse/SKILL.md` |
+| APK reverse engineering (mobile penetration) | `../apk-reverse/SKILL.md` |
 | JS frontend signature bypass | `../js-reverse/SKILL.md` |
 | Automated swarm penetration | Pentest Swarm AI (`pentestswarm scan --swarm`) |
 | AI-assisted penetration | `mcp-kali-server` / `metasploitmcp` / `hexstrike-ai` |
