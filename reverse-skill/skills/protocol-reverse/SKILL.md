@@ -10,7 +10,7 @@ description: Use for authorized reverse engineering of custom binary protocols, 
 1. `NOW`: Read `../field-journal/precedent-reverse.md` — confirm authorization and routine-operation boundaries
 2. `NOW`: Confirm whether the task is **protocol/traffic/serialization-format** reversing (if it is purely Web parameter signing → route to `js-reverse/`)
 3. `NOW`: If there will be network interaction with the target → run `../scripts/case-init.ps1` to complete scope; do not ACT on the target while `auth` is not granted
-4. `NEXT`: Read `../tool-index.md`; bootstrap missing tools (tshark/wireshark etc. may need manual install) (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
+4. `NEXT`: Read `../tool-index.md`; bootstrap missing tools (tshark/wireshark etc. may need manual install) (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 5. `ACT`: Enter Phase 1 of the workflow and produce a frame-layout or message-dictionary draft
 
 ## Applicable Scenarios
@@ -86,7 +86,7 @@ MUST deliverables:
 
 ## Routing Context
 
-**Upstream**: `MASTER-ROUTING` R21 · `routing.md`  
+**Upstream**: `MASTER-ROUTING` R21 · `../routing.md`  
 **Downstream**: need client algorithms → `ida-reverse`/`js-reverse`; need replay for exploitation → `pentest-tools`/`api-security`  
 **Peers**: `malware-analysis` (C2 protocols), `digital-forensics` (traffic forensics)
 

@@ -9,8 +9,8 @@ description: Use for authorized OT/ICS security assessment covering Purdue model
 
 1. `NOW`: Read `../field-journal/precedent-pentest.md` — **misoperation in industrial control environments can cause physical harm**
 2. `NOW`: Written authorization must clearly specify: sites, network segments, and whether active scanning / register writes are permitted
-3. `NOW`: case-init; default to **passive-first**; no PLC write operations before `ready_for_act`
-4. `NEXT`: tool-index; most ICS tools need manual install and an isolated lab network
+3. `NOW`: run `../scripts/case-init.ps1`; default to **passive-first**; no PLC write operations before `ready_for_act`
+4. `NEXT`: tool-index; most ICS tools need manual install and an isolated lab network (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 5. `ACT`: asset and zone identification → exposure surface → read-only verification
 
 ## Applicable Scenarios

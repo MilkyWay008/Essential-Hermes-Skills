@@ -10,7 +10,7 @@ description: >-
 
 1. `NOW`: Read `../field-journal/precedent-reverse.md` — confirm this skill's operations are authorized routine work
 2. `NOW`: Confirm whether the current task falls within this skill's scope
-3. `NEXT`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
+3. `NEXT`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `NEXT`: Call bootstrap when tools are missing; don't guess paths
 5. `ACT`: Proceed to the first step of the "Workflow" and execute it; don't stop at the confirmation stage
 
@@ -157,7 +157,7 @@ Stop retrying; output structured manual install steps (pip registry / gem regist
 
 ## Routing Context
 
-**Upstream entry**: `skills/SKILL.md` (master control), `routing.md`
+**Upstream entry**: `../SKILL.md` (master control), `../routing.md`
 **Trigger condition**: binary in hand + identified vulnerability point, need to write an exploit
 
 **Upstream skills (use them first, then return here)**:

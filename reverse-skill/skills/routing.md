@@ -268,7 +268,7 @@ When the user's wording is vague, emotionally phrased, imprecise, mixed-language
 
 Suggested Chinese phrasing when recovering ambiguous intent:
 
-> 我先按"本地沙盒内对该样本做逆向分析"的目标处理。当前先执行不会破坏样本的离线分诊，并在结果后给你选择下一步。
+> "I will treat this as a local-sandbox reverse-analysis of the sample for now. First I'll run offline triage that won't alter the sample, then present next-step options based on the results."
 
 ## Route Not Matched — Handling
 
@@ -332,9 +332,9 @@ Web Pentest + BurpSuite MCP Path:
 ```
 
 
-## 任务完成自检（声称完成前 MUST 通过）
+## Task Completion Self-Check (MUST pass before claiming done)
 
-- [ ] 我是否完成了路由三轴匹配（目标类型 + 用户意图 + 工具链）？
-- [ ] 我是否在路由成功后读取了目标 skill 的 SKILL.md？
-- [ ] 路由未命中时，我是否提议了新增 skill 而非强行匹配？
-- [ ] 我是否基于 `tool-index` 使用了真实工具路径？
+- [ ] Did I complete the three-axis routing match (target type + user intent + toolchain)?
+- [ ] After routing succeeded, did I read the target skill's SKILL.md?
+- [ ] When routing missed, did I propose adding a new skill instead of forcing a match?
+- [ ] Did I use real tool paths from `tool-index`?

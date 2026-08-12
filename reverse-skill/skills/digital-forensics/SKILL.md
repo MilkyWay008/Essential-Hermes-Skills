@@ -10,7 +10,7 @@ description: Use for authorized digital forensics including memory dumps, disk t
 1. `NOW`: Read `../field-journal/precedent-pentest.md` or the organization's IR authorization note
 2. `NOW`: Confirm this is **forensics/attribution**, not offensive scanning
 3. `NOW`: Establish the case; prefer read-only copies of evidence (write-protect the original media)
-4. `NEXT`: tool-index; Volatility etc. are often manual
+4. `NEXT`: tool-index; Volatility etc. are often manual (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 5. `ACT`: Preservation hashes → timeline → key artifacts
 
 ## When to Use

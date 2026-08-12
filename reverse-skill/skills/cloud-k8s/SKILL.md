@@ -10,7 +10,7 @@ description: Use for authorized cloud, container, and Kubernetes security assess
 1. `NOW`: read `../field-journal/precedent-pentest.md` — **cloud/K8s testing MUST have written authorization**
 2. `NOW`: case-init + scope; clarify account boundaries, forbid destructive operations
 3. `NOW`: confirm this is cloud metadata/container/K8s/IAM, not ordinary web scanning (use `pentest-tools/` for the latter)
-4. `NEXT`: tool-index; kubectl/aws/gcloud etc. are mostly manual installs
+4. `NEXT`: tool-index; kubectl/aws/gcloud etc. are mostly manual installs (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 5. `ACT`: start with "identity and exposure surface"; no default full-network scanning
 
 ## Applicable Scenarios

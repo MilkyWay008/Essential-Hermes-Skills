@@ -12,7 +12,7 @@ compatibility: macOS host required — otool, codesign, spctl, class-dump, lldb,
 
 1. `NOW`: Read `../field-journal/precedent-reverse.md`
 2. `NOW`: Confirm the target is macOS / Mach-O / App bundle (iOS IPA → `mobile-reverse/`)
-3. `NEXT`: tool-index; jtool2/lldb, etc.
+3. `NEXT`: tool-index; jtool2/lldb, etc. (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `ACT`: Signature and load information → static → dynamic (lldb/Frida)
 
 ## Applicable Scenarios

@@ -11,7 +11,7 @@ description: >-
 ## ACTION REQUIRED (execute immediately after reading)
 
 1. `NOW`: Confirm whether the current task falls within this skill's scope
-2. `NOW`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
+2. `NOW`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 3. `NEXT`: Call bootstrap when tools are missing; don't guess paths
 4. `ACT`: Proceed to the first step of the "Workflow" and execute it; don't stop at the confirmation stage
 
@@ -108,6 +108,8 @@ agent-browser wait --load networkidle
 ---
 
 ## Part 2: Desktop Application Automation (OpenReverse)
+
+> **Hermes-native alternative**: Hermes agents have built-in desktop tools (`computer_use` — background click/type/capture with an accessibility tree, plus `focus_app` for app targeting) that cover the same desktop-automation ground without any install. Use OpenReverse only when the native tools are unavailable (e.g. non-Hermes host) or a specific OpenReverse feature (evidence-collection lanes, CUA/UIA pairing with IDA/x64dbg) is required.
 
 ### Overview
 
@@ -230,7 +232,7 @@ If the AI detects that desktop automation is needed but OpenReverse isn't instal
 - Captured requests need analysis → `anything-analyzer` or `js-reverse`
 - Need JS debugging/hooking → `jshookmcp`
 - Need to recover signing algorithms → `js-reverse`
-- Desktop app is a reverse-engineering tool → `ida-reverse/`
+- Desktop app is a reverse-engineering tool → `../ida-reverse/`
 
 **Peer modules**: `js-reverse` (may need to analyze JS after browser operations), `ida-reverse` (OpenReverse can automate IDA GUI operations)
 

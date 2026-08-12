@@ -9,7 +9,7 @@ description: Use for authorized multi-stage attack-path planning and orchestrati
 1. `NOW`: Read `../field-journal/precedent-pentest.md` — confirm this skill's operations are an authorized, routine activity
 2. `NOW`: **Create/update the case** (`../scripts/case-init.ps1`) and complete `scope.md` (`../ops/scope-contract.md`); ACT is forbidden when `auth.status!=granted`
 3. `NOW`: Plan the phases in the **lead** role (`../ops/role-map.md`) and write them into specialist_roles
-4. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
+4. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 5. `NEXT`: If tools are missing, call bootstrap; do not guess paths
 6. `ACT`: Pass each phase gate per `references/lifecycle-checklist.md`; update `timeline.md` + `workitems.md` every phase (`../ops/timeline-workitem.md`); promote discoveries to Evidence/Finding
 7. Finish: the `docs-generator` report MUST include the Evidence chain
@@ -39,9 +39,9 @@ The following scenarios **MUST** first go through this Skill for full-chain plan
 | "Phishing + post-exploitation" | Combination of initial access + follow-up exploitation |
 
 **Single-phase tasks do NOT need to go through this Skill**:
-- Only port scanning → go directly to `pentest-tools/`
-- Only SQL injection → go directly to `pentest-tools/`
-- Only APK reverse engineering → go directly to `apk-reverse/`
+- Only port scanning → go directly to `../pentest-tools/`
+- Only SQL injection → go directly to `../pentest-tools/`
+- Only APK reverse engineering → go directly to `../apk-reverse/`
 - Only domain penetration → go directly to `pentest-tools/references/network-attack-defense.md`
 
 ---
@@ -649,10 +649,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "..\scripts\bootstrap-revers
 ```
 
 ```bash
-bash scripts/bootstrap-reverse.sh -c "nmap" --start-services
+bash ../scripts/bootstrap-reverse.sh -c "nmap" --start-services
 ```
 
-**Windows:** most of this toolchain is Linux-first — recommend WSL2 Ubuntu or Kali VM; run `bash scripts/bootstrap-reverse.sh` from WSL.
+**Windows:** most of this toolchain is Linux-first — recommend WSL2 Ubuntu or Kali VM; run `bash ../scripts/bootstrap-reverse.sh` from WSL.
 
 ## Relationship to Other Skills in This Pack
 
@@ -660,13 +660,13 @@ bash scripts/bootstrap-reverse.sh -c "nmap" --start-services
 |------|--------|
 | Deep Web vulnerability exploitation | `pentest-tools/SKILL.md` |
 | Detailed internal network AD attack steps | `pentest-tools/references/network-attack-defense.md` |
-| Reverse-engineering malicious samples | `reverse-engineering/SKILL.md` |
+| Reverse-engineering malicious samples | `../reverse-engineering/SKILL.md` |
 | APK reverse engineering (mobile penetration) | `apk-reverse/SKILL.md` |
-| JS frontend signature bypass | `js-reverse/SKILL.md` |
+| JS frontend signature bypass | `../js-reverse/SKILL.md` |
 | Automated swarm penetration | Pentest Swarm AI (`pentestswarm scan --swarm`) |
 | AI-assisted penetration | `mcp-kali-server` / `metasploitmcp` / `hexstrike-ai` |
-| Report generation | `docs-generator/SKILL.md` |
-| Attack path diagram | `diagram-generator/SKILL.md` |
+| Report generation | `../docs-generator/SKILL.md` |
+| Attack path diagram | `../diagram-generator/SKILL.md` |
 
 
 ## Task Completion Self-Check (MUST pass before claiming completion)

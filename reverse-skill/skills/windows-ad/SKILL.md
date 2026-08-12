@@ -9,8 +9,8 @@ description: Use for authorized Active Directory and Windows identity attacks in
 
 1. `NOW`: Read `../field-journal/precedent-pentest.md`
 2. `NOW`: **Domain/AD testing MUST have explicitly authorized scope** (including DCs, and whether poisoning/relaying is allowed)
-3. `NOW`: case-init; write network_profile and prohibited actions clearly
-4. `NEXT`: tool-index (impacket/certipy/bloodhound etc. are often manual)
+3. `NOW`: run `../scripts/case-init.ps1`; write network_profile and prohibited actions clearly
+4. `NEXT`: tool-index (impacket/certipy/bloodhound etc. are often manual) (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 5. `ACT`: Start with identity enumeration and BloodHound graph — do not jump straight to destructive exploitation
 
 ## When to Use

@@ -12,7 +12,7 @@ A binary analysis skill for the `radare2` CLI. The focus is on doing reconnaissa
 
 1. `NOW`: Read `../field-journal/precedent-reverse.md` — confirm this skill's operations are an authorized, routine activity
 2. `NOW`: Confirm whether the current task falls within this skill's scope
-3. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
+3. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `NEXT`: If tools are missing, call bootstrap; do not guess paths
 5. `ACT`: Enter step one of the "workflow" and execute; do not stop at confirmation
 

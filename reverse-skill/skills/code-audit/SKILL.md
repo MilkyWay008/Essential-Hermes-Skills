@@ -10,7 +10,7 @@ description: Use for authorized source-code security review and SAST workflows i
 1. `NOW`: read `../field-journal/precedent-pentest.md` or the code audit authorization
 2. `NOW`: confirm **source/repository access** (binary without source → route to RE skill)
 3. `NOW`: clarify the language stack and scope (directory/service/PR diff)
-4. `NEXT`: tool-index; semgrep etc.
+4. `NEXT`: tool-index; semgrep etc. (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 5. `ACT`: threat model sketch → automated scan → manual verification
 
 ## Applicable Scenarios

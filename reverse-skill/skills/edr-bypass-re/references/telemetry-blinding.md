@@ -342,6 +342,6 @@ Wrong-order examples:
 
 ## Routing Callback
 
-After completing this trio (hook survey → unhook → telemetry blinding), return to Step 5 of `SKILL.md` to validate in the sandbox,
+After completing this trio (hook survey → unhook → telemetry blinding), return to Step 5 of `../SKILL.md` to validate in the sandbox,
 then move to the next phase via the initial access and lateral movement sections of `attack-chain/`.
 

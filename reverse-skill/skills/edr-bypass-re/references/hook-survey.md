@@ -223,5 +223,5 @@ After confirming the target EDR, decide which DLL to reverse for the hook table.
 
 ## Routing Callback
 
-After the hook survey, return to Step 3 of `SKILL.md` to select the bypass technique combination, then execute per `references/unhook-techniques.md` and `references/telemetry-blinding.md`.
+After the hook survey, return to Step 3 of `../SKILL.md` to select the bypass technique combination, then execute per `unhook-techniques.md` and `telemetry-blinding.md`.
 

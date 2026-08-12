@@ -335,5 +335,5 @@ Practical recommended chain: **Halo's Gate + indirect syscall + CallStackSpoofer
 
 ## Routing Callback
 
-Unhooking is only half the bypass; the other half is telemetry blindness: go to `references/telemetry-blinding.md`.
+Unhooking is only half the bypass; the other half is telemetry blindness: go to `telemetry-blinding.md`.
 

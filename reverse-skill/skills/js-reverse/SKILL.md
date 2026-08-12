@@ -13,7 +13,7 @@ description: >-
 
 1. `NOW`: Read `../field-journal/precedent-reverse.md` — confirm the operations in this skill are authorized routine operations
 2. `NOW`: Confirm whether the current task falls within this skill's scope
-3. `NEXT`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
+3. `NEXT`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `NEXT`: If tools are missing, call bootstrap; do not guess paths
 5. `ACT`: Move into the first step of the workflow and execute; do not stop at confirmation
 
@@ -27,7 +27,7 @@ Use this skill first when the task falls into the following scenarios:
 - Tracing the trigger points of a specific XHR/Fetch/WebSocket
 - Bringing page evidence back to Node for local reproduction and environment patching
 
-If the target is a binary, APK, PE, ELF, DLL, or SO, use `ida-reverse`, `radare2`, or `reverse-engineering` instead.
+If the target is a binary, APK, PE, ELF, DLL, or SO, use `../ida-reverse`, `../radare2`, or `../reverse-engineering` instead.
 
 ## Default Tool Mapping in the Current Environment
 
@@ -164,11 +164,11 @@ Rules:
 
 ## Routing Context
 
-**Upstream entry**: `skills/SKILL.md` (master control), `routing.md`
+**Upstream entry**: `../SKILL.md` (master control), `../routing.md`
 **Upstream alternatives**:
 - anything-analyzer MCP (port 23816) browser tools can serve as an alternative or supplement
 - jshookmcp can serve as a stronger browser/CDP/Hook/Network/SourceMap/AST execution surface
-- `reverse-engineering/SKILL.md` (if the target is not frontend JS)
+- `../reverse-engineering/SKILL.md` (if the target is not frontend JS)
 
 **Downstream exits**:
 - Environment patching needed → `references/env-patching.md`
@@ -208,7 +208,7 @@ powershell -File "<skill-root>\scripts\bootstrap-reverse.ps1" -Capability @('any
 - `anything-analyzer` needs pnpm and the project source; bootstrap auto-clones and installs dependencies
 - If Node.js is not installed, bootstrap installs Node.js 22 via winget first
 
-<br><br>## Task Completion Self-Check (MUST pass before claiming completion)
+## Task Completion Self-Check (MUST pass before claiming completion)
 
 - [ ] Did I execute every step of the workflow (rather than only reading)?
 - [ ] Did I use real tool paths based on `tool-index`?

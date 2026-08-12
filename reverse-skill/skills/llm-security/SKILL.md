@@ -10,7 +10,7 @@ description: Use for authorized security assessment of LLM applications and AI a
 
 1. `NOW`: Read `../field-journal/precedent-pentest.md` — confirm this skill's operations are authorized routine operations
 2. `NOW`: Confirm whether the current task falls within this skill's scope
-3. `NEXT`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
+3. `NEXT`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `NEXT`: If tools are missing, call bootstrap — don't guess paths
 5. `ACT`: Move to the first step of the "Workflow" and execute it — don't stop at confirmation
 

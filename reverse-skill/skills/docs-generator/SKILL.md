@@ -12,7 +12,7 @@ description: >-
 ## ACTION REQUIRED (execute immediately after reading)
 
 1. `NOW`: Confirm whether the current task falls within this skill's scope
-2. `NOW`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
+2. `NOW`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 3. `NEXT`: If tools are missing, call bootstrap — don't guess paths
 4. `ACT`: Move to the first step of the "Workflow" and execute it — don't stop at confirmation
 

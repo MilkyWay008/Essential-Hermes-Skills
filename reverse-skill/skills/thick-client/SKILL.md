@@ -9,7 +9,7 @@ description: Use for authorized security testing of desktop thick clients includ
 
 1. `NOW`: Read `../field-journal/precedent-pentest.md`
 2. `NOW`: Confirm the target is a **desktop thick client** (Win/macOS/Linux GUI or companion service), not pure Web
-3. `NOW`: case-init; write installer source and test accounts into scope
+3. `NOW`: run `../scripts/case-init.ps1`; write installer source and test accounts into scope
 4. `NEXT`: Tools (Burp upstream proxy, process monitoring, reverse engineering tools)
 5. `ACT`: Trust boundary map → local surface → network surface → update/supply chain
 

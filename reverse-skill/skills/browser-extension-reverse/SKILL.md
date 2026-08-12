@@ -8,7 +8,7 @@ description: Use for authorized reverse engineering of browser extensions (Chrom
 ## ACTION REQUIRED (execute immediately after reading)
 
 1. `NOW`: Read `../field-journal/precedent-reverse.md`
-2. `NOW`: Confirm the target is a **browser extension** (crx/xpi/unpacked directory), not ordinary web page JS (ordinary → `js-reverse/`)
+2. `NOW`: Confirm the target is a **browser extension** (crx/xpi/unpacked directory), not ordinary web page JS (ordinary → `../js-reverse/`)
 3. `NEXT`: Unpack the extension; read the manifest
 4. `ACT`: Permission surface → background scripts → network/storage hooks
 

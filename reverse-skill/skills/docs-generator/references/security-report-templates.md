@@ -33,7 +33,7 @@ Link to `timeline.md` or embed 3–10 key appended records
 
 ## 0.6 Vendor Structure Overlay (professional vendor report structure)
 
-> Full rules: `references/vendor-report-rules.md` (Issue #65)  
+> Full rules: `vendor-report-rules.md` (Issue #65)  
 > **MUST** read and select when generating formal security reports; **extract structure only, never copy vendor original text/IOC instances**.
 
 | Flavor | Scenario | Skeleton in one line |

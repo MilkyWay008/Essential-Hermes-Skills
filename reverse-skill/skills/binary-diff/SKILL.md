@@ -14,7 +14,7 @@ description: >-
 
 1. `NOW`: Read `../field-journal/precedent-reverse.md` — confirm the operations in this skill are authorized routine operations
 2. `NOW`: Confirm whether the current task falls within this skill's scope
-3. `NEXT`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
+3. `NEXT`: Read `../tool-index.md` to verify tool availability and actual paths (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `NEXT`: If tools are missing, call bootstrap; do not guess paths
 5. `ACT`: Move into the first step of the workflow and execute; do not stop at confirmation
 
@@ -31,7 +31,7 @@ Use this skill when the task falls into the following scenarios:
 
 | Scenario | What to use |
 |------|--------|
-| Reverse a binary from scratch | `ida-reverse/` or `radare2/` |
+| Reverse a binary from scratch | `../ida-reverse/` or `../radare2/` |
 | Have old-version results, migrate to the new version | **This skill** |
 | Compare two completely different binaries | BinDiff / Diaphora (traditional tools) |
 
@@ -294,7 +294,7 @@ Recommended strategy: default the external API calls to DeepSeek; escalate to a 
 ### Notes
 
 The core of this skill does not depend on heavy tool installs; it mainly relies on:
-- IDA Pro already available (managed by the `ida-reverse/` skill)
+- IDA Pro already available (managed by the `../ida-reverse/` skill)
 - Python + requests/httpx (for API calls)
 - An LLM API endpoint
 
@@ -305,10 +305,10 @@ The core of this skill does not depend on heavy tool installs; it mainly relies 
 **Upstream entry**: `skills/SKILL.md` (master control), `routing.md`
 **Trigger condition**: you have old-version symbols/reversal results and need to migrate them to a new version
 **Downstream exits**:
-- Need to open the binary first → `ida-reverse/`
-- Need quick recon to confirm version differences → `radare2/`
+- Need to open the binary first → `../ida-reverse/`
+- Need quick recon to confirm version differences → `../radare2/`
 
-**Peer modules**: `ida-reverse/` (both data export and symbol application go through IDA)
+**Peer modules**: `../ida-reverse/` (both data export and symbol application go through IDA)
 
 
 ## Task Completion Self-Check (MUST pass before claiming completion)

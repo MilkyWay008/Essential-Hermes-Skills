@@ -13,7 +13,7 @@ compatibility: Requires a filesystem-based code agent or CLI with shell access, 
 
 1. `NOW`: Read `../field-journal/precedent-reverse.md` — confirm that this skill's operations are an authorized routine
 2. `NOW`: Confirm whether the current task falls within this skill's scope
-3. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths (if missing at cold start, run `scripts/refresh-tool-index.ps1` on Windows or `bash scripts/refresh-tool-index.sh` on Linux/macOS first)
+3. `NEXT`: Read `../tool-index.md` and verify tool availability and actual paths (if missing at cold start, run `../scripts/refresh-tool-index.ps1` on Windows or `bash ../scripts/refresh-tool-index.sh` on Linux/macOS first)
 4. `NEXT`: If tools are missing, call bootstrap; do not guess paths
 5. `ACT`: Proceed per re-agent-workflow; move to the first step of the workflow and execute it; do not stop at confirmation
 
