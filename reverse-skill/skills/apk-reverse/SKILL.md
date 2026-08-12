@@ -368,8 +368,8 @@ frida -U -f com.example.app -l hook.js
 **Upstream entry**: `skills/SKILL.md` (master control), `routing.md`
 **Downstream exits**:
 - Core logic in `.so` → `ida-reverse/` or `radare2/`
-- Dynamic hooking/verification needed → `reverse-engineering/tools-dynamic.md` (Frida section)
-- General reverse engineering methodology → `reverse-engineering/SKILL.md`
+- Dynamic hooking/verification needed → `../reverse-engineering/tools-dynamic.md` (Frida section)
+- General reverse engineering methodology → `../reverse-engineering/SKILL.md`
 
 **Peer modules**: `reverse-engineering/` (.so analysis and advanced Frida usage)
 

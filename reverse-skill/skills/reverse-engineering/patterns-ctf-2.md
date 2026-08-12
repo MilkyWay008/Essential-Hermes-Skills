@@ -237,7 +237,7 @@ v_mod = Matrix(targets) % (2**32)
 solution = M_mod.solve(v_mod)  # Returns flag characters
 ```
 
-**Key insight:** When a binary validates input through linear combinations with large coefficients and the solution must be in a small range (printable ASCII), this is a lattice problem in disguise. LLL reduction + CVP finds the nearest lattice point, recovering the constrained solution. Cross-reference: invoke `/ctf-crypto` for LLL/CVP fundamentals (advanced-math.md in ctf-crypto).
+**Key insight:** When a binary validates input through linear combinations with large coefficients and the solution must be in a small range (printable ASCII), this is a lattice problem in disguise. LLL reduction + CVP finds the nearest lattice point, recovering the constrained solution. Cross-reference: invoke `../CTF-Sandbox-Orchestrator/competition-crypto-mobile/SKILL.md` for LLL/CVP fundamentals (advanced-math.md in that module).
 
 **Detection:** Binary performs matrix-like operations on grouped input, compares against 64-bit constants, and a brute-force search space is too large (e.g., 256^4 per group × 12 groups).
 

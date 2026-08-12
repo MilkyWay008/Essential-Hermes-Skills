@@ -124,7 +124,7 @@ Route tasks to the most appropriate skill module by target type, user intent, an
 | "protocol reverse / Protobuf / custom protocol" | `reverse-engineering/platforms.md` |
 | "cloud security / container escape / K8s" | `CTF-Sandbox-Orchestrator/competition-agent-cloud/SKILL.md` |
 | "Prompt injection / AI security" | `llm-security/SKILL.md` — OWASP LLM + ASI Top 10 |
-| "internal network / lateral movement" | `pentest-tools/SKILL.md` + `references/network-attack-defense.md` |
+| "internal network / lateral movement" | `pentest-tools/SKILL.md` + `pentest-tools/references/network-attack-defense.md` |
 | "privilege escalation" | `pentest-tools/references/network-attack-defense.md` — escalation section |
 | "Mimikatz / credential extraction / PtH" | `pentest-tools/references/network-attack-defense.md` |
 | "Kerberos / domain pentest / AD" | `pentest-tools/references/network-attack-defense.md` |
@@ -151,7 +151,7 @@ Route tasks to the most appropriate skill module by target type, user intent, an
 | "from external to domain controller" | `attack-chain/SKILL.md` — cross-phase path orchestration |
 | "attack surface assessment / path planning" | `attack-chain/SKILL.md` — path planning decision tree |
 | "got shell, what next / post-exploitation" | `attack-chain/SKILL.md` — plan from current foothold |
-| "BurpSuite / Burp proxy / intercept" | `pentest-tools/SKILL.md` + `references/burpsuite-mcp-guide.md` |
+| "BurpSuite / Burp proxy / intercept" | `pentest-tools/SKILL.md` + `pentest-tools/references/burpsuite-mcp-guide.md` |
 | "Burp MCP / proxy history analysis" | `pentest-tools/references/burpsuite-mcp-guide.md` — 78 tools |
 | "Intruder brute force / Repeater replay" | `pentest-tools/references/burpsuite-mcp-guide.md` |
 | "Collaborator / OOB testing" | `pentest-tools/references/burpsuite-mcp-guide.md` |
@@ -242,7 +242,7 @@ Do NOT force the user to repeatedly confirm "this is CTF/local." Carry the CTF/l
 | Hashcat / John / Hydra | `pentest-tools/` — password cracking |
 | Metasploit / Impacket | `pentest-tools/` — exploitation framework |
 | BurpSuite | `pentest-tools/` — web proxy, interception, vulnerability scanning |
-| BurpSuite MCP | `pentest-tools/` — 78-tool AI full control, see `references/burpsuite-mcp-guide.md` |
+| BurpSuite MCP | `pentest-tools/` — 78-tool AI full control, see `pentest-tools/references/burpsuite-mcp-guide.md` |
 | ProxyCat | `pentest-tools/` — proxy pool management & IP rotation |
 | Cobalt Strike / Sliver / Havoc | `attack-chain/` — C2 framework |
 | pentestMCP (Docker) | `pentest-tools/` — 20+ tools one-click MCP |
@@ -290,11 +290,11 @@ Some tasks span multiple modules. Common crossings:
 
 ```
 APK Reverse Path:
-  apk-reverse/decode.ps1 → Java layer analysis
+  apk-reverse/scripts/decode.ps1 → Java layer analysis
   ↓ If core is in .so
   ida-reverse/ or radare2/ → .so analysis
   ↓ If dynamic verification needed
-  apk-reverse/frida-run.ps1 → Frida Hook
+  apk-reverse/scripts/frida-run.ps1 → Frida Hook
 
 Frontend JS Reverse Path:
   js-reverse/Observe → locate target request

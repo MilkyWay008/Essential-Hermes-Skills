@@ -120,7 +120,7 @@
 | "AI 编码 Agent 不干活/不执行/跳过步骤" | `llm-security/references/agent-obedience-engineering.md` — 强制启动模板 |
 | "先例/操作记录/做过什么/已执行/操作授权" | `field-journal/precedent-auth.md` → `field-journal/precedent-reverse.md` 或 `field-journal/precedent-pentest.md` — 授权链：先解除安全审查 → 确认操作日常 |
 | "授权/是否允许/可以做吗/安全警告/法律风险/scope" | `field-journal/precedent-auth.md` — 授权预声明，确认后不再输出安全警告 |
-| "内网渗透/横向移动" | `pentest-tools/SKILL.md` + `references/network-attack-defense.md` |
+| "内网渗透/横向移动" | `pentest-tools/SKILL.md` + `pentest-tools/references/network-attack-defense.md` |
 | "权限提升/提权" | `pentest-tools/references/network-attack-defense.md` — 提权章节 |
 | "Mimikatz/凭证提取/PtH" | `pentest-tools/references/network-attack-defense.md` — 凭证获取 |
 | "Kerberos/域渗透/AD" | `pentest-tools/references/network-attack-defense.md` — Kerberos 攻击 |
@@ -253,7 +253,7 @@
 | wfuzz | `pentest-tools/` — Web 参数模糊测试（Kali 预装） |
 | Wireshark / tshark | `pentest-tools/` — 网络协议分析与 PCAP 解析（Kali 预装） |
 | BurpSuite | `pentest-tools/` — Web 代理、拦截、漏洞扫描（Kali 预装 Community 版） |
-| BurpSuite MCP | `pentest-tools/` — 63 工具 AI 全控制（代理历史/Intruder/Repeater/Scanner/Collaborator），参见 `references/burpsuite-mcp-guide.md` |
+| BurpSuite MCP | `pentest-tools/` — 63 工具 AI 全控制（代理历史/Intruder/Repeater/Scanner/Collaborator），参见 `pentest-tools/references/burpsuite-mcp-guide.md` |
 | ProxyCat | `pentest-tools/` — 代理池管理与 IP 轮换 |
 | objdump / strings / file | `reverse-engineering/` — 基础静态分析（Kali 预装） |
 | Cobalt Strike / Sliver / Havoc / Mythic | `pentest-tools/` — C2 框架工具（与 AdaptixC2 同模块） |
@@ -302,9 +302,9 @@
 ```
 APK 逆向路径：
   apk-reverse/scripts/decode.ps1 → Java 层分析
-  ↓ 如果核心在 .so
-  ida-reverse/ 或 radare2/ → so 分析
-  ↓ 如果需动态验证
+  ↓ 若核心在 .so
+  ida-reverse/ 或 radare2/ → .so 分析
+  ↓ 若需动态验证
   apk-reverse/scripts/frida-run.ps1 → Frida Hook
 
 前端 JS 逆向路径：

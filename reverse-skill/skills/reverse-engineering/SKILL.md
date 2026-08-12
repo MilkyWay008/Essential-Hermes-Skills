@@ -82,13 +82,13 @@ r2pm -ci r2ghidra   # Native Ghidra decompiler for radare2
 
 ## When to Pivot
 
-- If you already understand the binary and now need heap, ROP, or kernel exploitation, switch to `/ctf-pwn`.
-- If the challenge is really about recovering deleted files, PCAP data, or disk artifacts, switch to `/ctf-forensics`.
-- If the target is a web app and you are only reversing a small client-side helper script, switch to `/ctf-web`.
-- If the binary implements a machine learning model and the challenge is about model attacks or adversarial inputs, switch to `/ctf-ai-ml`.
-- If the reversed binary's core logic is a cryptographic algorithm or math problem, switch to `/ctf-crypto`.
-- If the binary is a real malware sample with C2, packing, or evasion behavior, switch to `/ctf-malware`.
-- If the challenge is a toy VM, encoding puzzle, or pyjail rather than a real binary, switch to `/ctf-misc`.
+- If you already understand the binary and now need heap, ROP, or kernel exploitation, switch to `../CTF-Sandbox-Orchestrator/competition-reverse-pwn/SKILL.md`.
+- If the challenge is really about recovering deleted files, PCAP data, or disk artifacts, switch to `../CTF-Sandbox-Orchestrator/competition-forensic-timeline/SKILL.md` (or `competition-pcap-protocol` for pure packet analysis).
+- If the target is a web app and you are only reversing a small client-side helper script, switch to `../CTF-Sandbox-Orchestrator/competition-web-runtime/SKILL.md`.
+- If the binary implements a machine learning model and the challenge is about model attacks or adversarial inputs, switch to `../CTF-Sandbox-Orchestrator/competition-prompt-injection/SKILL.md`.
+- If the reversed binary's core logic is a cryptographic algorithm or math problem, switch to `../CTF-Sandbox-Orchestrator/competition-crypto-mobile/SKILL.md`.
+- If the binary is a real malware sample with C2, packing, or evasion behavior, switch to `../CTF-Sandbox-Orchestrator/competition-malware-config/SKILL.md`.
+- If the challenge is a toy VM, encoding puzzle, or pyjail rather than a real binary, stay in this module (see `dsl-vm-reverse/SKILL.md` for custom VMs, `crypto-decode-tools.md` for encodings).
 
 ## Problem-Solving Workflow
 

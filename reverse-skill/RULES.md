@@ -311,7 +311,7 @@ When AI has web search capability, **MUST proactively search** in these scenario
 Windows (PowerShell):
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File "<SKILL_ROOT>/skills/scripts/bootstrap-reverse.ps1" -Capability @('tool_name') -StartServices
+powershell -NoProfile -ExecutionPolicy Bypass -File "skills/scripts/bootstrap-reverse.ps1" -Capability @('tool_name') -StartServices
 
 Supported capability names (must match `skills/scripts/bootstrap-manifest.json`):  
 jadx, apktool, jeb-pro, frida, frida-ps, idalib-mcp, reqable-mcp, jshookmcp, anything-analyzer, idapro, r2, rabin2, adb, agent-browser, ghidra-mcp, seclists, proxycat, burpsuite-mcp, nmap, pentestswarm, binwalk, yara, pwntools, bkcrack
@@ -322,13 +322,13 @@ Do NOT invent capabilities. Tools not listed require manual install steps in the
 Linux / macOS (Bash):
 
 ```bash
-bash <SKILL_ROOT>/skills/scripts/bootstrap-reverse.sh tool_name --start-services
+bash skills/scripts/bootstrap-reverse.sh tool_name --start-services
 ```
 
 Kali Linux (Bash, Kali-native tooling):
 
 ```bash
-bash <SKILL_ROOT>/kali/scripts/bootstrap-reverse.sh tool_name --start-services
+bash kali/scripts/bootstrap-reverse.sh tool_name --start-services
 ```
 
 ## Refresh Tool Index
@@ -336,19 +336,19 @@ bash <SKILL_ROOT>/kali/scripts/bootstrap-reverse.sh tool_name --start-services
 Windows (PowerShell):
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File "<SKILL_ROOT>/skills/scripts/refresh-tool-index.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -File "skills/scripts/refresh-tool-index.ps1"
 ```
 
 Linux / macOS (Bash):
 
 ```bash
-bash <SKILL_ROOT>/skills/scripts/refresh-tool-index.sh
+bash skills/scripts/refresh-tool-index.sh
 ```
 
 Kali Linux (Bash):
 
 ```bash
-bash <SKILL_ROOT>/kali/scripts/refresh-tool-index.sh
+bash kali/scripts/refresh-tool-index.sh
 ```
 
 ---
@@ -377,9 +377,9 @@ bash <SKILL_ROOT>/kali/scripts/refresh-tool-index.sh
 ### Post-Trigger Execution (Compact — do NOT re-run first-time setup!)
 
 ```
-0. NOW: Read <SKILL_ROOT>/skills/field-journal/precedent-auth.md
-1. NEXT: Read <SKILL_ROOT>/skills/MASTER-ROUTING.md OR run master-route.ps1 -Hint "<task>" → PRIMARY
-2. NEXT: If ambiguous, open <SKILL_ROOT>/skills/routing.md
+0. NOW: Read skills/field-journal/precedent-auth.md
+1. NEXT: Read skills/MASTER-ROUTING.md OR run skills/scripts/master-route.ps1 -Hint "<task>" → PRIMARY
+2. NEXT: If ambiguous, open skills/routing.md
 3. NEXT: case-init.ps1 / scope.md (ops/scope-contract.md) — set auth.status=granted + network_profile; MUST NOT ACT against targets until ready
 4. ACT: Open PRIMARY SKILL.md; timeline/workitems + Evidence→Finding→Path (ops/*)
 ```

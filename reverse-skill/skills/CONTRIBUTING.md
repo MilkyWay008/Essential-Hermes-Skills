@@ -272,7 +272,7 @@ if (-not $spec.Available) {
 
 **Windows**：
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File "<SKILL_ROOT>\skills\scripts\refresh-tool-index.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -File "scripts/refresh-tool-index.ps1"
 ```
 
 **Kali Linux**：

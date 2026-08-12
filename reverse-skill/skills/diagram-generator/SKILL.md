@@ -109,12 +109,12 @@ Use SVG only when text diagram languages cannot express the requested visual rel
 When the user asks for PNG/SVG/PDF, create a source file and run:
 
 ```bash
-python "<SKILL_ROOT>/diagram-generator/scripts/render_diagram.py" input.mmd --format svg --out output.svg
-python "<SKILL_ROOT>/diagram-generator/scripts/render_diagram.py" input.dot --format png --out output.png
-python "<SKILL_ROOT>/diagram-generator/scripts/render_diagram.py" input.puml --format svg --out output.svg
+python "scripts/render_diagram.py" input.mmd --format svg --out output.svg
+python "scripts/render_diagram.py" input.dot --format png --out output.png
+python "scripts/render_diagram.py" input.puml --format svg --out output.svg
 ```
 
-> `<SKILL_ROOT>` is the actual path of this package's `skills/` directory; the AI should detect it automatically.
+> The renderer script lives in this skill's own `scripts/` folder; the AI should detect it automatically relative to this SKILL.md.
 
 The renderer is intentionally dependency-tolerant. It tries common local tools and reports actionable installation hints if a renderer is unavailable. Do not claim an image was rendered unless the script completed successfully and the output file exists.
 

@@ -194,7 +194,7 @@ sysmon64.exe -i sysmonconfig.xml
 #   - pe-sieve:     download pe-sieve64.exe from https://github.com/hasherezade/pe-sieve/releases
 #   - SysWhispers3: git clone https://github.com/klezVirus/SysWhispers3
 #   - Sysmon:       https://learn.microsoft.com/sysinternals/downloads/sysmon (+ olaf config)
-powershell -NoProfile -ExecutionPolicy Bypass -File "&lt;SKILL_ROOT&gt;\skills\scripts\bootstrap-reverse.ps1" -StartServices
+powershell -NoProfile -ExecutionPolicy Bypass -File "..\scripts\bootstrap-reverse.ps1" -StartServices
 ```
 
 ## Routing Context

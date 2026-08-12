@@ -180,7 +180,7 @@ Enter this skill when the user says any of the following:
 - Need AI to directly drive dnSpy → register and integrate dnSpy MCP (see `references/sharp-tools.md`)
 
 **Peer modules**:
-- `reverse-engineering/languages-compiled.md` (.NET intro points to this module)
+- `../reverse-engineering/languages-compiled.md` (.NET intro points to this module)
 - `apk-reverse/` (Xamarin/MAUI Android reversing can return here for the C# layer)
 
 ## Reference Documents

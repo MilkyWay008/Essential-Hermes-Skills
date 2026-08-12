@@ -140,7 +140,7 @@ This skill has no third-party dependency. If Python 3 is unavailable, the only a
 
 **Downstream exit**: `docs-generator/` for a formal report, or the original PRIMARY skill when the graph is incomplete.
 
-**Related modules**: `ops/evidence-finding-path.md`, `ops/timeline-workitem.md`, `digital-forensics/`, `reverse-engineering/`, and `docs-generator/`.
+**Related modules**: `../ops/evidence-finding-path.md`, `../ops/timeline-workitem.md`, `digital-forensics/`, `reverse-engineering/`, and `docs-generator/`.
 
 ## References
 

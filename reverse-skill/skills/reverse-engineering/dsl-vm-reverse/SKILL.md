@@ -37,10 +37,10 @@ Use this skill when the target file matches **any** of the following features:
 
 | Condition | Not this skill | Go to |
 |------|-----------|------|
-| File starts with `\x00asm` | Standard WASM binary | `reverse-engineering/languages.md` |
+| File starts with `\x00asm` | Standard WASM binary | `../languages.md` |
 | File starts with `Uint8Array([0,97,115,109])` (WASM magic) | Embedded WASM | Extract .wasm then switch to IDA/Ghidra |
 | Standard Webpack bundle (`function(e,t,n){...}`) | Plain JS | `js-reverse/` |
-| Zero-byte ratio > 20% | WASM binary | `reverse-engineering/languages.md` |
+| Zero-byte ratio > 20% | WASM binary | `../languages.md` |
 
 ---
 

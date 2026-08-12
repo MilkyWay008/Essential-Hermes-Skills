@@ -384,7 +384,7 @@ How to handle:
 **Upstream entry**: `skills/SKILL.md` (master control), `routing.md`
 **Upstream alternative**: `ida-reverse/` (upgrade to IDA when decompilation/pseudocode is needed)
 **Downstream exits**:
-- Need dynamic analysis → `reverse-engineering/tools-dynamic.md` (Frida/GDB)
+- Need dynamic analysis → `../reverse-engineering/tools-dynamic.md` (Frida/GDB)
 - Need deep decompilation → `ida-reverse/`
 - After finding interesting strings in recon, need cross-references → `ida-reverse/` (IDA's xref is more powerful)
 
