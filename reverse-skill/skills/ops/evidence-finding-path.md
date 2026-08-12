@@ -28,14 +28,14 @@ Each piece of evidence is its own paragraph or table row:
 **CLI helper** (writes `work/<case>/evidence/E-*.md`):
 
 ```powershell
-powershell -File skills/scripts/append-evidence.ps1 -CaseRoot work/<case> `
+powershell -File scripts/append-evidence.ps1 -CaseRoot work/<case> `
   -Id E-001 -Title "..." -ReproCommand "..." -Severity info -Status observed
 ```
 
 When the evidence is a case-local file, pass `-ArtifactPath` to record a SHA-256 fixity value and a relative artifact path. Review the complete case graph before handoff:
 
 ```bash
-python3 skills/case-review/scripts/review_case.py work/<case> --verify-hashes --strict
+python3 case-review/scripts/review_case.py work/<case> --verify-hashes --strict
 ```
 
 The review is read-only and checks scope fields, Evidence records, work item and timeline references, structured Findings, Paths, and artifact hash matches.

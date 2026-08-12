@@ -18,7 +18,7 @@ work/<case>/
 Initialize:
 
 ```powershell
-powershell -File skills\scripts\case-init.ps1 -Hint "full pentest" -CaseName "acme-2026"
+powershell -File scripts\case-init.ps1 -Hint "full pentest" -CaseName "acme-2026"
 ```
 
 ## timeline.md Format

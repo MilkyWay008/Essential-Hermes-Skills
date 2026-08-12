@@ -7,7 +7,7 @@
 ## How to Initialize
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File skills\scripts\case-init.ps1 -Hint "<one-line task description>" -CaseName "my-case"
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\case-init.ps1 -Hint "<one-line task description>" -CaseName "my-case"
 # Default output: work/<case>/scope.md etc. in the current analysis project
 # When invoking the skill from another directory, specify explicitly: -ProjectRoot "C:\path\to\analysis-project"
 ```

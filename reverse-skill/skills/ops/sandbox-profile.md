@@ -4,7 +4,7 @@
 
 ## Capabilities reverse-skill can auto-bootstrap
 
-Source: `skills/scripts/bootstrap-manifest.json` (the file wins):
+Source: `scripts/bootstrap-manifest.json` (the file wins):
 
 | Capability | Typical use |
 |------|----------|
@@ -18,8 +18,8 @@ Source: `skills/scripts/bootstrap-manifest.json` (the file wins):
 | binwalk / pwntools / yara | firmware/pwn/malware |
 
 ```powershell
-powershell -File skills\scripts\bootstrap-reverse.ps1 -Capability @('jadx','nmap','yara') -StartServices
-powershell -File skills\scripts\refresh-tool-index.ps1
+powershell -File scripts\bootstrap-reverse.ps1 -Capability @('jadx','nmap','yara') -StartServices
+powershell -File scripts\refresh-tool-index.ps1
 ```
 
 ## Common in the Z3r0 sandbox but NOT auto-installed by this manifest

@@ -189,6 +189,7 @@ The MCP capabilities this skill depends on can be auto-registered through the un
 | Capability | Auto-registrable | Method | Notes |
 |------|-----------|------|------|
 | jshookmcp | ✓ | npm-mcp (npx launch) | Auto-registers in the agent's MCP configuration (e.g. Hermes `config.yaml` `mcp_servers`) |
+| js-reverse-mcp | ✓ | npm-mcp (npx launch) | Auto-registers as `js-reverse` MCP server (`npx -y js-reverse-mcp@4.0.1`) — the skill's primary `js-reverse_*` tool surface |
 | anything-analyzer | ✓ | local-http-mcp | Auto-registers + can auto-start the service |
 | Node.js | ✓ | winget install | Runtime dependency |
 

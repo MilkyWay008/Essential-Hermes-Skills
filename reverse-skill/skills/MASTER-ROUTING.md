@@ -16,20 +16,20 @@
 ```
 
 ```powershell
-powershell -File skills\scripts\master-route.ps1 -Hint "<user-task>"
+powershell -File scripts\master-route.ps1 -Hint "<user-task>"
 # By default writes to the current project's work/master-route-<ts>/route-scope.md; when calling from another directory, explicitly pass the project root
-powershell -File skills\scripts\master-route.ps1 -Hint "<user-task>" -ProjectRoot "C:\path\to\analysis-project"
-powershell -File skills\scripts\case-init.ps1 -Hint "<user-task>" -CaseName "my-case"
+powershell -File scripts\master-route.ps1 -Hint "<user-task>" -ProjectRoot "C:\path\to\analysis-project"
+powershell -File scripts\case-init.ps1 -Hint "<user-task>" -CaseName "my-case"
 # case defaults to the current project's work/<case>/; -PackageRoot kept for compatibility, -ProjectRoot takes precedence
-powershell -File skills\scripts\case-init.ps1 -Hint "<user-task>" -CaseName "my-case" -ProjectRoot "C:\path\to\analysis-project"
+powershell -File scripts\case-init.ps1 -Hint "<user-task>" -CaseName "my-case" -ProjectRoot "C:\path\to\analysis-project"
 # One-shot, ready to ACT (auth + target + network profile):
-powershell -File skills\scripts\case-init.ps1 -Hint "<task>" -CaseName "my-case" -AuthGranted -TargetUrl "https://target/" -NetworkProfile authorized_target_only
+powershell -File scripts\case-init.ps1 -Hint "<task>" -CaseName "my-case" -AuthGranted -TargetUrl "https://target/" -NetworkProfile authorized_target_only
 # Smoke test: verify + script parsing + routing matrix (incl. Chinese Hint)
-powershell -File skills\scripts\smoke.ps1
+powershell -File scripts\smoke.ps1
 # Lightweight scope gate before ACT (exit 2 if not ready; -Force only warns)
-powershell -File skills\scripts\case-guard.ps1 -CaseRoot work\my-case
+powershell -File scripts\case-guard.ps1 -CaseRoot work\my-case
 # Evidence append
-powershell -File skills\scripts\append-evidence.ps1 -CaseRoot work\my-case -Id E-001 -Title "..." -ReproCommand "..."
+powershell -File scripts\append-evidence.ps1 -CaseRoot work\my-case -Id E-001 -Title "..." -ReproCommand "..."
 python3 skills/case-review/scripts/review_case.py work/<case> --verify-hashes --strict
 ```
 
