@@ -69,7 +69,7 @@ Each skill is **self-contained**, **production-tested**, and documented with its
 
 ### 2. 🕵️ `reverse-skill` — Open Up Any Program and See What's Inside
 
-**What it is:** software is a black box — you see what it *shows* you, not what it *does*. When a program breaks, won't start, acts suspicious, or hides its logic, this 85-skill pack (ported from the popular [reverse-skill](https://github.com/zhaoxuya520/reverse-skill) project, 23.9k⭐) gives your agent the tools to open the box: read the code inside apps, find out why they crash, and judge whether they're safe.
+**What it is:** software is a black box — you see what it *shows* you, not what it *does*. When a program breaks, won't start, acts suspicious, or hides its logic, this 85-skill pack (ported from the popular [reverse-skill](https://github.com/zhaoxuya520/reverse-skill) project, 24.4k⭐) gives your agent the tools to open the box: read the code inside apps, find out why they crash, and judge whether they're safe.
 
 **Everyday examples:**
 - **"This app won't open anymore."** A program (say, QuickBooks) crashes on launch and the error says nothing useful. reverse-skill inspects the compiled code, finds what broke, and tells you exactly why.
@@ -187,7 +187,7 @@ cp -r web_search ~/.hermes/skills/web/
 cp -r web_extract ~/.hermes/skills/web/
 
 # reverse-skill — Option A: whole pack as one folder (recommended)
-cp -r reverse-skill/skills ~/.hermes/skills/reverse-skill/            # router + 43 modules + 42 CTF sub-skills, all in one folder
+cp -r reverse-skill/skills ~/.hermes/skills/reverse-skill/            # router + 40 modules + 41 CTF sub-skills + master, all in one folder
 ```
 
 ### Configure
@@ -221,10 +221,10 @@ essential-hermes-skills/
 │   ├── README-hermes.md         ← Hermes guide (duplicate, kept for visibility)
 │   ├── README-orignal.md        ← upstream README (preserved)
 │   ├── LICENSE                  ← upstream MIT (zhaoxuya520)
-│   ├── skills/                  ← router + 43 specialist modules + CTF + scripts
+│   ├── skills/                  ← router + 40 specialist modules + CTF + scripts
 │   │   ├── SKILL.md             ← reverse-skill-router (pack entry point)
-│   │   ├── <module>/            ← 43 RE/security modules (apk-reverse, ida-reverse, …)
-│   │   ├── CTF-Sandbox-Orchestrator/ ← 42 CTF competition sub-skills + master orchestrator
+│   │   ├── <module>/            ← 40 RE/security modules (apk-reverse, ida-reverse, …)
+│   │   ├── CTF-Sandbox-Orchestrator/ ← 41 CTF competition sub-skills + master orchestrator
 │   │   ├── scripts/             ← bootstrap + case-init tooling
 │   │   └── field-journal/       ← self-evolving lessons
 │   └── kali/                    ← Kali Linux edition docs

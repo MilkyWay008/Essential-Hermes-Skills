@@ -1,6 +1,6 @@
 # 🕵️ reverse-skill — Open Up Any Program and See What's Inside
 
-> **Hermes Agent port of [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)** (MIT, 23.9k⭐). Upstream READMEs, routing docs, and bilingual (EN/ZH) content preserved in this folder — this port adapts the skill pack to Hermes Agent conventions so every module loads as a first-class Hermes skill.
+> **Hermes Agent port of [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)** (MIT, 24.4k⭐). Upstream READMEs, routing docs, and bilingual (EN/ZH) content preserved in this folder — this port adapts the skill pack to Hermes Agent conventions so every module loads as a first-class Hermes skill.
 
 **In plain English:** software is a black box — you see what it *shows* you, not what it *does*. When a program breaks, won't start, acts suspicious, or hides its logic, reverse-skill gives your agent the tools to open the box: read the code inside apps, find out why they crash, see what they send over the internet, and judge whether they're safe to trust.
 
@@ -25,11 +25,11 @@
 | `skills/` | The whole pack — the router, 40 specialist modules, and the nested CTF collection |
 | `skills/SKILL.md` | The **router skill** (`reverse-skill-router`) — reads the task, picks the PRIMARY module, enforces the authorization contract |
 | `skills/<module>/` | 40 specialist modules — each a self-contained Hermes skill (`SKILL.md` + `references/` + `scripts/`) |
-| `skills/CTF-Sandbox-Orchestrator/` | 42 CTF competition sub-skills orchestrated by a master controller |
+| `skills/CTF-Sandbox-Orchestrator/` | 41 CTF competition sub-skills + a master orchestrator (42 skill files) |
 | `skills/config/routing.json` | 42 routing rules (R0–R41) — single source of truth for routing |
 | `skills/field-journal/` | Self-evolving knowledge base — lessons written back after each task |
 | `skills/scripts/` | Cross-platform helpers (`.ps1` + `.sh` twins): `master-route`, `case-init`, `bootstrap-reverse`, `smoke`, etc. |
-| `kali/`, `burp-mcp-full/`, `docs/`, `examples/` | Auxiliary tooling and docs from upstream |
+| `kali/`, `burp-mcp-full/`, `docs/` | Auxiliary tooling and docs from upstream |
 
 ## Install into Hermes
 
@@ -39,15 +39,15 @@ Copy the entire `skills/` folder into your Hermes skills directory as a **single
 
 ```bash
 # Hermes sees one clean entry: ~/.hermes/skills/reverse-skill/
-# (includes the router, all 40 RE/security modules, and the 42 CTF sub-skills)
+# (includes the router, all 40 RE/security modules, and the 41 CTF sub-skills + master)
 cp -r skills ~/.hermes/skills/reverse-skill/
 ```
 
-That's it — one command. The folder contains the `SKILL.md` router (the pack's entry point), all 40 specialist modules, and the nested `CTF-Sandbox-Orchestrator/` (42 competition sub-skills + its own master orchestrator). Hermes groups everything under `reverse-skill/` — one tidy folder, not 44 folders scattered in your skills root. The router fires when a task spans modules or the entrypoint is unclear; individual modules also fire on their own triggers (e.g. *"analyze this APK"* → `apk-reverse`).
+That's it — one command. The folder contains the `SKILL.md` router (the pack's entry point), all 40 specialist modules, and the nested `CTF-Sandbox-Orchestrator/` (41 competition sub-skills + its own master orchestrator). Hermes groups everything under `reverse-skill/` — one tidy folder instead of 40+ loose module folders scattered in your skills root. The router fires when a task spans modules or the entrypoint is unclear; individual modules also fire on their own triggers (e.g. *"analyze this APK"* → `apk-reverse`).
 
 > **Why one command now?** The CTF collection lives *inside* `skills/` in this port, and every module references the pack's shared scaffolding (`scripts/`, `ops/`, `field-journal/`, `tool-index.md`) via relative paths — so the whole pack must stay together. Partial installs (copying a few modules) break those relative references; that's why cherry-picking is not offered. If you want fewer visible skills, use Option B instead.
 >
-> ⚠️ **Note:** Option A installs only `skills/`. The auxiliary dirs (`kali/`, `burp-mcp-full/`, `docs/`, `examples/`) are **not** copied — Kali auto-bootstrap scripts inside a few modules reference `kali/` and will need it present if you use Kali; copy it too with `cp -r skills kali burp-mcp-full docs ~/.hermes/skills/reverse-skill/` when needed.
+> ⚠️ **Note:** Option A installs only `skills/`. The auxiliary dirs (`kali/`, `burp-mcp-full/`, `docs/`) are **not** copied — Kali auto-bootstrap scripts inside a few modules reference `kali/` and will need it present if you use Kali; copy it too with `cp -r skills kali burp-mcp-full docs ~/.hermes/skills/reverse-skill/` when needed (upstream also had an `examples/` dir; this port does not ship it).
 
 ### Option B — install the whole pack, then hide the long-tail
 
