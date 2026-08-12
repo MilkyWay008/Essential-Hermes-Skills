@@ -182,10 +182,12 @@ Each skill is a self-contained folder. Copy the skill folder you want into your 
 ```bash
 # generic — works for any Hermes profile
 cp -r complex-project-workflow ~/.hermes/skills/software-development/
-cp -r reverse-skill/skills ~/.hermes/skills/security/            # whole pack (85 skills + router)
 cp -r app-debug-workflow ~/.hermes/skills/software-development/
 cp -r web_search ~/.hermes/skills/web/
 cp -r web_extract ~/.hermes/skills/web/
+
+# reverse-skill — Option A: whole pack as one folder (recommended)
+cp -r reverse-skill/skills ~/.hermes/skills/reverse-skill/            # router + 43 modules + 42 CTF sub-skills, all in one folder
 ```
 
 ### Configure
@@ -219,8 +221,12 @@ essential-hermes-skills/
 │   ├── README-hermes.md         ← Hermes guide (duplicate, kept for visibility)
 │   ├── README-orignal.md        ← upstream README (preserved)
 │   ├── LICENSE                  ← upstream MIT (zhaoxuya520)
-│   ├── skills/                  ← 43 specialist modules + router + scripts
-│   ├── CTF-Sandbox-Orchestrator/← 42 CTF competition sub-skills
+│   ├── skills/                  ← router + 43 specialist modules + CTF + scripts
+│   │   ├── SKILL.md             ← reverse-skill-router (pack entry point)
+│   │   ├── <module>/            ← 43 RE/security modules (apk-reverse, ida-reverse, …)
+│   │   ├── CTF-Sandbox-Orchestrator/ ← 42 CTF competition sub-skills + master orchestrator
+│   │   ├── scripts/             ← bootstrap + case-init tooling
+│   │   └── field-journal/       ← self-evolving lessons
 │   └── kali/                    ← Kali Linux edition docs
 ├── app-debug-workflow/          ← 90-min disciplined codebase auditing
 │   ├── SKILL.md

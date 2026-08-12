@@ -26,7 +26,6 @@ if [[ -z "$TOOLS_ROOT" || "$TOOLS_ROOT" == "/" || "$TOOLS_ROOT" == "$HOME" ]]; t
   echo "Unsafe REVERSE_SKILL_TOOLS_DIR: $TOOLS_ROOT" >&2
   exit 2
 fi
-MCP_CONFIG_PATH="${CLAUDE_MCP_CONFIG:-$HOME/.claude/mcp.json}"
 
 UNAME_S="$(uname -s 2>/dev/null || echo unknown)"
 case "$UNAME_S" in
@@ -139,8 +138,8 @@ Examples:
 
 Notes:
   - This script supports Linux and macOS.
-  - It writes MCP config to ~/.claude/mcp.json by default.
-  - Override with CLAUDE_MCP_CONFIG=/path/to/mcp.json.
+  - Installs and discovers tools; MCP servers are NOT auto-registered.
+  - See the printed instructions to register servers in Hermes config.yaml.
   - Override install root with REVERSE_SKILL_TOOLS_DIR=~/tools.
 EOF
 }
@@ -352,26 +351,14 @@ install_github_release() {
 }
 
 write_mcp_server() {
+  # Hermes port: MCP servers are NOT auto-registered into client configs.
+  # Tool discovery/install is complete; registration is a manual instruction.
   local name="$1"
   local json_payload="$2"
-  ensure_dir "$(dirname "$MCP_CONFIG_PATH")"
-  python3 - "$MCP_CONFIG_PATH" "$name" "$json_payload" <<'PY'
-import json, pathlib, sys
-path = pathlib.Path(sys.argv[1])
-name = sys.argv[2]
-payload = json.loads(sys.argv[3])
-if path.exists():
-    try:
-        data = json.loads(path.read_text(encoding='utf-8'))
-    except Exception:
-        data = {}
-else:
-    data = {}
-data.setdefault('mcpServers', {})[name] = payload
-path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')
-print(path)
-PY
-  log_ok "MCP server '$name' registered in $MCP_CONFIG_PATH"
+  log_ok "MCP server '$name' is installed but NOT auto-registered."
+  echo "  To use it, register '$name' in your Hermes profile's config.yaml under mcp_servers:"
+  echo "      $name: $json_payload"
+  echo "  (or add it to your smart-mcp-proxy config and reload the proxy)"
 }
 
 test_tcp_port() {

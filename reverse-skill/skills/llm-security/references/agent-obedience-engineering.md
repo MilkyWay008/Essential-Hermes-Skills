@@ -1,7 +1,7 @@
 # AI Agent 服从性工程 — 让 AI 读完工作流后真正干活
 
 > 来源：2026 年多来源综合（Anthropic Skill Engineering、Microsoft Code Words、Strands Steering Hooks、Gradient Flow Harness Engineering）
-> 适用场景：AI 编码 Agent（Claude Code / Codex / Cursor / Cline / Windsurf / Kiro 等）读完 README/RULES.md 后只确认不执行、跳过步骤、自作主张省略关键操作
+> 适用场景：AI 编码 Agent（各种 agent CLI / IDE 内嵌 agent 等客户端）读完 README/RULES.md 后只确认不执行、跳过步骤、自作主张省略关键操作
 
 ---
 

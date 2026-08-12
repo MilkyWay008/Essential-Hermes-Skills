@@ -111,13 +111,13 @@ brew install --cask dotnet-sdk
 
 | 项目 | 特点 | 适配 |
 |------|------|------|
-| **soufianetahiri/dnspy-mcp** | 核心 MCP Server，暴露 decompile、IL inspection 等工具 | Claude Code / Cursor |
+| **soufianetahiri/dnspy-mcp** | 核心 MCP Server，暴露 decompile、IL inspection 等工具 | 各种 agent 客户端 |
 | **AgentSmithers/DnSpy-MCPserver-Extension** | 作为 dnSpyEx 扩展运行，深度集成 GUI | dnSpyEx 内加载 |
 | **malwarecakefactory/dnspy-mcp-extension** | 33 个工具，覆盖 triage → deobfuscation 全流程 | 全流程自动化 |
 
-### 注册到 Claude MCP 配置
+### 注册到 agent 的 MCP 配置
 
-按对应项目 README 装 dnSpyEx 扩展后，在 `~/.claude/mcp.json` 注册（具体 command/args 以项目 README 为准）：
+按对应项目 README 装 dnSpyEx 扩展后，在 agent 的 MCP 配置文件（如 `<agent MCP config>`）注册（具体 command/args 与配置位置以项目 README 和所用客户端为准）：
 
 ```json
 {

@@ -83,7 +83,7 @@ kubectl get clusterrolebindings
 ## References
 
 - `references/k8s-cloud-checklist.md`
-- CTF counterpart: `../../CTF-Sandbox-Orchestrator/competition-agent-cloud/`
+- CTF counterpart: `../CTF-Sandbox-Orchestrator/competition-agent-cloud/`
 - `../supply-chain-security/` `../pentest-tools/`
 
 ## Routing Context

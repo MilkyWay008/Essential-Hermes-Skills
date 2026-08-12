@@ -554,77 +554,54 @@ function Get-ReverseBootstrapDefinition {
     return Get-ReverseBootstrapCatalog | Where-Object { $_.name -eq $Name } | Select-Object -First 1
 }
 
-function Get-ClaudeMcpConfigPath {
-    [CmdletBinding()]
-    param()
-
-    if (-not [string]::IsNullOrWhiteSpace($env:CLAUDE_MCP_CONFIG)) {
-        return $env:CLAUDE_MCP_CONFIG
-    }
-    $profilePath = Get-ReverseUserProfilePath
-    return Join-Path (Join-Path $profilePath '.claude') 'mcp.json'
-}
-
-function Get-CodexConfigPath {
-    [CmdletBinding()]
-    param()
-
-    if (-not [string]::IsNullOrWhiteSpace($env:CODEX_CONFIG_PATH)) {
-        return $env:CODEX_CONFIG_PATH
-    }
-    $profilePath = Get-ReverseUserProfilePath
-    return Join-Path (Join-Path $profilePath '.codex') 'config.toml'
-}
-
-function Get-ClaudeMcpServerNames {
-    [CmdletBinding()]
-    param()
-
-    $configPath = Get-ClaudeMcpConfigPath
-    if (-not (Test-Path -LiteralPath $configPath)) {
-        return @()
-    }
-
-    try {
-        $json = Get-Content -LiteralPath $configPath -Raw -Encoding UTF8 | ConvertFrom-Json
-        if ($null -eq $json.mcpServers) {
-            return @()
-        }
-        return @($json.mcpServers.PSObject.Properties.Name)
-    }
-    catch {
-        return @()
-    }
-}
-
-function Get-CodexMcpServerNames {
-    [CmdletBinding()]
-    param()
-
-    $configPath = Get-CodexConfigPath
-    if (-not (Test-Path -LiteralPath $configPath)) {
-        return @()
-    }
-
-    $pattern = '^\[mcp_servers\.([^\].]+)\]\s*$'
-    $names = @()
-    foreach ($match in Select-String -LiteralPath $configPath -Pattern $pattern) {
-        if ($match.Matches.Count -gt 0) {
-            $names += $match.Matches[0].Groups[1].Value
-        }
-    }
-
-    return @($names | Sort-Object -Unique)
-}
-
 function Get-ReverseMcpServerNames {
     [CmdletBinding()]
     param()
 
-    $names = @()
-    $names += @(Get-ClaudeMcpServerNames)
-    $names += @(Get-CodexMcpServerNames)
-    return @($names | Sort-Object -Unique)
+    # Hermes port: read registered MCP server names from a Hermes config.yaml.
+    # Point REVERSE_SKILL_HERMES_CONFIG at the profile config, or it falls back
+    # to common Hermes locations. Line-based YAML scan (no parser dependency):
+    # finds "mcp_servers:" then the first-level indented keys beneath it.
+    $candidates = @()
+    if (-not [string]::IsNullOrWhiteSpace($env:REVERSE_SKILL_HERMES_CONFIG)) {
+        $candidates += $env:REVERSE_SKILL_HERMES_CONFIG
+    }
+    $profilePath = Get-ReverseUserProfilePath
+    $candidates += (Join-Path $profilePath '.hermes/config.yaml')
+    $candidates += (Join-Path $profilePath '.hermes/profiles/gf-helen/config.yaml')
+
+    foreach ($path in $candidates) {
+        if (-not (Test-Path -LiteralPath $path)) {
+            continue
+        }
+        try {
+            $lines = Get-Content -LiteralPath $path
+            $inMcpServers = $false
+            $names = @()
+            foreach ($line in $lines) {
+                if ($line -match '^mcp_servers:\s*$') {
+                    $inMcpServers = $true
+                    continue
+                }
+                if ($inMcpServers) {
+                    if ($line -match '^\s{2,}([A-Za-z0-9_.-]+):') {
+                        $names += $Matches[1]
+                    }
+                    elseif ($line -match '^\S' -and $line -notmatch '^#') {
+                        # left the mcp_servers block
+                        $inMcpServers = $false
+                    }
+                }
+            }
+            if ($names.Count -gt 0) {
+                return @($names | Sort-Object -Unique)
+            }
+        }
+        catch {
+            # try next candidate
+        }
+    }
+    return @()
 }
 
 function Test-ReverseTcpPort {

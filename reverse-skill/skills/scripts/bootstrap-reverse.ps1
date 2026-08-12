@@ -7,10 +7,7 @@ param(
 
     [switch]$SkipRefresh,
 
-    [switch]$StartServices,
-
-    [ValidateSet('Claude', 'Codex', 'Both')]
-    [string]$McpHostTarget = 'Both'
+    [switch]$StartServices
 )
 
 # 临时目录统一入口（$env:TEMP 在 Linux/macOS 上可能未设置）
@@ -80,13 +77,6 @@ function Test-SuccessExitCode {
     return $ExitCode -in @(0, 3010, 1641)
 }
 
-function Get-McpHostTargets {
-    switch ($McpHostTarget) {
-        'Claude' { return @('Claude') }
-        'Codex' { return @('Codex') }
-        default { return @('Claude', 'Codex') }
-    }
-}
 
 function Test-ReverseIsWindows {
     return $env:OS -eq 'Windows_NT'
@@ -561,139 +551,10 @@ function Ensure-PipPackageInstall {
     }
 }
 
-function Get-ClaudeMcpConfig {
-    $path = Get-ClaudeMcpConfigPath
-    if (-not (Test-Path -LiteralPath $path)) {
-        return @{ path = $path; json = @{ mcpServers = @{} } }
-    }
 
-    $json = Read-ReverseJsonAsHashtable -Path $path
-    if ($null -eq $json) {
-        $json = @{ mcpServers = @{} }
-    }
-    if (-not $json.Contains('mcpServers')) {
-        $json['mcpServers'] = @{}
-    }
-    return @{ path = $path; json = $json }
-}
 
-function Save-ClaudeMcpConfig {
-    param([Parameter(Mandatory = $true)]$Config)
 
-    $parent = Split-Path -Path $Config.path -Parent
-    if (-not (Test-Path -LiteralPath $parent)) {
-        New-Item -ItemType Directory -Path $parent -Force | Out-Null
-    }
 
-    $Config.json | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $Config.path -Encoding utf8
-}
-
-function ConvertTo-TomlLiteral {
-    param([Parameter(Mandatory = $true)]$Value)
-
-    if ($Value -is [bool]) {
-        return $Value.ToString().ToLowerInvariant()
-    }
-    if ($Value -is [int] -or $Value -is [long] -or $Value -is [double] -or $Value -is [decimal]) {
-        return [string]$Value
-    }
-    if ($Value -is [System.Collections.IEnumerable] -and -not ($Value -is [string])) {
-        $items = foreach ($item in $Value) {
-            ConvertTo-TomlLiteral -Value $item
-        }
-        return "[{0}]" -f ($items -join ', ')
-    }
-
-    $escaped = ([string]$Value).Replace('\', '\\').Replace('"', '\"')
-    return '"' + $escaped + '"'
-}
-
-function Remove-CodexMcpServerBlocks {
-    param(
-        [AllowEmptyCollection()]
-        [string[]]$Lines,
-        [Parameter(Mandatory = $true)][string]$ServerName
-    )
-
-    $targetPattern = '^\[mcp_servers\.{0}(?:\.env)?\]\s*$' -f [regex]::Escape($ServerName)
-    $result = New-Object System.Collections.Generic.List[string]
-    $skipBlock = $false
-
-    if ($null -eq $Lines) {
-        return @()
-    }
-
-    foreach ($line in $Lines) {
-        if ($line -match '^\[') {
-            if ($line -match $targetPattern) {
-                $skipBlock = $true
-                continue
-            }
-
-            if ($skipBlock) {
-                $skipBlock = $false
-            }
-        }
-
-        if (-not $skipBlock) {
-            $result.Add($line)
-        }
-    }
-
-    return @($result)
-}
-
-function Set-CodexMcpServer {
-    param(
-        [Parameter(Mandatory = $true)][string]$ServerName,
-        [Parameter(Mandatory = $true)][hashtable]$ServerDefinition
-    )
-
-    $path = Get-CodexConfigPath
-    $parent = Split-Path -Path $path -Parent
-    if (-not (Test-Path -LiteralPath $parent)) {
-        New-Item -ItemType Directory -Path $parent -Force | Out-Null
-    }
-
-    $lines = @()
-    if (Test-Path -LiteralPath $path) {
-        $rawLines = @(Get-Content -LiteralPath $path)
-        if ($rawLines.Count -eq 1 -and [string]::IsNullOrEmpty($rawLines[0])) {
-            $lines = @()
-        }
-        else {
-            $lines = $rawLines
-        }
-    }
-    $lines = @(Remove-CodexMcpServerBlocks -Lines $lines -ServerName $ServerName)
-
-    while ($lines.Count -gt 0 -and [string]::IsNullOrWhiteSpace($lines[-1])) {
-        $lines = if ($lines.Count -gt 1) { $lines[0..($lines.Count - 2)] } else { @() }
-    }
-    if ($lines.Count -gt 0) {
-        $lines += ''
-    }
-
-    $lines += "[mcp_servers.$ServerName]"
-    foreach ($key in @('type', 'url', 'command', 'args', 'bearer_token_env_var')) {
-        if ($ServerDefinition.Contains($key)) {
-            $lines += "$key = $(ConvertTo-TomlLiteral -Value $ServerDefinition[$key])"
-        }
-    }
-    foreach ($key in ($ServerDefinition.Keys | Where-Object { $_ -notin @('type', 'url', 'command', 'args', 'bearer_token_env_var', 'env') } | Sort-Object)) {
-        $lines += "$key = $(ConvertTo-TomlLiteral -Value $ServerDefinition[$key])"
-    }
-
-    if ($ServerDefinition.Contains('env') -and $ServerDefinition['env'] -is [System.Collections.IDictionary] -and $ServerDefinition['env'].Count -gt 0) {
-        $lines += ''
-        $lines += "[mcp_servers.$ServerName.env]"
-        foreach ($envKey in ($ServerDefinition['env'].Keys | Sort-Object)) {
-            $lines += "$envKey = $(ConvertTo-TomlLiteral -Value $ServerDefinition['env'][$envKey])"
-        }
-    }
-
-    Set-Content -LiteralPath $path -Value $lines -Encoding utf8
-}
 
 function Ensure-McpServer {
     param(
@@ -701,30 +562,21 @@ function Ensure-McpServer {
         [Parameter(Mandatory = $true)][hashtable]$ServerDefinition
     )
 
-    foreach ($target in Get-McpHostTargets) {
-        switch ($target) {
-            'Claude' {
-                $config = Get-ClaudeMcpConfig
-                $claudeDefinition = @{}
-                foreach ($key in $ServerDefinition.Keys) {
-                    if ($key -ne 'bearer_token_env_var') {
-                        $claudeDefinition[$key] = $ServerDefinition[$key]
-                    }
-                }
-                $config.json.mcpServers[$ServerName] = $claudeDefinition
-                Save-ClaudeMcpConfig -Config $config
-            }
-            'Codex' {
-                $codexDefinition = @{}
-                foreach ($key in $ServerDefinition.Keys) {
-                    if ($key -ne 'headers') {
-                        $codexDefinition[$key] = $ServerDefinition[$key]
-                    }
-                }
-                Set-CodexMcpServer -ServerName $ServerName -ServerDefinition $codexDefinition
-            }
+    Write-Host ""
+    Write-Host "  MCP server '$ServerName' is installed but NOT auto-registered." -ForegroundColor Yellow
+    Write-Host "  To use it, register the server in your Hermes profile's config.yaml:" -ForegroundColor Yellow
+    Write-Host "    mcp_servers:" -ForegroundColor Cyan
+    Write-Host "      $ServerName:" -ForegroundColor Cyan
+    foreach ($key in $ServerDefinition.Keys | Sort-Object) {
+        $value = $ServerDefinition[$key]
+        if ($value -is [string]) {
+            Write-Host "        $key: '$value'" -ForegroundColor Cyan
+        } else {
+            Write-Host "        $key: $($value | ConvertTo-Json -Compress)" -ForegroundColor Cyan
         }
     }
+    Write-Host "  (or add it to your smart-mcp-proxy config and reload the proxy)" -ForegroundColor Yellow
+    Write-Host ""
 }
 
 function Get-McpCommandServerDefinition {

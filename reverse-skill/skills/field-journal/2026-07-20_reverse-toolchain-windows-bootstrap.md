@@ -26,7 +26,7 @@
 | anything-analyzer SQLite ABI 不匹配 | 普通 `pnpm rebuild better-sqlite3` 构建成 Node ABI，而 Electron 需要 Electron ABI | 使用项目的 `pnpm run postinstall` | 中 |
 | WSL 服务 1053，系统功能不存在 | Windows 镜像裁剪掉 WSL、VirtualMachinePlatform、Hyper-V 功能包 | 保留真实 Linux 命令缺口，改用 Windows 原生工具与 QEMU full-system | 中 |
 | Dr. Memory 版本正常但注入崩溃 | Windows 11 24H2 build 26100 兼容性问题 | 记录上游 issue，使用 AppVerifier/PageHeap/UMDH/CDB/Frida | 中 |
-| Codex TOML 无法加载 | 历史项目路径乱码造成缺引号、无效转义和重复键 | 仅修复表头语法并校验 `codex mcp list` | 低 |
+| 历史 MCP 配置（TOML）无法加载 | 历史项目路径乱码造成缺引号、无效转义和重复键 | 仅修复表头语法并校验 [agent MCP config check] | 低 |
 | Burp MCP 注册后无工具 | Burp GUI 尚未加载扩展，9876 未监听 | 构建固定 JAR，记录 GUI 加载条件 | 低 |
 
 ## 工具链发现
@@ -42,7 +42,7 @@
 python "{skill_root}\scripts\toolchain_probe.py" --format markdown
 aria2c --disable-ipv6=true --max-connection-per-server=16 --split=16 "{official_url}"
 powershell -NoProfile -ExecutionPolicy Bypass -File "{package_root}\skills\scripts\refresh-tool-index.ps1"
-codex mcp list
+# [agent MCP config check]（历史客户端命令；当前 agent 使用各自的 MCP 配置）
 cdb -g -G C:\Windows\System32\where.exe cmd
 ```
 

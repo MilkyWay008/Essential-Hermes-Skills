@@ -10,10 +10,10 @@ description: >-
 
 ## ACTION REQUIRED (execute immediately after reading)
 
-1. `NOW`：Confirm whether the current task falls within this skill's scope
-2. `NOW`：Read `../tool-index.md` to verify tool availability and actual paths
-3. `NEXT`：Call bootstrap when tools are missing; don't guess paths
-4. `ACT`：Proceed to the first step of the "Workflow" and execute it; don't stop at the confirmation stage
+1. `NOW`: Confirm whether the current task falls within this skill's scope
+2. `NOW`: Read `../tool-index.md` to verify tool availability and actual paths
+3. `NEXT`: Call bootstrap when tools are missing; don't guess paths
+4. `ACT`: Proceed to the first step of the "Workflow" and execute it; don't stop at the confirmation stage
 
 ## Scope
 
@@ -140,7 +140,7 @@ cd openreverse
 # 2. 安装依赖
 npm install
 
-# 3. 接入 Agent 宿主（Claude Code / Codex / Zed）
+# 3. Integrate with the agent host (Hermes Agent)
 npm run init:agents -- --target=all /path/to/project
 
 # 4. 安装 CUA runtime（如果需要视觉驱动模式）

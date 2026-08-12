@@ -43,7 +43,7 @@ Compared with traditional approaches:
 |------|--------------|------|--------|
 | Manually compare across two IDA windows | Free but exhausting | Several hours | High |
 | BinDiff auto-matching | Free | Fast | Medium (fails when structure changes significantly) |
-| Fully delegated to an agent (CC/Codex) | ¥50-100 | Slow | High |
+| Fully delegated to a generic coding agent | ¥50-100 | Slow | High |
 | **This skill (LLM batch comparison)** | **~¥1** | **~10 s/function** | **High** |
 
 ## Core Principle

@@ -230,7 +230,7 @@ done
 # Python heredoc below so this script keeps its existing bash dependencies.
 
 MANIFEST_PATH="$SCRIPT_DIR/bootstrap-manifest.json"
-MCP_CONFIG_PATH_FOR_CAP="${CLAUDE_MCP_CONFIG:-$HOME/.claude/mcp.json}"
+MCP_CONFIG_PATH_FOR_CAP="${REVERSE_SKILL_HERMES_CONFIG:-}"
 CAP_RECORDS_TMP="$(mktemp)"
 # Replace earlier single-file trap with one that also cleans this capability tmp file.
 trap 'rm -f "$records_tmp" "$CAP_RECORDS_TMP"' EXIT
@@ -250,11 +250,22 @@ except Exception:
     manifest = {'capabilities': []}
 capabilities = manifest.get('capabilities', [])
 
-# Load currently registered MCP server names
+# Load currently registered MCP server names (Hermes config.yaml, line-based scan)
 registered_names = set()
 try:
-    mcp_data = json.loads(pathlib.Path(mcp_config_path).read_text(encoding='utf-8'))
-    registered_names = set(mcp_data.get('mcpServers', {}).keys())
+    if mcp_config_path and pathlib.Path(mcp_config_path).exists():
+        in_mcp = False
+        for line in pathlib.Path(mcp_config_path).read_text(encoding='utf-8').splitlines():
+            if line.rstrip() == 'mcp_servers:':
+                in_mcp = True
+                continue
+            if in_mcp:
+                if line[:2] == '  ' and ':' in line and not line.lstrip().startswith('#'):
+                    name = line.split(':', 1)[0].strip()
+                    if name:
+                        registered_names.add(name)
+                elif line and not line.startswith(' ') and not line.startswith('#'):
+                    in_mcp = False
 except Exception:
     pass
 

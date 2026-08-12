@@ -484,11 +484,11 @@ skills/ghidra-headless/
 
 ### 10.3 编写 MCP 注册逻辑
 
-bootstrap 脚本已经内置了通用的 MCP 配置合并能力。对于标准类型，只需在 manifest 中声明即可，bootstrap 会自动：
+bootstrap 脚本负责安装/启动 MCP server，但**不再自动写入任何客户端的 MCP 配置文件**——它会在引导结束时打印注册指引（配置位置与格式）。对于标准类型，只需在 manifest 中声明即可，bootstrap 会自动：
 
-1. 读取用户的 MCP 配置文件（如 `~/.claude/mcp.json`）
-2. 合并新的 server 条目（不覆盖已有配置）
-3. 保存回去
+1. 安装并验证 MCP server 可用
+2. 打印该 server 的注册指引（以用户所用客户端为准）
+3. 由用户（或 AI 按指引）在客户端中完成注册
 
 如果新 MCP 有特殊的注册需求（如需要 auth token、自定义 header），在 manifest 中添加：
 
@@ -500,7 +500,7 @@ bootstrap 脚本已经内置了通用的 MCP 配置合并能力。对于标准�
 }
 ```
 
-bootstrap 会把 headers 写入配置。用户后续需要把 `<PLACEHOLDER_TOKEN>` 替换成真实值。
+bootstrap 会在注册指引中说明这些 headers。用户后续需要把 `<PLACEHOLDER_TOKEN>` 替换成真实值。
 
 ### 10.4 编写启动脚本（本地服务型）
 
@@ -575,12 +575,12 @@ MCP 配置示例：
 
 | 客户端 | 配置文件位置 |
 |--------|-------------|
-| Claude Code | `~/.claude/mcp.json` |
+| agent CLI 客户端 | `<agent MCP config>`（位置因客户端而异） |
 | Kiro | `.kiro/settings/mcp.json`（workspace）或 `~/.kiro/settings/mcp.json`（全局） |
 | Cursor | Cursor Settings → MCP |
 | Cline | Cline 设置面板 |
 
-当前 bootstrap 脚本默认写入 Claude Code 的配置路径。如果用户使用其他客户端，AI 应在引导中说明对应的配置位置。
+当前 bootstrap 脚本不再自动写入任何客户端的 MCP 配置，而是在引导结束时打印注册指引（含配置位置与格式）。AI 应根据用户所用客户端，在引导中说明对应的配置位置。
 
 ### 10.7 完整示例：新增一个假设的 "sqlmap-mcp" skill
 

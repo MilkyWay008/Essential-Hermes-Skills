@@ -35,7 +35,7 @@ This skill does not assume bare tool names exist; it defaults to binding the `js
 
 If the current task explicitly mentions `jshookmcp`, `JS hook`, `CDP`, browser breakpoints, network interception, SourceMap, or AST deobfuscation, still use this skill; just switch the underlying MCP surface to `jshookmcp` instead of treating it as a new master entry.
 
-Prerequisite: `jshookmcp` is not a bare local command-line tool; it is an MCP server that must first be downloaded/registered/enabled. The related tool surface is only truly callable after it is connected and enabled in the Claude MCP configuration.
+Prerequisite: `jshookmcp` is not a bare local command-line tool; it is an MCP server that must first be downloaded/registered/enabled. The related tool surface is only truly callable after it is connected and enabled in the agent's MCP configuration (e.g. Hermes `config.yaml` `mcp_servers`).
 
 Common mappings:
 
@@ -188,7 +188,7 @@ The MCP capabilities this skill depends on can be auto-registered through the un
 
 | Capability | Auto-registrable | Method | Notes |
 |------|-----------|------|------|
-| jshookmcp | ✓ | npm-mcp (npx launch) | Automatically writes to the Claude MCP configuration |
+| jshookmcp | ✓ | npm-mcp (npx launch) | Auto-registers in the agent's MCP configuration (e.g. Hermes `config.yaml` `mcp_servers`) |
 | anything-analyzer | ✓ | local-http-mcp | Auto-registers + can auto-start the service |
 | Node.js | ✓ | winget install | Runtime dependency |
 

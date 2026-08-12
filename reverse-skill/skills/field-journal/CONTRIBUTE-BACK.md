@@ -125,8 +125,7 @@ AI 在提交前**只需要读 `_index.md` 一个文件**进行去重，不需要
 - `pentest-tools/templates/scope.md`（包含目标信息）
 - `pentest-tools/templates/findings.md`（包含漏洞详情）
 - `pentest-tools/templates/progress.md`（包含操作记录）
-- `.claude/`（用户配置）
-- `.kiro/`（用户配置）
+- agent 客户端本地配置目录（用户级配置）
 - 任何 `.env`、`*.key`、`*.pem` 文件
 
 ## 脱敏二次检查

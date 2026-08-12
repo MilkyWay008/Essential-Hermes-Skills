@@ -336,7 +336,7 @@ ida-pro-mcp --config
 ### Bootstrap Trigger Points
 
 - `scripts/start.ps1`: automatically calls `bootstrap-reverse.ps1` when `idalib-mcp` is missing
-- MCP registration: bootstrap automatically writes `idapro` into the Claude MCP config
+- MCP registration: bootstrap automatically writes `idapro` into the agent's MCP configuration (e.g. Hermes `config.yaml` `mcp_servers`)
 
 ### Prerequisites
 

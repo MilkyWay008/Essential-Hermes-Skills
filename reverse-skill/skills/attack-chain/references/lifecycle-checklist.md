@@ -1,7 +1,7 @@
 # 渗透/攻击链生命周期检查单
 
-> 对照社区 pentest skill 包（如 Orizon claude-code-pentest 六阶段）与本包 `attack-chain` + `ops` 整合。  
-> 来源启发：公开 Claude pentest lifecycle skills（2026-07 检索）；**命令与授权以本包 scope 为准**。  
+> 对照社区 pentest skill 包（如 Orizon 的 AI pentest 六阶段 skill）与本包 `attack-chain` + `ops` 整合。  
+> 来源启发：公开的 AI-agent pentest lifecycle skills（2026-07 检索）；**命令与授权以本包 scope 为准**。  
 > 日期：2026-07-17
 
 ## 使用前

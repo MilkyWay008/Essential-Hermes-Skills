@@ -39,7 +39,7 @@ If routing fails to match, research additional methodology online and propose a 
 | **IDA Pro Reverse Engineering** | `ida-reverse/` | IDA Pro MCP HTTP server (72 tools): decompile, disassemble, data-flow tracing, cross-references |
 | **Frontend JS Reverse Engineering** | `js-reverse/` | Browser-side signature location, encrypted-parameter analysis, runtime sampling, Node environment reproduction |
 | **radare2 Analysis** | `radare2/` | CLI binary recon, disassembly, patching: r2 / rabin2 / rasm2 / radiff2 |
-| **CTF Full Stack** | `../CTF-Sandbox-Orchestrator/` | 40+ sub-skills: Web/RE/Pwn/Cloud/Container/AD/Forensics/Stego/Mobile/Crypto/ZIP, orchestrated by the master controller |
+| **CTF Full Stack** | `CTF-Sandbox-Orchestrator/` | 40+ sub-skills: Web/RE/Pwn/Cloud/Container/AD/Forensics/Stego/Mobile/Crypto/ZIP, orchestrated by the master controller |
 | **Technical Documentation** | `docs-generator/` | Auto-generate RE reports, pentest reports, CTF writeups, signature RE reports after task completion |
 | **Evidence Review** | `case-review/` | Validate scope, Evidence→Finding→Path traceability, workitems, timeline, artifact hashes |
 | **Browser & Desktop Automation** | `browser-automation/` | Playwright browser automation + Windows desktop app automation + network observation |
@@ -134,7 +134,7 @@ When adding skills, follow the standard process in `CONTRIBUTING.md`:
 ## Related Resources
 
 - `tool-index.md` records whether local RE tools are available, their real paths, versions, and script references
-- The package root `README.md` provides generic install and integration instructions for Claude Code, Codex CLI, Hermes Agent, and other code-AI clients
+- The package root `README.md` provides generic install and integration instructions for Hermes Agent and other code-AI clients
 
 ## On-Demand Bootstrap
 

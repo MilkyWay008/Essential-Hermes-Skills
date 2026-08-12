@@ -22,9 +22,10 @@
 
 | Part | What it is |
 |------|-----------|
-| `skills/` | 43 specialist modules — each a self-contained Hermes skill (`SKILL.md` + `references/` + `scripts/`) |
-| `CTF-Sandbox-Orchestrator/` | 42 CTF competition sub-skills orchestrated by a master controller |
+| `skills/` | The whole pack — the router, 43 specialist modules, and the nested CTF collection |
 | `skills/SKILL.md` | The **router skill** (`reverse-skill-router`) — reads the task, picks the PRIMARY module, enforces the authorization contract |
+| `skills/<module>/` | 43 specialist modules — each a self-contained Hermes skill (`SKILL.md` + `references/` + `scripts/`) |
+| `skills/CTF-Sandbox-Orchestrator/` | 42 CTF competition sub-skills orchestrated by a master controller |
 | `skills/config/routing.json` | 41 routing rules (R0–R40) — single source of truth for routing |
 | `skills/field-journal/` | Self-evolving knowledge base — lessons written back after each task |
 | `skills/scripts/` | Cross-platform helpers (`.ps1` + `.sh` twins): `master-route`, `case-init`, `bootstrap-reverse`, `smoke`, etc. |
@@ -38,10 +39,13 @@ Copy the entire `skills/` folder into your Hermes skills directory as a **single
 
 ```bash
 # Hermes sees one clean entry: ~/.hermes/skills/reverse-skill/
+# (includes the router, all 43 RE/security modules, and the 42 CTF sub-skills)
 cp -r skills ~/.hermes/skills/reverse-skill/
 ```
 
-The folder contains the `SKILL.md` router (the pack's entry point) plus all 43 specialist modules nested inside. Hermes groups everything under `reverse-skill/` — one tidy folder, not 44 folders scattered in your skills root. The router fires when a task spans modules or the entrypoint is unclear; individual modules also fire on their own triggers (e.g. *"analyze this APK"* → `apk-reverse`).
+That's it — one command. The folder contains the `SKILL.md` router (the pack's entry point), all 43 specialist modules, and the nested `CTF-Sandbox-Orchestrator/` (42 competition sub-skills + its own master orchestrator). Hermes groups everything under `reverse-skill/` — one tidy folder, not 44 folders scattered in your skills root. The router fires when a task spans modules or the entrypoint is unclear; individual modules also fire on their own triggers (e.g. *"analyze this APK"* → `apk-reverse`).
+
+> **Why one command now?** The CTF collection lives *inside* `skills/` in this port, and every module references the pack's shared scaffolding (`scripts/`, `ops/`, `field-journal/`, `tool-index.md`) via relative paths — so the whole pack must stay together. Partial installs (copying a few modules) break those relative references; that's why cherry-picking is not offered. If you want fewer visible skills, use Option B instead.
 
 ### Option B — install the whole pack, then hide the long-tail
 
@@ -59,28 +63,13 @@ skills:
     - radio-sdr
     - ot-ics
     - hardware-security
+    - competition-web-runtime
     # ... add any module you rarely reach for
 ```
 
 Disabled skills are hidden from the index and skill list, but their files stay on disk — a skill librarian (or `read_file` on the module's `SKILL.md` path) can still find them when a task actually needs them. Best of both worlds: a clean index, with the full pack one `read_file` away.
 
 > **Hidden ≠ unreachable through the router.** The router dispatches by **file path**, not through the skill index — it reads `MASTER-ROUTING.md`, `routing.json`, and each module's `SKILL.md` directly from disk. So a module you disabled is still fully reachable whenever the router routes to it; disabling only removes it from the skill index, never from the pack's routing.
-
-### Option C — cherry-pick individual modules
-
-Copy only the module folders you need — **into the same `reverse-skill/` folder**, not the skills root:
-
-```bash
-# keep everything grouped: ~/.hermes/skills/reverse-skill/<module>/
-mkdir -p ~/.hermes/skills/reverse-skill/
-cp -r skills/apk-reverse ~/.hermes/skills/reverse-skill/
-cp -r skills/ida-reverse ~/.hermes/skills/reverse-skill/
-cp -r skills/malware-analysis ~/.hermes/skills/reverse-skill/
-```
-
-Each module loads as a standalone skill with its own trigger description. No router required for single-module use — use this when you want just a few specialists without the full pack.
-
-> **Why the same folder?** Modules reference shared scaffolding via relative paths (`../scripts/case-init.ps1`, `../ops/scope-contract.md`, `../field-journal/precedent-auth.md`, `../tool-index.md`). Copying a module into the `reverse-skill/` folder keeps those paths resolving to the pack's shared files; copying it flat into the skills root would break them.
 
 ### Verify
 

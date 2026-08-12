@@ -8,8 +8,8 @@ description: >-
   needed. Not for pure native binaries (use reverse-engineering / ida-reverse instead).
 license: MIT
 compatibility: >-
-  Requires a filesystem-based code agent or CLI with shell access, Windows host preferred (dnSpyEx 是 Windows
-  GUI)；Linux/macOS 可用 ILSpy/de4dot CLI + mono/dotnet runtime。
+  Requires a filesystem-based code agent or CLI with shell access, Windows host preferred (dnSpyEx is a Windows
+  GUI); Linux/macOS can use ILSpy/de4dot CLI + mono/dotnet runtime.
 allowed-tools: Bash Read Write Edit Glob Grep Task WebFetch WebSearch
 metadata: {"user-invocable": "false"}
 ---

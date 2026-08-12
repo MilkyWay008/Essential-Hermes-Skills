@@ -101,7 +101,7 @@ python3 skills/case-review/scripts/review_case.py work/<case> --verify-hashes --
 
 | 任务 | 处理 |
 |------|------|
-| 纯 CTF 多类型编排 | `../CTF-Sandbox-Orchestrator/` |
+| 纯 CTF 多类型编排 | `CTF-Sandbox-Orchestrator/` |
 
 ## 读序
 
