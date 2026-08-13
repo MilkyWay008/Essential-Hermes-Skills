@@ -1,6 +1,6 @@
 # 🕵️ reverse-skill — Open Up Any Program and See What's Inside
 
-> **Hermes Agent port of [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)** (MIT, 23.9k⭐). Upstream READMEs, routing docs, and bilingual (EN/ZH) content preserved in this folder — this port adapts the skill pack to Hermes Agent conventions so every module loads as a first-class Hermes skill.
+> **Hermes Agent port of [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)** (MIT, 24.4k⭐). Upstream READMEs, routing docs, and bilingual (EN/ZH) content preserved in this folder — this port adapts the skill pack to Hermes Agent conventions so every module loads as a first-class Hermes skill.
 
 **In plain English:** software is a black box — you see what it *shows* you, not what it *does*. When a program breaks, won't start, acts suspicious, or hides its logic, reverse-skill gives your agent the tools to open the box: read the code inside apps, find out why they crash, see what they send over the internet, and judge whether they're safe to trust.
 
@@ -20,85 +20,33 @@
 
 ## What's inside (the technical tour)
 
+> **You are reading this from inside the installed pack.** Everything below is relative to this folder (`reverse-skill/` in your Hermes skills directory).
+
 | Part | What it is |
 |------|-----------|
-| `skills/` | The whole pack — the router, 40 specialist modules, and the nested CTF collection |
-| `skills/SKILL.md` | The **router skill** (`reverse-skill-router`) — reads the task, picks the PRIMARY module, enforces the authorization contract |
-| `skills/<module>/` | 40 specialist modules — each a self-contained Hermes skill (`SKILL.md` + `references/` + `scripts/`) |
-| `skills/CTF-Sandbox-Orchestrator/` | 42 CTF competition sub-skills orchestrated by a master controller |
-| `skills/config/routing.json` | 42 routing rules (R0–R41) — single source of truth for routing |
-| `skills/field-journal/` | Self-evolving knowledge base — lessons written back after each task |
-| `skills/scripts/` | Cross-platform helpers (`.ps1` + `.sh` twins): `master-route`, `case-init`, `bootstrap-reverse`, `smoke`, etc. |
-| `kali/`, `burp-mcp-full/`, `docs/`, `examples/` | Auxiliary tooling and docs from upstream |
+| `SKILL.md` | The **router skill** (`reverse-skill-router`) — reads the task, picks the PRIMARY module, enforces the authorization contract |
+| `<module>/` | 40 specialist modules — each a self-contained Hermes skill (`SKILL.md` + `references/` + `scripts/`) |
+| `CTF-Sandbox-Orchestrator/` | 41 CTF competition sub-skills + a master orchestrator (42 skill files) |
+| `config/routing.json` | 42 routing rules (R0–R41) — single source of truth for routing |
+| `field-journal/` | Self-evolving knowledge base — lessons written back after each task |
+| `scripts/` | Cross-platform helpers (`.ps1` + `.sh` twins): `master-route`, `case-init`, `bootstrap-reverse`, `smoke`, etc. |
+| `ops/` | Operations contracts: scope, evidence chain, roles, identity, skill supply-chain |
+| `tests/` | Routing benchmark (163 cases) and test scripts |
+| `references/` | Shared cross-module references (e.g. community skills, domain coverage map) |
 
-## Install into Hermes
-
-### Option A — install the whole pack as one folder (recommended)
-
-Copy the entire `skills/` folder into your Hermes skills directory as a **single folder named `reverse-skill`**:
-
-```bash
-# Hermes sees one clean entry: ~/.hermes/skills/reverse-skill/
-# (includes the router, all 40 RE/security modules, and the 42 CTF sub-skills)
-cp -r skills ~/.hermes/skills/reverse-skill/
-```
-
-That's it — one command. The folder contains the `SKILL.md` router (the pack's entry point), all 40 specialist modules, and the nested `CTF-Sandbox-Orchestrator/` (42 competition sub-skills + its own master orchestrator). Hermes groups everything under `reverse-skill/` — one tidy folder, not 44 folders scattered in your skills root. The router fires when a task spans modules or the entrypoint is unclear; individual modules also fire on their own triggers (e.g. *"analyze this APK"* → `apk-reverse`).
-
-> **Why one command now?** The CTF collection lives *inside* `skills/` in this port, and every module references the pack's shared scaffolding (`scripts/`, `ops/`, `field-journal/`, `tool-index.md`) via relative paths — so the whole pack must stay together. Partial installs (copying a few modules) break those relative references; that's why cherry-picking is not offered. If you want fewer visible skills, use Option B instead.
->
-> ⚠️ **Note:** this install copies only `skills/` contents. The pack repo also has auxiliary dirs (`kali/`, `burp-mcp-full/`, `docs/`, `examples/`) that are **not** installed — a few Kali-bootstrap scripts reference `kali/` and need it present if you use Kali (copy it too: `cp -r kali ~/.hermes/skills/reverse-skill/`).
-
-### Option B — install the whole pack, then hide the long-tail
-
-Same folder install as Option A, then disable the rarely-used modules so they don't clutter the Hermes skill index:
-
-```bash
-cp -r skills ~/.hermes/skills/reverse-skill/
-```
-
-Then in your Hermes `config.yaml`, add the modules you don't need day-to-day:
-
-```yaml
-skills:
-  disabled:
-    - radio-sdr
-    - ot-ics
-    - hardware-security
-    - competition-web-runtime
-    # ... add any module you rarely reach for
-```
-
-Disabled skills are hidden from the index and skill list, but their files stay on disk — a skill librarian (or `read_file` on the module's `SKILL.md` path) can still find them when a task actually needs them. Best of both worlds: a clean index, with the full pack one `read_file` away.
-
-> **Hidden ≠ unreachable through the router.** The router dispatches by **file path**, not through the skill index — it reads `MASTER-ROUTING.md`, `routing.json`, and each module's `SKILL.md` directly from disk. So a module you disabled is still fully reachable whenever the router routes to it; disabling only removes it from the skill index, never from the pack's routing.
-
-### Verify
-
-After install, trigger any module by name — e.g. ask the agent to *"analyze this APK"* (apk-reverse), *"reverse this .NET binary"* (dotnet-reverse), *"help me understand this stripped Go binary"* (go-rust-reverse), or *"route this security task"* (reverse-skill-router). The skill's frontmatter description is the trigger.
-
-## Packaging a release (zip/tar)
-
-Always build distribution archives from **git-tracked files** — never `zip -r` the working tree. The working tree contains untracked junk that must never ship: `reports/` (un-desensitized pentest samples — anti-leak policy), `.trash/`, and `*.bak` backups. Use the bundled scripts:
-
-```bash
-bash scripts/zip-dist.sh              # -> ../reverse-skill-dist.zip (or .tar.gz if zip missing)
-powershell -File scripts/zip-dist.ps1 # -> <repo>/reverse-skill-dist.zip
-```
-
-Both build from `git ls-files` only, so the junk is excluded by construction. The archive contains the pack as a `reverse-skill/` folder (same layout as the repo). If you deliberately want the sample CTF report in the archive, copy it in manually.
+> **Note:** the pack repo also carries auxiliary dirs (`kali/`, `burp-mcp-full/`, `docs/`) that are **not** part of this installed folder — a few Kali-bootstrap scripts reference `kali/` and need it present if you use Kali (copy it from the repo into this folder).
 
 ## How it works
 
 1. Task arrives → router (or the matching module's trigger) fires
-2. Router reads `MASTER-ROUTING.md` / `routing.json` → picks PRIMARY module
+2. Router reads `MASTER-ROUTING.md` / `config/routing.json` → picks PRIMARY module
 3. Reads the PRIMARY module's `SKILL.md` → follows its workflow
-4. Missing tools → `bootstrap-reverse` provisions from the manifest (JEB Pro stays manual-license-only)
+4. Missing tools → `scripts/bootstrap-reverse` provisions from the manifest (JEB Pro stays manual-license-only)
 5. After the task → lessons written to `field-journal/` → next similar task skips trial-and-error
 
 ## Requirements & safety
 
-- **Authorized use only.** Every module enforces the authorization contract (scope file via `case-init`, no action on a target until auth is granted). The router's `RULES.md` gates are mandatory.
+- **Authorized use only.** Every module enforces the authorization contract (scope file via `scripts/case-init`, no action on a target until auth is granted). The `RULES.md` gates are mandatory.
 - **No mandatory API keys.** Most modules work with freely available tools (jadx, Ghidra, radare2, Frida, pwntools…). Optional MCP integrations (IDA MCP, Ghidra MCP, BurpSuite MCP, jshookmcp) are additive, never required.
 - **Cross-platform.** Helpers ship as both PowerShell (`.ps1`) and POSIX shell (`.sh`) twins; docs cover Windows, Linux, and macOS.
 - **Commercial tools** (IDA Pro, JEB Pro, BurpSuite) are referenced but never downloaded or license-circumvented by the bootstrap.
@@ -115,7 +63,7 @@ However, **the deep reference files remain in their original language** — many
 
 ## Attribution & license
 
-- **Upstream project:** [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) by zhaoxuya520 — MIT license, kept in this folder (`LICENSE`).
+- **Upstream project:** [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) by zhaoxuya520 — MIT license (the upstream `LICENSE` lives at the repo root `reverse-skill/LICENSE`; subtree licenses that do ship inside this installed folder are listed below).
 - **This port:** adaptations made for Hermes Agent conventions (frontmatter descriptions in English, router rewritten for Hermes' load-on-demand model, machine-specific references removed). All upstream docs, routing matrices, RULES, and module content preserved verbatim where possible — including the original Chinese in deep reference files, per the note above.
 - Ported 2026-08-11. Star count referenced from upstream at port time.
 - **Mixed licensing:** the overall pack is MIT (upstream `LICENSE`), but the `CTF-Sandbox-Orchestrator/` subtree ships under **GNU GPL v3** (its own `LICENSE`, preserved) and the `pentestswarm` CLI ships under **AGPL-3.0** (CLI-only).
