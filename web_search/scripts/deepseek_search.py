@@ -8,7 +8,7 @@ Returns an ANSWER, not raw links.
 
 Key: DEEPSEEK_API_KEY (from .env — never hardcode).
 Usage:
-    python deepseek_search.py --query "what is the weather in sandy utah" [--max-tokens 400] [--json]
+    python deepseek_search.py --query "what is the weather in vegas nv" [--max-tokens 400] [--json]
 """
 import argparse
 import json
@@ -29,9 +29,8 @@ def _load_key() -> str:
     # Fallback: scan common .env locations
     candidates = [
         os.path.join(os.getcwd(), ".env"),
+        os.path.join(os.environ.get("HERMES_HOME", ""), ".env"),
         os.path.expanduser("~/.hermes/.env"),
-        os.path.expanduser("~/AppData/Local/hermes/.env"),
-        os.path.expanduser("~/AppData/Local/hermes/profiles/gf-helen/.env"),
     ]
     for path in candidates:
         try:

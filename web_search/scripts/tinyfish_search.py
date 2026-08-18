@@ -26,9 +26,8 @@ def _load_key() -> str:
         return key
     candidates = [
         os.path.join(os.getcwd(), ".env"),
+        os.path.join(os.environ.get("HERMES_HOME", ""), ".env"),
         os.path.expanduser("~/.hermes/.env"),
-        os.path.expanduser("~/AppData/Local/hermes/.env"),
-        os.path.expanduser("~/AppData/Local/hermes/profiles/gf-helen/.env"),
     ]
     for path in candidates:
         try:

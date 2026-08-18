@@ -1,14 +1,14 @@
 ---
 name: web_search
-description: "Tiered web search (deepseek → tavily → tinyfish → ddgs). Q&A via DeepSeek native server-side search, raw results via Tavily/TinyFish/DuckDuckGo. Replaces the built-in web_search tool with a richer, key-managed chain."
-version: 1.0.0
-author: Helen (gf-helen) + Ringo
+description: "Tiered web search (deepseek → tavily → tinyfish → ddgs → searxng-optional). Q&A via DeepSeek native server-side search, raw results via Tavily/TinyFish/DuckDuckGo, + optional SearXNG meta-search breadth tier. Replaces the built-in web_search tool with a richer, key-managed chain."
+version: 1.1.0
+author: Ringo
 license: MIT
 platforms: [windows, linux, macos]
 metadata:
   hermes:
     tags: [web, search, tiered, deepseek, tavily, tinyfish, ddgs, standalone]
-    homepage: https://github.com/MilkyWay008/hermes-kb-hack-fix
+    homepage: https://github.com/MilkyWay008/Essential-Hermes-Skills
 ---
 
 # web_search — Tiered Search Skill
@@ -27,15 +27,28 @@ profile or published to GitHub as-is.
 | 2 | **tavily** | Raw ranked results (title / url / snippet) | `TAVILY_API_KEY` |
 | 3 | **tinyfish** | Raw ranked results via agent.tinyfish.ai | `TINYFISH_API_KEY` |
 | 4 | **ddgs** | Raw results via DuckDuckGo (package first, stdlib fallback) | none |
+| 5 (opt) | **searxng** | Raw results via **SearXNG meta-search (70+ engines)** — breadth, news/science categories, time-range, engine selection | `SEARXNG_URL` (optional; activates only when set) |
 
-`auto` mode tries 1 → 2 → 3 → 4 and stops at the first success. If the top tier
-has no key configured, it fails fast and the next tier takes over.
+`auto` mode tries 1 → 2 → 3 → 4 → (5 if `SEARXNG_URL` set) and stops at the first success. If the top tier
+has no key configured, it fails fast and the next tier takes over. SearXNG
+is an **optional breadth tier** — it only joins the chain when `SEARXNG_URL`
+points to a reachable public or self-hosted instance, so its absence never
+blocks the base tiers.
+
+> **SearXNG adds breadth, not depth replacement.** It aggregates 70+ engines
+> in one query (vs our single-engine tiers), supports `--categories`
+> (news, science, general…), `--time-range` (day/week/month/year), and
+> `--engines` selection. Use it explicitly when you want multi-engine /
+> news / recently-updated results. It still returns snippets only — pair with
+> `web_extract` for full pages.
 
 ## When to Use
 
 - **Q&A / "what's the latest on X"** → deepseek tier gives the best answer (model
   reads search results itself, may cost DeepSeek tokens: ~1元/M input, 2元/M output).
 - **Need links / citations / raw sources** → tavily, tinyfish, or ddgs (effectively free).
+- **Need multi-engine breadth, news/science categories, or time-filtered results** → searxng
+  (optional; requires a `SEARXNG_URL` instance). Try `python scripts/search.py --query "..." --tier searxng --categories news --time-range week`.
 - **Built-in Hermes `web_search` tool vs this skill** → use this skill unless the
   user explicitly asks for the built-in tool. See "SOUL.md Injection" below.
 
@@ -50,7 +63,7 @@ python "<skills>/web/web_search/scripts/search.py" --query "..." --json
 ```
 
 Replace `<skills>` with the profile's skills directory, e.g.
-`C:\Users\<user>\AppData\Local\hermes\profiles\gf-helen\skills`.
+`~/.hermes/skills`.
 
 Per-tier scripts can also be invoked directly:
 
@@ -70,7 +83,7 @@ items are required for tiers 1–3 (keys) and one optional (ddgs package).
 
 ### 1. API Keys — all go in the profile's `.env` (never in this file)
 
-Open `<profile>/.env` (e.g. `C:\Users\<user>\AppData\Local\hermes\profiles\gf-helen\.env`)
+Open `<profile>/.env` (e.g. `~/.hermes/profiles/<profile>/.env` (or `~/.hermes/.env` for the default profile))
 and make sure these exist:
 
 ```bash
@@ -80,12 +93,8 @@ TINYFISH_API_KEY=sk-tinyfish-...   # tier 3 — from the tinyfish MCP config (X-
 ```
 
 The scripts read keys from the environment first, then fall back to scanning
-common `.env` locations (cwd, `~/.hermes/.env`, `~/AppData/Local/hermes/.env`,
-and the gf-helen profile path). No keys are hardcoded anywhere.
-
-> Tip: if you already use the tinyfish MCP server, its key lives in the main
-> Hermes `config.yaml` under `MCP_SERVER_TINYFISH_ENABLED` / the smart-mcp-proxy
-> `proxy-config.yaml` `TINYFISH_API_KEY` field — copy that value.
+common `.env` locations (cwd, `~/.hermes/.env`,
+and the active profile path). No keys are hardcoded anywhere.
 
 ### 2. Optional: install the `duckduckgo-search` package (tier 4 enhancement)
 
@@ -108,7 +117,7 @@ prompt` or a new `## Web Search` section):
 
 ```markdown
 ## Web Search
-When performing a web search, use the `web_search` skill `skill_view(name='web_search')`
+When performing a web search, use the `web_search` skill
 (tiered: deepseek → tavily → tinyfish → ddgs) instead of the built-in
 web_search tool, unless the user explicitly requests the built-in tool.
 ```
@@ -140,3 +149,18 @@ Expect `"success": true` and a `tier` field naming the serving tier.
 - `scripts/tavily_search.py` — tier 2: Tavily API
 - `scripts/tinyfish_search.py` — tier 3: TinyFish API (X-API-Key)
 - `scripts/ddgs_search.py` — tier 4: DuckDuckGo (package + stdlib fallback)
+- `scripts/searxng_search.py` — tier 5 (optional): SearXNG meta-search (needs `SEARXNG_URL`)
+
+## SearXNG optional setup (breadth tier)
+
+The searxng tier is dormant unless `SEARXNG_URL` is set. To enable it, add to
+the profile's `.env` (or export in the shell):
+
+```bash
+SEARXNG_URL=https://searxng.example.com   # public instance, or self-hosted
+```
+
+Self-host with Docker: `docker run -d -p 8888:8080 searxng/searxng` then
+`SEARXNG_URL=http://localhost:8888`. Public instances are listed at
+https://searxng.org/. If unset, the tier is skipped silently — the base
+chain (tiers 1-4) always works.

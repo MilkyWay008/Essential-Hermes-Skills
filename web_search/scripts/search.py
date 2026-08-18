@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
-web_search dispatcher — tiered search: deepseek → tavily → tinyfish → ddgs.
+web_search dispatcher — tiered search: deepseek → tavily → tinyfish → ddgs → (searxng, optional).
 
 Tries tiers in order; falls through on failure; reports which tier succeeded.
 Keys are read from .env at runtime (never hardcoded). Works standalone — each
-tier script lives in this folder and is invoked as a subprocess.
+tier script lives in this folder and is invoked as a subprocess. SearXNG is an
+optional breadth tier that joins the chain only when SEARXNG_URL is set.
 
 Usage:
-    python search.py --query "what is the weather in sandy utah"
+    python search.py --query "what is the weather in vegas nv"
     python search.py --query "..." --tier tavily        # force one tier
     python search.py --query "..." --tier auto --json   # machine-readable
     python search.py --query "..." --max-results 5
@@ -25,8 +26,37 @@ TIERS = {
     "tavily": "tavily_search.py",
     "tinyfish": "tinyfish_search.py",
     "ddgs": "ddgs_search.py",
+    "searxng": "searxng_search.py",  # optional: activates only when SEARXNG_URL is set
 }
-ORDER = ["deepseek", "tavily", "tinyfish", "ddgs"]
+
+ORDER_BASE = ["deepseek", "tavily", "tinyfish", "ddgs"]
+
+
+def _searxng_available() -> bool:
+    """SearXNG is available only if SEARXNG_URL is set (env or .env)."""
+    if os.environ.get("SEARXNG_URL", "").strip():
+        return True
+    candidates = [
+        os.path.join(os.getcwd(), ".env"),
+        os.path.join(os.environ.get("HERMES_HOME", ""), ".env"),
+        os.path.expanduser("~/.hermes/.env"),
+    ]
+    for path in candidates:
+        try:
+            with open(path, "r", encoding="utf-8") as fh:
+                if any(line.strip().startswith("SEARXNG_URL=") for line in fh):
+                    return True
+        except OSError:
+            continue
+    return False
+
+
+def _effective_order() -> list:
+    """Base order, plus searxng between ddgs and the end when configured."""
+    base = list(ORDER_BASE)
+    if _searxng_available():
+        base.append("searxng")
+    return base
 
 
 def run_tier(tier: str, query: str, max_results: int, timeout: int = 120) -> dict:
@@ -67,7 +97,7 @@ def main() -> int:
     if args.tier != "auto":
         tiers = [args.tier]
     else:
-        tiers = ORDER
+        tiers = _effective_order()
 
     last_error = None
     for tier in tiers:

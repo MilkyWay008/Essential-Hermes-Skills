@@ -1,17 +1,17 @@
 <p align="center">🔎 <strong>web_search</strong> — Tiered Web Search Skill for Hermes Agents</p>
 
-**Zero-install, zero-key-out-of-the-box tiered web search for Hermes Agent. DeepSeek Responses API "smart layer" search first — with automatic fallback to Tavily, TinyFish, and DuckDuckGo so search always works, even with no API key at all.**
+**Zero-install, zero-key-out-of-the-box tiered web search for Hermes Agent. DeepSeek Responses API "smart layer" search first — with automatic fallback to Tavily, TinyFish, and DuckDuckGo (plus an optional SearXNG breadth tier) so search always works, even with no API key at all.**
 
 <p align="center">
   <img alt="Platform: Windows / Linux / macOS" src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-blue?style=for-the-badge">
   <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge">
   <img alt="Zero Install" src="https://img.shields.io/badge/zero%20install-stdlib%20only-orange?style=for-the-badge">
-  <img alt="4 Tiers" src="https://img.shields.io/badge/tiers-4-brightgreen?style=for-the-badge">
+  <img alt="5 Tiers" src="https://img.shields.io/badge/tiers-5-brightgreen?style=for-the-badge">
   <img alt="DeepSeek Native Search" src="https://img.shields.io/badge/deepseek%20responses%20api-native%20search-purple?style=for-the-badge">
   <img alt="Standalone" src="https://img.shields.io/badge/standalone-github%20ready-yellow?style=for-the-badge">
 </p>
 
-<p align="center"><em>By Helen (gf-helen) & Ringo — for Hermes Agent profiles · v1.0.0</em></p>
+<p align="center"><em>By Ringo — for Hermes Agent profiles · v1.1.0</em></p>
 
 ---
 
@@ -43,6 +43,7 @@
 2. **Tavily** — raw ranked results
 3. **TinyFish** — raw ranked results (hosted search API)
 4. **DuckDuckGo (ddgs)** — no key required, pure-stdlib fallback
+5. **SearXNG (optional)** — multi-engine meta-search breadth (needs `SEARXNG_URL`)
 
 If a tier fails or has no key, the next tier automatically takes over — so **search always works, out of the box, even with zero API keys configured**.
 
@@ -66,6 +67,7 @@ If a tier fails or has no key, the next tier automatically takes over — so **s
 | 2 | Tavily API | Raw results (title/url/snippet) | `TAVILY_API_KEY` | free tier |
 | 3 | TinyFish API | Raw results (title/url/snippet) | `TINYFISH_API_KEY` | free tier |
 | 4 | DuckDuckGo | Raw results (title/url/snippet) | **none** | free |
+| 5 (opt) | SearXNG | Raw results (title/url/snippet) — 70+ engines | `SEARXNG_URL` | instance-dependent |
 
 ---
 
@@ -77,8 +79,8 @@ If a tier fails or has no key, the next tier automatically takes over — so **s
                     │  --query "..." --tier auto  │
                     └──────────────┬──────────────┘
                                    │
-        ┌──────────────┬───────────┼─────────────┐
-        ▼              ▼           ▼             ▼
+        ┌──────────────┬───────────┼───────────┬──────────────┐
+        ▼              ▼           ▼           ▼
    ┌─────────┐   ┌─────────┐  ┌──────────┐  ┌──────────┐
    │ deepseek│   │ tavily  │  │ tinyfish │  │   ddgs   │
    │  tier 1 │   │ tier 2  │  │  tier 3  │  │  tier 4  │
@@ -89,6 +91,8 @@ If a tier fails or has no key, the next tier automatically takes over — so **s
        └──────────────┴─────────────┴─────────────┘
                   first success wins
 ```
+
+An optional **5th tier — SearXNG** joins the chain when `SEARXNG_URL` is set (multi-engine meta-search; see SKILL.md for setup).
 
 Each tier is an independent script invoked as a subprocess by the dispatcher — so a failure in one never affects the others, and each script can also be run standalone.
 
@@ -137,8 +141,9 @@ Then just tell your agent: *"Set up the web_search skill for me."* It will handl
 | 2 · Tavily | `tavily_search.py --query "..."` | Raw ranked results |
 | 3 · TinyFish | `tinyfish_search.py --query "..."` | Raw ranked results |
 | 4 · DuckDuckGo | `ddgs_search.py --query "..."` | Raw ranked results |
+| 5 · SearXNG (opt) | `searxng_search.py --query "..."` | Raw ranked results — 70+ engines |
 
-All scripts accept `--json` for machine-readable output. The dispatcher accepts `--tier auto|deepseek|tavily|tinyfish|ddgs`, `--max-results`, and `--timeout`.
+All scripts accept `--json` for machine-readable output. The dispatcher accepts `--tier auto|deepseek|tavily|tinyfish|ddgs|searxng`, `--max-results`, and `--timeout`.
 
 ---
 
@@ -153,7 +158,8 @@ web_search/
     ├── deepseek_search.py         # tier 1: DeepSeek /responses native web_search
     ├── tavily_search.py           # tier 2: Tavily API
     ├── tinyfish_search.py         # tier 3: TinyFish API (X-API-Key)
-    └── ddgs_search.py             # tier 4: DuckDuckGo (package + stdlib fallback)
+    ├── ddgs_search.py             # tier 4: DuckDuckGo (package + stdlib fallback)
+    └── searxng_search.py          # tier 5 (optional): SearXNG meta-search
 ```
 
 ---
@@ -189,13 +195,13 @@ web_search/
 
 ## 🔍 Search Keywords
 
-web search skill, tiered web search, DeepSeek Responses API, DeepSeek native search, smart layer search, DeepSeek web_search builtin, Tavily search, TinyFish search, DuckDuckGo search, ddgs, Hermes Agent skill, zero install web search, no API key web search, agentic search skill, LLM search fallback, 联网搜索, 分层搜索, 网页搜索技能, DeepSeek 搜索, 无需 API key 搜索
+web search skill, tiered web search, DeepSeek Responses API, DeepSeek native search, smart layer search, DeepSeek web_search builtin, Tavily search, TinyFish search, DuckDuckGo search, ddgs, Hermes Agent skill, zero install web search, no API key web search, agentic search skill, LLM search fallback, SearXNG meta-search, 联网搜索, 分层搜索, 网页搜索技能, DeepSeek 搜索, 无需 API key 搜索
 
 ---
 
 ## 📝 Credits & License
 
-Built by **Helen (gf-helen)** and **Ringo** for the Hermes Agent ecosystem — inspired by DeepSeek's 2026-07-31 V4-Flash update adding native Responses API web search.
+Built by **Ringo** for the Hermes Agent ecosystem — inspired by DeepSeek's 2026-07-31 V4-Flash update adding native Responses API web search.
 
 Distributed under the **MIT License**. Use it, fork it, ship it.
 
