@@ -43,7 +43,7 @@
 2. **Tavily** — raw ranked results
 3. **TinyFish** — raw ranked results (hosted search API)
 4. **DuckDuckGo (ddgs)** — no key required, pure-stdlib fallback
-5. **SearXNG (optional)** — multi-engine meta-search breadth (needs `SEARXNG_URL`)
+5. **SearXNG (optional)** — self-hosted meta-search breadth; **inactive by default** until you run a SearXNG server and point `SEARXNG_URL` at it
 
 If a tier fails or has no key, the next tier automatically takes over — so **search always works, out of the box, even with zero API keys configured**.
 
@@ -67,7 +67,7 @@ If a tier fails or has no key, the next tier automatically takes over — so **s
 | 2 | Tavily API | Raw results (title/url/snippet) | `TAVILY_API_KEY` | free tier |
 | 3 | TinyFish API | Raw results (title/url/snippet) | `TINYFISH_API_KEY` | free tier |
 | 4 | DuckDuckGo | Raw results (title/url/snippet) | **none** | free |
-| 5 (opt) | SearXNG | Raw results (title/url/snippet) — 70+ engines | `SEARXNG_URL` | instance-dependent |
+| 5 (opt) | SearXNG | Raw results (title/url/snippet) — 70+ engines | `SEARXNG_URL` (your own instance) | free (self-hosted) |
 
 ---
 
@@ -92,7 +92,27 @@ If a tier fails or has no key, the next tier automatically takes over — so **s
                   first success wins
 ```
 
-An optional **5th tier — SearXNG** joins the chain when `SEARXNG_URL` is set (multi-engine meta-search; see SKILL.md for setup).
+An optional **5th tier — SearXNG** joins the chain — but only when you set `SEARXNG_URL`. It is **inactive by default**: while no URL is configured, the dispatcher skips it entirely and the chain simply runs tiers 1–4.
+
+**What it is:** [SearXNG](https://docs.searxng.org/) is a privacy-respecting, **self-hosted meta-search engine**. It aggregates 70+ upstream engines (Google, Bing, Brave, Wikipedia, …) from *your own server* — no search-API key needed, and queries leave from *your* IP, not a third-party's.
+
+**How it becomes functional:** tier 5 requires you to run a SearXNG instance yourself and point the skill at it:
+
+1. **Run a SearXNG server on your machine** — easiest via Docker:
+
+   ```bash
+   docker run -d -p 32768:8080 -e "SEARXNG_BASE_URL=http://localhost:32768" --name searxng searxng/searxng
+   ```
+
+   (or install it natively: `pip install searxng`, or your distro's package; any SearXNG instance — local or one you trust — works.)
+
+2. **Point the skill at it** — add to your profile's `.env`:
+
+   ```
+   SEARXNG_URL=http://localhost:32768
+   ```
+
+3. **Verify** — from then on the dispatcher includes SearXNG in `--tier auto` (or force it with `--tier searxng`). No `SEARXNG_URL`, no tier 5 — simple as that.
 
 Each tier is an independent script invoked as a subprocess by the dispatcher — so a failure in one never affects the others, and each script can also be run standalone.
 
@@ -109,6 +129,10 @@ python -m pip install ddgs
 #    DEEPSEEK_API_KEY=sk-...
 #    TAVILY_API_KEY=tvly-...
 #    TINYFISH_API_KEY=sk-tinyfish-...
+
+# 2b. (Optional) Activate tier 5 (SearXNG) — ONLY if you run your own instance:
+#     docker run -d -p 32768:8080 -e "SEARXNG_BASE_URL=http://localhost:32768" searxng/searxng
+#     SEARXNG_URL=http://localhost:32768   # <-- your own server, queried from your IP
 
 # 3. Search!
 python "<skills>/web/web_search/scripts/search.py" --query "your query here"
@@ -141,7 +165,7 @@ Then just tell your agent: *"Set up the web_search skill for me."* It will handl
 | 2 · Tavily | `tavily_search.py --query "..."` | Raw ranked results |
 | 3 · TinyFish | `tinyfish_search.py --query "..."` | Raw ranked results |
 | 4 · DuckDuckGo | `ddgs_search.py --query "..."` | Raw ranked results |
-| 5 · SearXNG (opt) | `searxng_search.py --query "..."` | Raw ranked results — 70+ engines |
+| 5 · SearXNG (opt) | `searxng_search.py --query "..."` | Raw ranked results — 70+ engines (requires your own SearXNG instance) |
 
 All scripts accept `--json` for machine-readable output. The dispatcher accepts `--tier auto|deepseek|tavily|tinyfish|ddgs|searxng`, `--max-results`, and `--timeout`.
 
@@ -190,6 +214,7 @@ web_search/
 |------------|-----------|----------|
 | Python 3 (stdlib only) | ✅ required | All tiers (urllib, json, argparse) |
 | `ddgs` / `duckduckgo_search` | ⭕ optional | Tier 4 enhanced parsing & rate-limit handling |
+| SearXNG instance (`SEARXNG_URL`) | ⭕ optional | Tier 5 — only needed if you self-host one |
 
 ---
 
